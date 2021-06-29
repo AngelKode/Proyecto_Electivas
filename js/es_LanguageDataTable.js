@@ -1,9 +1,7 @@
 $(document).ready(function(){
-    table = $('#tabla_registros_denominaciones').DataTable();
-    
-    table.destroy();
-    
-    table = $('#tabla_registros_denominaciones').DataTable({
+
+    const tablasRegistros = ["denominaciones", "constancias"];
+    const configuraciones = {
         "language": {
             "lengthMenu": "Mostrar _MENU_ registros",
             "zeroRecords": "Sin registros actualmente",
@@ -27,14 +25,21 @@ $(document).ready(function(){
                 "sortDescending": ": Habilitar orden de columna de forma descendente"
             },
         },
-        "scrollX":        "350px",
-        "scrollY":        "288.5px",
-        "scrollCollapse": true,
-        "paging":         false,
         "dom": 'Bfrtip',
-        "responsive": true,
         "buttons": [
-            'copy', 'csv', 'excel', 'pdf', 'print'
+            'copy', 'csv', 'excel', 'pdf', 'print',
         ]
+    };
+
+    tablasRegistros.forEach((nombre) => {
+        //Checamos que el objeto exista
+        if(document.getElementById("tabla_registros_"+nombre) !== undefined){
+            //Configuramos la tabla
+            table = $('#tabla_registros_'+nombre).DataTable();
+    
+            table.destroy();
+            
+            table = $('#tabla_registros_'+nombre).DataTable(configuraciones);
+        }
     });
 });
