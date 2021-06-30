@@ -121,6 +121,12 @@
                             <span>Alta de Constancias</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="desglose_creditos.html">
+                            <i class="material-icons">view_list</i>
+                            <span>Desglose de Créditos</span>
+                        </a>
+                    </li>
                 </ul>
             </div>
             <!-- #Menu -->
@@ -425,7 +431,7 @@
 
                                     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                         <div class="form-group">
-                                            <label style="font-weight: 100;">Fecha de Termino</label>
+                                            <label style="font-weight: 100;">Fecha de Término</label>
                                             <div class="form-line">
                                                 <input type="date" class="form-control">
                                             </div>
@@ -442,9 +448,9 @@
                                     </div>
 
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <div class="form-group">
-                                            <label for="formFile" class="form-label" style="font-weight: 100;">Archivo</label>
-                                            <input class="form-control" type="file" id="formFile">
+                                        <div class="input-group">
+                                            <label style="font-weight: 100;">Archivo (sólo <b>1 archivo</b> y en formato <b>PDF</b>)</label>
+                                            <input type="file" class="form-control">
                                         </div>
                                     </div>
 
@@ -662,52 +668,51 @@
 
     </section>
 
-    <!-- Jquery Core Js -->
-    <script src="plugins/jquery/jquery.min.js"></script>
+   <!-- Jquery Core Js -->
+   <script src="plugins/jquery/jquery.min.js"></script>
 
-    <!-- Jquery CountTo Plugin Js -->
-    <script src="plugins/jquery-countto/jquery.countTo.js"></script>
+   <!-- Jquery CountTo Plugin Js -->
+   <script src="plugins/jquery-countto/jquery.countTo.js"></script>
 
-    <!-- Bootstrap Core Js -->
-    <script src="plugins/bootstrap/js/bootstrap.js"></script>
+   <!-- Bootstrap Core Js -->
+   <script src="plugins/bootstrap/js/bootstrap.js"></script>
 
-    <!-- Waves Effect Plugin Js -->
-    <script src="plugins/node-waves/waves.js"></script>
-   
-    <!-- Jquery DataTable Plugin Js -->
-    <script src="plugins/jquery-datatable/jquery.dataTables.js"></script>
-    <script src="plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js"></script>
-    <script src="plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js"></script>
-    <script src="plugins/jquery-datatable/extensions/export/buttons.flash.min.js"></script>
-    <script src="plugins/jquery-datatable/extensions/export/jszip.min.js"></script>
-    <script src="plugins/jquery-datatable/extensions/export/pdfmake.min.js"></script>
-    <script src="plugins/jquery-datatable/extensions/export/vfs_fonts.js"></script>
-    <script src="plugins/jquery-datatable/extensions/export/buttons.html5.min.js"></script>
-    <script src="plugins/jquery-datatable/extensions/export/buttons.print.min.js"></script>
-   
-    <!-- Custom Js -->
-    <script src="js/admin.js"></script>
-    <script src="js/pages/tables/jquery-datatable.js"></script>
-    <script src="js/pages/ui/tooltips-popovers.js"></script>
+   <!-- Waves Effect Plugin Js -->
+   <script src="plugins/node-waves/waves.js"></script>
+  
+   <!-- Jquery DataTable Plugin Js -->
+   <script src="plugins/jquery-datatable/jquery.dataTables.js"></script>
+   <script src="plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js"></script>
+   <script src="plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js"></script>
+   <script src="plugins/jquery-datatable/extensions/export/buttons.flash.min.js"></script>
+   <script src="plugins/jquery-datatable/extensions/export/jszip.min.js"></script>
+   <script src="plugins/jquery-datatable/extensions/export/pdfmake.min.js"></script>
+   <script src="plugins/jquery-datatable/extensions/export/vfs_fonts.js"></script>
+   <script src="plugins/jquery-datatable/extensions/export/buttons.html5.min.js"></script>
+   <script src="plugins/jquery-datatable/extensions/export/buttons.print.min.js"></script>
+  
+   <!-- Custom Js -->
+   <script src="js/admin.js"></script>
+   <script src="js/pages/tables/jquery-datatable.js"></script>
+   <script src="js/pages/ui/tooltips-popovers.js"></script>
 
-    <!--Configuramos el idioma de la tabla-->
-    <script src="js/es_LanguageDataTable.js"></script>
+   <!--Configuramos el idioma de la tabla-->
+   <script src="js/es_LanguageDataTable.js"></script>
 
-    <!-- Dropzone Plugin Js -->
-    <script src="plugins/dropzone/dropzone.js"></script>
+   <!-- Dropzone Plugin Js -->
+   <script src="plugins/dropzone/dropzone.js"></script>
 
-    <script src="plugins/bootstrap-inputfile/customfile.js"></script>
-    <script>
-        Dropzone.options.frmFileUpload = {
-            paramName: "file",
-            maxFilesize: 20,
-            uploadMultiple : false,
-            createImageThumbnails : true,
-            init: function() {
-                this.on("addedfile", function(file) { console.log(file.name) });
-            }
-        };
-    </script>
+   <script>
+       Dropzone.options.frmFileUpload = {
+           paramName: "file",
+           maxFilesize: 20,
+           uploadMultiple : false,
+           createImageThumbnails : true,
+           init: function() {
+               this.on("addedfile", function(file) { console.log(file.name) });
+           }
+       };
+   </script>
 </body>
 
 </html>
