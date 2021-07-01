@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>Denominación Electivas</title>
+    <title>Inicio</title>
     <!-- Favicon-->
     <link rel="icon" href="favicon.ico" type="image/x-icon">
 
@@ -108,6 +108,12 @@
                     <li class="header">Secciones</li>
                     <li class="active">
                         <a href="index.html">
+                            <i class="material-icons">home</i>
+                            <span>Inicio</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="denominacion_electivas.html">
                             <i class="material-icons">library_add</i>
                             <span>Denominación Electivas</span>
                         </a>
@@ -289,7 +295,7 @@
     <section class="content">
         <div class="container-fluid">
             <div class="block-header">
-                <h2>Denominación Electivas</h2>
+                <h2>Liberación de Electivas</h2>
             </div>
 
             <div class="row clearfix">
@@ -297,394 +303,194 @@
                     <div class="card">
                         <div class="header">
                             <h2 style="display: inline-block;">
-                                Alta de Denominación
+                                Estado de Liberación de Electivas
                             </h2>
-                            <button type= "button" class="btn btn-success waves-effect" data-toggle="modal" data-target="#modal_alta_denominaciones"
-                            style="style= display: inline-block; float : right; padding-top:0;padding-bottom:0;">
-                                <i class="material-icons">add</i>
-                                <span>Nuevo</span>
-                            </button>
                         </div>
                         <div class="body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-hover dataTable js-exportable" id="tabla_registros_denominaciones">
-                                    <thead>
-                                        <tr>
-                                            <th>Eje Temático</th>
-                                            <th>Modalidad</th>
-                                            <th>Créditos</th>
-                                            <th>Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>Enfásis en la profesión</td>
-                                            <td>Docencia</th>
-                                            <td>1 x 16 Horas</th>
-                                            <td>
-                                                <div>
-                                                    <button type="button" class="btn btn-primary waves-effect">
-                                                        <i class="material-icons">update</i>
-                                                        <span>Editar</span>
-                                                    </button>
-                                                    <button type="button" class="btn btn-danger waves-effect">
-                                                        <i class="material-icons">delete</i>
-                                                        <span>Eliminar</span>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
+                            <!--Contenido Card-->
 
-                                        <tr>
-                                            <td>Enfásis en la profesión</td>
-                                            <td>Trabajo de Campo Supervisado</td>
-                                            <td>1 x 50 Horas</th>
-                                            <td>
-                                                <div>
-                                                    <button type="button" class="btn btn-primary waves-effect">
-                                                        <i class="material-icons">update</i>
-                                                        <span>Editar</span>
-                                                    </button>
-                                                    <button type="button" class="btn btn-danger waves-effect">
-                                                        <i class="material-icons">delete</i>
-                                                        <span>Eliminar</span>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>Enfásis en la profesión</td>
-                                            <td>Independientes</td>
-                                            <td>1 x 20 Horas</td>
-                                            <td>
-                                                <div>
-                                                    <button type="button" class="btn btn-primary waves-effect">
-                                                        <i class="material-icons">update</i>
-                                                        <span>Editar</span>
-                                                    </button>
-                                                    <button type="button" class="btn btn-danger waves-effect">
-                                                        <i class="material-icons">delete</i>
-                                                        <span>Eliminar</span>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>Complementarias a la formación</td>
-                                            <td>Docencia</td>
-                                            <td>1 x 16 Horas</td>
-                                            <td>
-                                                <div>
-                                                    <button type="button" class="btn btn-primary waves-effect">
-                                                        <i class="material-icons">update</i>
-                                                        <span>Editar</span>
-                                                    </button>
-                                                    <button type="button" class="btn btn-danger waves-effect">
-                                                        <i class="material-icons">delete</i>
-                                                        <span>Eliminar</span>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-
-                                        
-                                        <tr>
-                                            <td>Complementarias a la formación</td>
-                                            <td>Docencia</td>
-                                            <td>1 x 16 Horas</td>
-                                            <td>
-                                                <div>
-                                                    
-                                                        <button type="button" class="btn btn-primary waves-effect" data-target="#modal_editar_denominaciones" data-toggle="modal">
-                                                            <i class="material-icons">update</i>
-                                                            <span>Editar</span>
-                                                        </button>
-                                                   
-                                                   
-                                                        <button type="button" class="btn btn-danger waves-effect" data-target="#modal_eliminar_denominaciones" data-toggle="modal">
-                                                            <i class="material-icons">delete</i>
-                                                            <span>Eliminar</span>
-                                                        </button>
-                                                    
-                                                </div>
-                                            </td>
-                                        </tr>
-
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Eje Temático</th>
-                                            <th>Modalidad</th>
-                                            <th>Créditos</th>
-                                            <th>Acciones</th>
-                                        </tr>
-                                    </tfoot>
-                                </table>
+                            <!--Progreso de Electivas-->
+                            <div class="card" style="border-left: 10px solid#4CAF50;">
+                                <div class="header" style="padding:10px;padding-left: 15px;">
+                                    <h5>
+                                        Electiva 1
+                                    </h5>
+                                </div>
+                                <div class="body" style="padding: 10px;">
+                                    <div class="progress" style="margin: 5px;">
+                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">Completado</div>
+                                    </div>
+                                </div>
                             </div>
+
+                            <div class="card" style="border-left: 10px solid #FF9800;">
+                                <div class="header" style="padding:10px;padding-left: 15px;">
+                                    <h5>
+                                        Electiva 2
+                                    </h5>
+                                </div>
+                                <div class="body" style="padding: 10px;">
+                                    <div class="progress" style="margin: 5px;">
+                                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 25%;">25%</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card" style="border-left: 10px solid #F44336">
+                                <div class="header" style="padding:10px;padding-left: 15px;">
+                                    <h5>
+                                        Electiva 3
+                                    </h5>
+                                </div>
+                                <div class="body" style="padding: 10px;">
+                                    <div class="progress" style="margin: 5px;text-align: center;">
+                                        <span>0%</span>
+                                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Progreso de Electivas-->
+
+                            <!--Ejemplos de Actividades-->
+                            <h3>Ejemplos de Actividades</h3>
+
+                            <div class="panel-group" id="accordion_2" role="tablist" aria-multiselectable="true">
+
+                                <div class="panel panel-info">
+                                    <div class="panel-heading" role="tab" id="headingOne_2">
+                                        <h4 class="panel-title">
+                                            <a role="button" data-toggle="collapse" data-parent="#accordion_2" href="#collapseOne_2" aria-expanded="true" aria-controls="collapseOne_2">
+                                                Inquietudes Vocacionales Propias
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="collapseOne_2" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne_2">
+                                        <div class="panel-body">
+                                            <!--Tabla de información-->
+                                            <div class="body table-responsive">
+                                                <table class="table table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Modalidad</th>
+                                                            <th>Ejemplos de Actividades</th>
+                                                            <th>Créditos</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                        <tr>
+                                                            <td>Docencia</td>
+                                                            <td>
+                                                                <ul>
+                                                                    <li>Cursos ofertados en las Unidades Académicas del IPN.</li>
+                                                                    <li>Estudio de una lengua extranjera que no se considere requisito de titulación.</li>
+                                                                </ul>
+                                                            </td>
+                                                            <td>1 crédito por cada 16 horas.</td>
+                                                        </tr>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <!--Tabla de información-->
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="panel panel-info">
+                                    <div class="panel-heading" role="tab" id="headingTwo_2">
+                                        <h4 class="panel-title">
+                                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion_2" href="#collapseTwo_2" aria-expanded="false"
+                                               aria-controls="collapseTwo_2">
+                                                Énfasis en la Profesión
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="collapseTwo_2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo_2">
+                                        <div class="panel-body">
+                                            <!--Tabla de información-->
+                                            <div class="body table-responsive">
+                                                <table class="table table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Modalidad</th>
+                                                            <th>Ejemplos de Actividades</th>
+                                                            <th>Créditos</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                        <tr>
+                                                            <td>Docencia</td>
+                                                            <td>
+                                                                <ul>
+                                                                    <li>Cursos ofertados en las Unidades Académicas del IPN.</li>
+                                                                    <li>Estudio de una lengua extranjera que no se considere requisito de titulación.</li>
+                                                                </ul>
+                                                            </td>
+                                                            <td>1 crédito por cada 16 horas.</td>
+                                                        </tr>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <!--Tabla de información-->
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="panel panel-info">
+                                    <div class="panel-heading" role="tab" id="headingThree_2">
+                                        <h4 class="panel-title">
+                                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion_2" href="#collapseThree_2" aria-expanded="false"
+                                               aria-controls="collapseThree_2">
+                                                Complementarias a la Formación
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="collapseThree_2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree_2">
+                                        <div class="panel-body">
+                                            <!--Tabla de información-->
+                                            <div class="body table-responsive">
+                                                <table class="table table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Modalidad</th>
+                                                            <th>Ejemplos de Actividades</th>
+                                                            <th>Créditos</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                        <tr>
+                                                            <td>Docencia</td>
+                                                            <td>
+                                                                <ul>
+                                                                    <li>Cursos ofertados en las Unidades Académicas del IPN.</li>
+                                                                    <li>Estudio de una lengua extranjera que no se considere requisito de titulación.</li>
+                                                                </ul>
+                                                            </td>
+                                                            <td>1 crédito por cada 16 horas.</td>
+                                                        </tr>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <!--Tabla de información-->
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Panel Success-->
+
+                            </div>
+                            <!--Panel Group-->
+                            <!--Ejemplos de Actividades-->
+                            <!--Contenido Card-->
                         </div>
                     </div>
                 </div>
             </div>
             <!--Div Tabla-->
-
-            <!--Modal Agregar Denominaciones-->
-            <div class="modal fade" id="modal_alta_denominaciones" tabindex="-1" role="dialog" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title" id="defaultModalLabel">Alta de Denominaciones</h4>
-                        </div>
-
-                        <div class="modal-body">
-                                <div class="row clearfix">
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                        <div class="form-group form-float">
-                                            <div class="form-line">
-                                                <input type="text" class="form-control">
-                                                <label class="form-label">Eje Temático</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                        <div class="form-group form-float">
-                                            <div class="form-line">
-                                                <input type="text" class="form-control">
-                                                <label class="form-label">Modalidad</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                        <div class="form-group form-float">
-                                            <div class="form-line">
-                                                <input type="text" class="form-control">
-                                                <label class="form-label">Descripción de Créditos</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                                        <div class="form-group form-float">
-                                            <div class="form-line">
-                                                <input type="text" class="form-control">
-                                                <label class="form-label"># Créditos</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                                        <div class="form-group form-float">
-                                            <div class="form-line">
-                                                <input type="text" class="form-control">
-                                                <label class="form-label"># Horas</label>
-                                            </div>
-                                            <div class="help-info">Para conseguir el # de créditos indicado</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group form-float" style="padding-top: 10px;">
-                                    <div class="form-line">
-                                        <textarea cols="30" rows="3" class="form-control no-resize" required></textarea>
-                                        <label class="form-label">Ejemplos de Actividades</label>
-                                    </div>
-                                </div>
-                        </div>
-                        <!--Modal Body-->
-
-                        <div class="modal-footer" style="padding-top: 0;">
-                            <div style="padding-right: 10px;">
-                                <ul style="list-style:none;">
-                                    <li style="display: inline-block;">
-                                        <a href="javascript:void(0);">
-                                            <i class="material-icons" style="color: #4CAF50;">done</i>
-                                        </a>
-                                    </li>
-                                    <li style="display: inline-block;">
-                                        <a href="javascript:void(0);">
-                                            <i class="material-icons" style="color: #F44336;"  data-dismiss="modal">close</i>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <!--Footer-->
-                    </div>
-                    <!--Content-->
-                </div>
-                <!--Dialog-->
-            </div>
-            <!--Modal Agregar Denominaciones-->
-
-
-            <!--Modal Editar Denominaciones-->
-            <div class="modal fade" id="modal_editar_denominaciones" tabindex="-1" role="dialog" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title" id="defaultModalLabel">Editar Denominación</h4>
-                        </div>
-
-                        <div class="modal-body">
-                                <div class="row clearfix">
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                        <div class="form-group form-float">
-                                            <div class="form-line">
-                                                <input type="text" class="form-control" value="Complementarias a la formación">
-                                                <label class="form-label">Eje Temático</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                        <div class="form-group form-float">
-                                            <div class="form-line">
-                                                <input type="text" class="form-control" value="Docencia">
-                                                <label class="form-label">Modalidad</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                        <div class="form-group form-float">
-                                            <div class="form-line">
-                                                <input type="text" class="form-control" value="Enseñar con calidad">
-                                                <label class="form-label">Descripción de Créditos</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                                        <div class="form-group form-float">
-                                            <div class="form-line">
-                                                <input type="text" class="form-control" value="1">
-                                                <label class="form-label"># Créditos</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                                        <div class="form-group form-float">
-                                            <div class="form-line">
-                                                <input type="text" class="form-control" value="16">
-                                                <label class="form-label"># Horas</label>
-                                            </div>
-                                            <div class="help-info">Para conseguir el # de créditos indicado</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group form-float" style="padding-top: 10px;">
-                                    <div class="form-line">
-                                        <textarea cols="30" rows="3" class="form-control no-resize">Sin descripción</textarea>
-                                        <label class="form-label">Ejemplos de Actividades</label>
-                                    </div>
-                                </div>
-                        </div>
-                        <!--Modal Body-->
-
-                        <div class="modal-footer" style="padding-top: 0;">
-                            <div style="padding-right: 10px;">
-                                <ul style="list-style:none;">
-                                    <li style="display: inline-block;">
-                                        <a href="javascript:void(0);">
-                                            <i class="material-icons" style="color: #2196F3;">update</i>
-                                        </a>
-                                    </li>
-                                    <li style="display: inline-block;">
-                                        <a href="javascript:void(0);">
-                                            <i class="material-icons" style="color: #F44336;"  data-dismiss="modal">close</i>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <!--Footer-->
-                    </div>
-                    <!--Content-->
-                </div>
-                <!--Dialog-->
-            </div>
-            <!--Modal Editar Denominaciones-->
-
-            <!--Modal Eliminar Denominaciones-->
-            <div class="modal fade" id="modal_eliminar_denominaciones" tabindex="-1" role="dialog" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title" id="defaultModalLabel">Eliminar Denominación</h4>
-                        </div>
-
-                        <div class="modal-body">
-                                <div class="row clearfix">
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                        <div class="form-group form-float">
-                                            <div class="form-line">
-                                                <input type="text" class="form-control" value="Complementarias a la formación" disabled>
-                                                <label class="form-label">Eje Temático</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                        <div class="form-group form-float">
-                                            <div class="form-line">
-                                                <input type="text" class="form-control" value="Docencia" disabled>
-                                                <label class="form-label">Modalidad</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                        <div class="form-group form-float">
-                                            <div class="form-line">
-                                                <input type="text" class="form-control" value="Enseñar con calidad" disabled>
-                                                <label class="form-label">Descripción de Créditos</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                                        <div class="form-group form-float">
-                                            <div class="form-line">
-                                                <input type="text" class="form-control" value="1" disabled>
-                                                <label class="form-label"># Créditos</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                                        <div class="form-group form-float">
-                                            <div class="form-line">
-                                                <input type="text" class="form-control" value="16" disabled>
-                                                <label class="form-label"># Horas</label>
-                                            </div>
-                                            <div class="help-info">Para conseguir el # de créditos indicado</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group form-float" style="padding-top: 10px;">
-                                    <div class="form-line">
-                                        <textarea cols="30" rows="3" class="form-control no-resize" disabled>Sin descripción</textarea>
-                                        <label class="form-label">Ejemplos de Actividades</label>
-                                    </div>
-                                </div>
-                        </div>
-                        <!--Modal Body-->
-
-                        <div class="modal-footer" style="padding-top: 0;">
-                            <div style="padding-right: 10px;">
-                                <ul style="list-style:none;">
-                                    <li style="display: inline-block;">
-                                        <a href="javascript:void(0);">
-                                            <i class="material-icons" style="color: #e21d0e;">delete_forever</i>
-                                        </a>
-                                    </li>
-                                    <li style="display: inline-block;">
-                                        <a href="javascript:void(0);">
-                                            <i class="material-icons" style="color: #F44336;"  data-dismiss="modal">close</i>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <!--Footer-->
-                    </div>
-                    <!--Content-->
-                </div>
-                <!--Dialog-->
-            </div>
-            <!--Modal Eliminar Denominaciones-->
-
         </div>
         <!--Container Fluid-->
 
@@ -717,8 +523,6 @@
     <script src="js/admin.js"></script>
     <script src="js/pages/tables/jquery-datatable.js"></script>
 
-    <!--Configuramos el idioma de la tabla-->
-    <script src="js/es_LanguageDataTable.js"></script>
 </body>
 
 </html>

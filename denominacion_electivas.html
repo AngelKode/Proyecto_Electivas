@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>Alta de Constancias</title>
+    <title>Denominación Electivas</title>
     <!-- Favicon-->
     <link rel="icon" href="favicon.ico" type="image/x-icon">
 
@@ -33,9 +33,6 @@
 
     <!-- JQuery DataTable Css -->
     <link href="plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css" rel="stylesheet">
-
-    <!-- Dropzone Css -->
-    <link href="plugins/dropzone/dropzone.css" rel="stylesheet">
 
 
 </head>
@@ -115,13 +112,13 @@
                             <span>Inicio</span>
                         </a>
                     </li>
-                    <li>
+                    <li class="active">
                         <a href="denominacion_electivas.html">
                             <i class="material-icons">library_add</i>
                             <span>Denominación Electivas</span>
                         </a>
                     </li>
-                    <li class="active">
+                    <li>
                         <a href="alta_constancias.html">
                             <i class="material-icons">folder</i>
                             <span>Alta de Constancias</span>
@@ -298,7 +295,7 @@
     <section class="content">
         <div class="container-fluid">
             <div class="block-header">
-                <h2>Constancias</h2>
+                <h2>Denominación Electivas</h2>
             </div>
 
             <div class="row clearfix">
@@ -306,9 +303,9 @@
                     <div class="card">
                         <div class="header">
                             <h2 style="display: inline-block;">
-                                Alta de Constancias
+                                Alta de Denominación
                             </h2>
-                            <button type= "button" class="btn btn-success waves-effect" data-toggle="modal" data-target="#modal_alta_constancias"
+                            <button type= "button" class="btn btn-success waves-effect" data-toggle="modal" data-target="#modal_alta_denominaciones"
                             style="style= display: inline-block; float : right; padding-top:0;padding-bottom:0;">
                                 <i class="material-icons">add</i>
                                 <span>Nuevo</span>
@@ -316,26 +313,20 @@
                         </div>
                         <div class="body">
                             <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-hover dataTable js-exportable" id="tabla_registros_constancias">
+                                <table class="table table-bordered table-striped table-hover dataTable js-exportable" id="tabla_registros_denominaciones">
                                     <thead>
                                         <tr>
-                                            <th>Nombre de la Actividad</th>
-                                            <th>Fecha</th>
-                                            <th>Horas</th>
-                                            <th>Archivo</th>
+                                            <th>Eje Temático</th>
+                                            <th>Modalidad</th>
+                                            <th>Créditos</th>
                                             <th>Acciones</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>Curso de Android</td>
-                                            <td>23-12-2020</td>
-                                            <td>20</td>
-                                            <td>
-                                                    <i class="material-icons" style="cursor: pointer;">
-                                                        visibility
-                                                    </i>
-                                            </td>
+                                            <td>Enfásis en la profesión</td>
+                                            <td>Docencia</th>
+                                            <td>1 x 16 Horas</th>
                                             <td>
                                                 <div>
                                                     <button type="button" class="btn btn-primary waves-effect">
@@ -351,61 +342,78 @@
                                         </tr>
 
                                         <tr>
-                                            <td>Curso de Flutter</td>
-                                            <td>16-09-2020</td>
-                                            <td>30</td>
+                                            <td>Enfásis en la profesión</td>
+                                            <td>Trabajo de Campo Supervisado</td>
+                                            <td>1 x 50 Horas</th>
                                             <td>
-                                                <i class="material-icons" style="cursor: pointer;">
-                                                    visibility
-                                                </i>
-                                            </td>
-                                            <td>
-                                                <div class="bg-green text-center">
-                                                    <span data-toggle="tooltip" data-placement="right" title="Constancia aceptada." style="cursor: pointer;">
-                                                        Validada
-                                                    </span>
+                                                <div>
+                                                    <button type="button" class="btn btn-primary waves-effect">
+                                                        <i class="material-icons">update</i>
+                                                        <span>Editar</span>
+                                                    </button>
+                                                    <button type="button" class="btn btn-danger waves-effect">
+                                                        <i class="material-icons">delete</i>
+                                                        <span>Eliminar</span>
+                                                    </button>
                                                 </div>
                                             </td>
                                         </tr>
 
                                         <tr>
-                                            <td>Curso de React Native</td>
-                                            <td>13-12-2019</td>
-                                            <td>20</td>
+                                            <td>Enfásis en la profesión</td>
+                                            <td>Independientes</td>
+                                            <td>1 x 20 Horas</td>
                                             <td>
-                                                <i class="material-icons" style="cursor: pointer;">
-                                                    visibility
-                                                </i>
+                                                <div>
+                                                    <button type="button" class="btn btn-primary waves-effect">
+                                                        <i class="material-icons">update</i>
+                                                        <span>Editar</span>
+                                                    </button>
+                                                    <button type="button" class="btn btn-danger waves-effect">
+                                                        <i class="material-icons">delete</i>
+                                                        <span>Eliminar</span>
+                                                    </button>
+                                                </div>
                                             </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Complementarias a la formación</td>
+                                            <td>Docencia</td>
+                                            <td>1 x 16 Horas</td>
                                             <td>
-                                                <div class="bg-red text-center">
-                                                    <span data-toggle="tooltip" data-placement="right" title="La constancia no especifíca horas." style="cursor: pointer;">
-                                                        Rechazada
-                                                    </span>
+                                                <div>
+                                                    <button type="button" class="btn btn-primary waves-effect">
+                                                        <i class="material-icons">update</i>
+                                                        <span>Editar</span>
+                                                    </button>
+                                                    <button type="button" class="btn btn-danger waves-effect">
+                                                        <i class="material-icons">delete</i>
+                                                        <span>Eliminar</span>
+                                                    </button>
                                                 </div>
                                             </td>
                                         </tr>
 
                                         
                                         <tr>
-                                            <td>Curso de Android</td>
-                                            <td>23-12-2020</td>
-                                            <td>20</td>
-                                            <td>
-                                                <i class="material-icons" style="cursor: pointer;">
-                                                    visibility
-                                                </i>
-                                            </td>
+                                            <td>Complementarias a la formación</td>
+                                            <td>Docencia</td>
+                                            <td>1 x 16 Horas</td>
                                             <td>
                                                 <div>
-                                                    <button type="button" class="btn btn-primary waves-effect">
-                                                        <i class="material-icons">update</i>
-                                                        <span>Editar</span>
-                                                    </button>
-                                                    <button type="button" class="btn btn-danger waves-effect">
-                                                        <i class="material-icons">delete</i>
-                                                        <span>Eliminar</span>
-                                                    </button>
+                                                    
+                                                        <button type="button" class="btn btn-primary waves-effect" data-target="#modal_editar_denominaciones" data-toggle="modal">
+                                                            <i class="material-icons">update</i>
+                                                            <span>Editar</span>
+                                                        </button>
+                                                   
+                                                   
+                                                        <button type="button" class="btn btn-danger waves-effect" data-target="#modal_eliminar_denominaciones" data-toggle="modal">
+                                                            <i class="material-icons">delete</i>
+                                                            <span>Eliminar</span>
+                                                        </button>
+                                                    
                                                 </div>
                                             </td>
                                         </tr>
@@ -413,10 +421,9 @@
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <th>Nombre de la Actividad</th>
-                                            <th>Fecha</th>
-                                            <th>Horas</th>
-                                            <th>Archivo</th>
+                                            <th>Eje Temático</th>
+                                            <th>Modalidad</th>
+                                            <th>Créditos</th>
                                             <th>Acciones</th>
                                         </tr>
                                     </tfoot>
@@ -429,70 +436,63 @@
             <!--Div Tabla-->
 
             <!--Modal Agregar Denominaciones-->
-            <div class="modal fade" id="modal_alta_constancias" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal fade" id="modal_alta_denominaciones" tabindex="-1" role="dialog" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h4 class="modal-title" id="defaultModalLabel">Subir Constancia</h4>
+                            <h4 class="modal-title" id="defaultModalLabel">Alta de Denominaciones</h4>
                         </div>
 
                         <div class="modal-body">
                                 <div class="row clearfix">
-
-                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                         <div class="form-group form-float">
                                             <div class="form-line">
                                                 <input type="text" class="form-control">
-                                                <label class="form-label">Nombre de la Actividad</label>
+                                                <label class="form-label">Eje Temático</label>
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                        <div class="form-group">
-                                            <label style="font-weight: 100;">Fecha de Inicio</label>
-                                            <div class="form-line">
-                                                <input type="date" class="form-control">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                        <div class="form-group">
-                                            <label style="font-weight: 100;">Fecha de Término</label>
-                                            <div class="form-line">
-                                                <input type="date" class="form-control">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                         <div class="form-group form-float">
                                             <div class="form-line">
-                                                <input type="number" class="form-control" min="1">
-                                                <label class="form-label">Horas</label>
+                                                <input type="text" class="form-control">
+                                                <label class="form-label">Modalidad</label>
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <div class="input-group">
-                                            <label style="font-weight: 100;">Archivo (sólo <b>1 archivo</b> y en formato <b>PDF</b>)</label>
-                                            <input type="file" class="form-control">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                         <div class="form-group form-float">
                                             <div class="form-line">
-                                                <textarea name="observaciones" id="oberv" cols="30" rows="3" class="form-control"></textarea>
-                                                <label class="form-label">Observaciones</label>
+                                                <input type="text" class="form-control">
+                                                <label class="form-label">Descripción de Créditos</label>
                                             </div>
                                         </div>
                                     </div>
-
+                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                        <div class="form-group form-float">
+                                            <div class="form-line">
+                                                <input type="text" class="form-control">
+                                                <label class="form-label"># Créditos</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                        <div class="form-group form-float">
+                                            <div class="form-line">
+                                                <input type="text" class="form-control">
+                                                <label class="form-label"># Horas</label>
+                                            </div>
+                                            <div class="help-info">Para conseguir el # de créditos indicado</div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <!--Row-->
+                                <div class="form-group form-float" style="padding-top: 10px;">
+                                    <div class="form-line">
+                                        <textarea cols="30" rows="3" class="form-control no-resize" required></textarea>
+                                        <label class="form-label">Ejemplos de Actividades</label>
+                                    </div>
+                                </div>
                         </div>
                         <!--Modal Body-->
 
@@ -696,51 +696,36 @@
 
     </section>
 
-   <!-- Jquery Core Js -->
-   <script src="plugins/jquery/jquery.min.js"></script>
+    <!-- Jquery Core Js -->
+    <script src="plugins/jquery/jquery.min.js"></script>
 
-   <!-- Jquery CountTo Plugin Js -->
-   <script src="plugins/jquery-countto/jquery.countTo.js"></script>
+    <!-- Jquery CountTo Plugin Js -->
+    <script src="plugins/jquery-countto/jquery.countTo.js"></script>
 
-   <!-- Bootstrap Core Js -->
-   <script src="plugins/bootstrap/js/bootstrap.js"></script>
+    <!-- Bootstrap Core Js -->
+    <script src="plugins/bootstrap/js/bootstrap.js"></script>
 
-   <!-- Waves Effect Plugin Js -->
-   <script src="plugins/node-waves/waves.js"></script>
-  
-   <!-- Jquery DataTable Plugin Js -->
-   <script src="plugins/jquery-datatable/jquery.dataTables.js"></script>
-   <script src="plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js"></script>
-   <script src="plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js"></script>
-   <script src="plugins/jquery-datatable/extensions/export/buttons.flash.min.js"></script>
-   <script src="plugins/jquery-datatable/extensions/export/jszip.min.js"></script>
-   <script src="plugins/jquery-datatable/extensions/export/pdfmake.min.js"></script>
-   <script src="plugins/jquery-datatable/extensions/export/vfs_fonts.js"></script>
-   <script src="plugins/jquery-datatable/extensions/export/buttons.html5.min.js"></script>
-   <script src="plugins/jquery-datatable/extensions/export/buttons.print.min.js"></script>
-  
-   <!-- Custom Js -->
-   <script src="js/admin.js"></script>
-   <script src="js/pages/tables/jquery-datatable.js"></script>
-   <script src="js/pages/ui/tooltips-popovers.js"></script>
+    <!-- Waves Effect Plugin Js -->
+    <script src="plugins/node-waves/waves.js"></script>
+   
+    <!-- Jquery DataTable Plugin Js -->
+    <script src="plugins/jquery-datatable/jquery.dataTables.js"></script>
+    <script src="plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js"></script>
+    <script src="plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js"></script>
+    <script src="plugins/jquery-datatable/extensions/export/buttons.flash.min.js"></script>
+    <script src="plugins/jquery-datatable/extensions/export/jszip.min.js"></script>
+    <script src="plugins/jquery-datatable/extensions/export/pdfmake.min.js"></script>
+    <script src="plugins/jquery-datatable/extensions/export/vfs_fonts.js"></script>
+    <script src="plugins/jquery-datatable/extensions/export/buttons.html5.min.js"></script>
+    <script src="plugins/jquery-datatable/extensions/export/buttons.print.min.js"></script>
+   
+    <!-- Custom Js -->
+    <script src="js/admin.js"></script>
+    <script src="js/pages/tables/jquery-datatable.js"></script>
 
-   <!--Configuramos el idioma de la tabla-->
-   <script src="js/es_LanguageDataTable.js"></script>
+    <!--Configuramos el idioma de la tabla-->
+    <script src="js/es_LanguageDataTable.js"></script>
 
-   <!-- Dropzone Plugin Js -->
-   <script src="plugins/dropzone/dropzone.js"></script>
-
-   <script>
-       Dropzone.options.frmFileUpload = {
-           paramName: "file",
-           maxFilesize: 20,
-           uploadMultiple : false,
-           createImageThumbnails : true,
-           init: function() {
-               this.on("addedfile", function(file) { console.log(file.name) });
-           }
-       };
-   </script>
 </body>
 
 </html>
