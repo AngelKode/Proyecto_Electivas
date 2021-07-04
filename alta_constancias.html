@@ -421,7 +421,7 @@
             <!--Div Tabla-->
 
             <!--Modal Agregar Constancias-->
-            <div class="modal fade" id="modal_alta_constancias" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal fade" id="modal_alta_constancias" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -515,7 +515,7 @@
 
 
             <!--Modal Editar Constancias-->
-            <div class="modal fade" id="modal_editar_constancias_and" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal fade" id="modal_editar_constancias_and" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -608,7 +608,7 @@
             <!--Modal Editar Constancias-->
 
             <!--Modal Eliminar Constancias-->
-            <div class="modal fade" id="modal_eliminar_constancias_and" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal fade" id="modal_eliminar_constancias_and" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -700,26 +700,21 @@
             <!--Modal Eliminar Constancias-->
 
             <!--Modal Archivo Subido-->
-            <div class="modal fade" id="modal_archivo_subido" tabindex="-1" role="dialog" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal fade" id="modal_archivo_subido" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+                <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h4 class="modal-title" id="defaultModalLabel">Archivo Subido</h4>
                         </div>
 
-                        <div class="modal-body">
-                            <embed src="files/ejemplo1.pdf" width="100%" height="500px" type="application/pdf">
+                        <div class="modal-body" style="height: 100%;">
+                            <embed src="files/ejemplo1.pdf" type="application/pdf" style="width: 100%;height: 70vh;overflow-y: scroll;">
                         </div>
                         <!--Modal Body-->
 
-                        <div class="modal-footer" style="padding-top: 0;">
+                        <div class="modal-footer">
                             <div style="padding-right: 10px;">
                                 <ul style="list-style:none;">
-                                    <li style="display: inline-block;">
-                                        <a href="javascript:void(0);">
-                                            <i class="material-icons" style="color: #e21d0e;">delete_forever</i>
-                                        </a>
-                                    </li>
                                     <li style="display: inline-block;">
                                         <a href="javascript:void(0);">
                                             <i class="material-icons" style="color: #F44336;"  data-dismiss="modal">close</i>

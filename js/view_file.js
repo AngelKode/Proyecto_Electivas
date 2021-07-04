@@ -1,4 +1,5 @@
 const verArchivo = () => {
+    //Al darle click al icono, mostramos el modal con el PDF
     $('#modal_archivo_subido').modal('show');
 }
 
