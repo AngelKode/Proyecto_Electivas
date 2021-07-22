@@ -2,6 +2,8 @@ $(document).ready(function(){
 
     const tablasRegistros = ["denominaciones", "constancias"];
     const configuraciones = {
+        "paging" : true,
+        "pageLength": 5,
         "language": {
             "lengthMenu": "Mostrar _MENU_ registros",
             "zeroRecords": "Sin registros actualmente",

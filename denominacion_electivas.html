@@ -31,6 +31,9 @@
     <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
     <link href="css/themes/theme-blue.css" rel="stylesheet" />
 
+    <!-- Sweetalert Css -->
+    <link href="plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+
     <!-- JQuery DataTable Css -->
     <link href="plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css" rel="stylesheet">
 
@@ -304,7 +307,7 @@
                 <h2>Denominación Electivas</h2>
             </div>
 
-            <div class="row clearfix">
+            <div class="row clearfix" id="body_page">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="card">
                         <div class="header">
@@ -329,100 +332,6 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>Enfásis en la profesión</td>
-                                            <td>Docencia</th>
-                                            <td>1 x 16 Horas</th>
-                                            <td>
-                                                <div>
-                                                    <button type="button" class="btn btn-primary waves-effect">
-                                                        <i class="material-icons">update</i>
-                                                        <span>Editar</span>
-                                                    </button>
-                                                    <button type="button" class="btn btn-danger waves-effect">
-                                                        <i class="material-icons">delete</i>
-                                                        <span>Eliminar</span>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>Enfásis en la profesión</td>
-                                            <td>Trabajo de Campo Supervisado</td>
-                                            <td>1 x 50 Horas</th>
-                                            <td>
-                                                <div>
-                                                    <button type="button" class="btn btn-primary waves-effect">
-                                                        <i class="material-icons">update</i>
-                                                        <span>Editar</span>
-                                                    </button>
-                                                    <button type="button" class="btn btn-danger waves-effect">
-                                                        <i class="material-icons">delete</i>
-                                                        <span>Eliminar</span>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>Enfásis en la profesión</td>
-                                            <td>Independientes</td>
-                                            <td>1 x 20 Horas</td>
-                                            <td>
-                                                <div>
-                                                    <button type="button" class="btn btn-primary waves-effect">
-                                                        <i class="material-icons">update</i>
-                                                        <span>Editar</span>
-                                                    </button>
-                                                    <button type="button" class="btn btn-danger waves-effect">
-                                                        <i class="material-icons">delete</i>
-                                                        <span>Eliminar</span>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>Complementarias a la formación</td>
-                                            <td>Docencia</td>
-                                            <td>1 x 16 Horas</td>
-                                            <td>
-                                                <div>
-                                                    <button type="button" class="btn btn-primary waves-effect">
-                                                        <i class="material-icons">update</i>
-                                                        <span>Editar</span>
-                                                    </button>
-                                                    <button type="button" class="btn btn-danger waves-effect">
-                                                        <i class="material-icons">delete</i>
-                                                        <span>Eliminar</span>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-
-                                        
-                                        <tr>
-                                            <td>Complementarias a la formación</td>
-                                            <td>Docencia</td>
-                                            <td>1 x 16 Horas</td>
-                                            <td>
-                                                <div>
-                                                    
-                                                        <button type="button" class="btn btn-primary waves-effect" data-target="#modal_editar_denominaciones" data-toggle="modal">
-                                                            <i class="material-icons">update</i>
-                                                            <span>Editar</span>
-                                                        </button>
-                                                   
-                                                   
-                                                        <button type="button" class="btn btn-danger waves-effect" data-target="#modal_eliminar_denominaciones" data-toggle="modal">
-                                                            <i class="material-icons">delete</i>
-                                                            <span>Eliminar</span>
-                                                        </button>
-                                                    
-                                                </div>
-                                            </td>
-                                        </tr>
 
                                     </tbody>
                                     <tfoot>
@@ -454,7 +363,7 @@
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                         <div class="form-group form-float">
                                             <div class="form-line">
-                                                <input type="text" class="form-control">
+                                                <input type="text" class="form-control" id="newRowEjeTematico">
                                                 <label class="form-label">Eje Temático</label>
                                             </div>
                                         </div>
@@ -462,7 +371,7 @@
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                         <div class="form-group form-float">
                                             <div class="form-line">
-                                                <input type="text" class="form-control">
+                                                <input type="text" class="form-control" id="newRowModalidad">
                                                 <label class="form-label">Modalidad</label>
                                             </div>
                                         </div>
@@ -470,7 +379,7 @@
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                         <div class="form-group form-float">
                                             <div class="form-line">
-                                                <input type="text" class="form-control">
+                                                <input type="text" class="form-control" id="newRowDescripcion">
                                                 <label class="form-label">Descripción de Créditos</label>
                                             </div>
                                         </div>
@@ -478,7 +387,7 @@
                                     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                                         <div class="form-group form-float">
                                             <div class="form-line">
-                                                <input type="text" class="form-control">
+                                                <input type="text" class="form-control" id="newRowFactorCreditos">
                                                 <label class="form-label"># Créditos</label>
                                             </div>
                                         </div>
@@ -486,7 +395,7 @@
                                     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                                         <div class="form-group form-float">
                                             <div class="form-line">
-                                                <input type="text" class="form-control">
+                                                <input type="text" class="form-control" id="newRowFactorHoras">
                                                 <label class="form-label"># Horas</label>
                                             </div>
                                             <div class="help-info">Para conseguir el # de créditos indicado</div>
@@ -495,7 +404,7 @@
                                 </div>
                                 <div class="form-group form-float" style="padding-top: 10px;">
                                     <div class="form-line">
-                                        <textarea cols="30" rows="3" class="form-control no-resize" required></textarea>
+                                        <textarea cols="30" rows="3" class="form-control no-resize" required id="newRowEjemplos"></textarea>
                                         <label class="form-label">Ejemplos de Actividades</label>
                                     </div>
                                 </div>
@@ -506,7 +415,7 @@
                             <div style="padding-right: 10px;">
                                 <ul style="list-style:none;">
                                     <li style="display: inline-block;">
-                                        <a href="javascript:void(0);">
+                                        <a href="javascript:addNewDenominacion();">
                                             <i class="material-icons" style="color: #4CAF50;">done</i>
                                         </a>
                                     </li>
@@ -539,40 +448,40 @@
                                 <div class="row clearfix">
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                         <div class="form-group form-float">
-                                            <div class="form-line">
-                                                <input type="text" class="form-control" value="Complementarias a la formación">
+                                            <div class="form-line focused">
+                                                <input type="text" class="form-control" value="" id="updateEjeTematico">
                                                 <label class="form-label">Eje Temático</label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                         <div class="form-group form-float">
-                                            <div class="form-line">
-                                                <input type="text" class="form-control" value="Docencia">
+                                            <div class="form-line focused">
+                                                <input type="text" class="form-control" value="" id="updateModalidad">
                                                 <label class="form-label">Modalidad</label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                         <div class="form-group form-float">
-                                            <div class="form-line">
-                                                <input type="text" class="form-control" value="Enseñar con calidad">
+                                            <div class="form-line focused">
+                                                <input type="text" class="form-control" value="" id="updateDescripcion">
                                                 <label class="form-label">Descripción de Créditos</label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                                         <div class="form-group form-float">
-                                            <div class="form-line">
-                                                <input type="text" class="form-control" value="1">
+                                            <div class="form-line focused">
+                                                <input type="text" class="form-control" value="" id="updateFactorCreditos">
                                                 <label class="form-label"># Créditos</label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                                         <div class="form-group form-float">
-                                            <div class="form-line">
-                                                <input type="text" class="form-control" value="16">
+                                            <div class="form-line focused">
+                                                <input type="text" class="form-control" value="" id="updateFactorHoras">
                                                 <label class="form-label"># Horas</label>
                                             </div>
                                             <div class="help-info">Para conseguir el # de créditos indicado</div>
@@ -580,8 +489,8 @@
                                     </div>
                                 </div>
                                 <div class="form-group form-float" style="padding-top: 10px;">
-                                    <div class="form-line">
-                                        <textarea cols="30" rows="3" class="form-control no-resize">Sin descripción</textarea>
+                                    <div class="form-line focused">
+                                        <textarea cols="30" rows="3" class="form-control no-resize" id="updateEjemplos"></textarea>
                                         <label class="form-label">Ejemplos de Actividades</label>
                                     </div>
                                 </div>
@@ -592,7 +501,7 @@
                             <div style="padding-right: 10px;">
                                 <ul style="list-style:none;">
                                     <li style="display: inline-block;">
-                                        <a href="javascript:void(0);">
+                                        <a href="javascript:updateDenominacion();">
                                             <i class="material-icons" style="color: #2196F3;">update</i>
                                         </a>
                                     </li>
@@ -624,40 +533,40 @@
                                 <div class="row clearfix">
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                         <div class="form-group form-float">
-                                            <div class="form-line">
-                                                <input type="text" class="form-control" value="Complementarias a la formación" disabled>
+                                            <div class="form-line focused">
+                                                <input type="text" class="form-control" value="" id="deleteEjeTematico" disabled>
                                                 <label class="form-label">Eje Temático</label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                         <div class="form-group form-float">
-                                            <div class="form-line">
-                                                <input type="text" class="form-control" value="Docencia" disabled>
+                                            <div class="form-line focused">
+                                                <input type="text" class="form-control" value="" id="deleteModalidad" disabled>
                                                 <label class="form-label">Modalidad</label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                         <div class="form-group form-float">
-                                            <div class="form-line">
-                                                <input type="text" class="form-control" value="Enseñar con calidad" disabled>
+                                            <div class="form-line focused">
+                                                <input type="text" class="form-control" value="" id="deleteDescripcion" disabled>
                                                 <label class="form-label">Descripción de Créditos</label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                                        <div class="form-group form-float">
-                                            <div class="form-line">
-                                                <input type="text" class="form-control" value="1" disabled>
+                                        <div class="form-group">
+                                            <div class="form-line focused">
+                                                <input type="text" class="form-control" value="" id="deleteFactorCreditos" disabled>
                                                 <label class="form-label"># Créditos</label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                                         <div class="form-group form-float">
-                                            <div class="form-line">
-                                                <input type="text" class="form-control" value="16" disabled>
+                                            <div class="form-line focused">
+                                                <input type="text" class="form-control" value="" id="deleteFactorHoras" disabled>
                                                 <label class="form-label"># Horas</label>
                                             </div>
                                             <div class="help-info">Para conseguir el # de créditos indicado</div>
@@ -665,8 +574,8 @@
                                     </div>
                                 </div>
                                 <div class="form-group form-float" style="padding-top: 10px;">
-                                    <div class="form-line">
-                                        <textarea cols="30" rows="3" class="form-control no-resize" disabled>Sin descripción</textarea>
+                                    <div class="form-line focused">
+                                        <textarea cols="30" rows="3" class="form-control no-resize" id="deleteEjemplos" disabled></textarea>
                                         <label class="form-label">Ejemplos de Actividades</label>
                                     </div>
                                 </div>
@@ -677,7 +586,7 @@
                             <div style="padding-right: 10px;">
                                 <ul style="list-style:none;">
                                     <li style="display: inline-block;">
-                                        <a href="javascript:void(0);">
+                                        <a href="javascript:deleteDenominacion();">
                                             <i class="material-icons" style="color: #e21d0e;">delete_forever</i>
                                         </a>
                                     </li>
@@ -711,9 +620,12 @@
     <!-- Bootstrap Core Js -->
     <script src="plugins/bootstrap/js/bootstrap.js"></script>
 
+    <!-- Bootstrap Notify Plugin Js -->
+    <script src="plugins/bootstrap-notify/bootstrap-notify.js"></script>
+
     <!-- Waves Effect Plugin Js -->
     <script src="plugins/node-waves/waves.js"></script>
-   
+
     <!-- Jquery DataTable Plugin Js -->
     <script src="plugins/jquery-datatable/jquery.dataTables.js"></script>
     <script src="plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js"></script>
@@ -724,10 +636,14 @@
     <script src="plugins/jquery-datatable/extensions/export/vfs_fonts.js"></script>
     <script src="plugins/jquery-datatable/extensions/export/buttons.html5.min.js"></script>
     <script src="plugins/jquery-datatable/extensions/export/buttons.print.min.js"></script>
-   
+
+    <!-- SweetAlert Plugin Js -->
+    <script src="plugins/sweetalert/sweetalert.min.js"></script>
+
     <!-- Custom Js -->
     <script src="js/admin.js"></script>
     <script src="js/pages/tables/jquery-datatable.js"></script>
+    <script src="js/personal_files/denominaciones/denominacion_electivas.js"></script>
 
     <!--Configuramos el idioma de la tabla-->
     <script src="js/es_LanguageDataTable.js"></script>
