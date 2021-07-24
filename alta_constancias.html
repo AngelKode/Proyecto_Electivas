@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html>
-
+    
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <meta name="robots" content="noindex">
+
     <title>Alta de Constancias</title>
     <!-- Favicon-->
     <link rel="icon" href="favicon.ico" type="image/x-icon">
@@ -33,6 +35,9 @@
 
     <!-- JQuery DataTable Css -->
     <link href="plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css" rel="stylesheet">
+
+    <!-- Sweetalert Css -->
+    <link href="plugins/sweetalert/sweetalert.css" rel="stylesheet" />
 
     <!-- Dropzone Css -->
     <link href="plugins/dropzone/dropzone.css" rel="stylesheet">
@@ -333,81 +338,6 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>Curso de Android</td>
-                                            <td>23-12-2020</td>
-                                            <td>20</td>
-                                            <td class="view_file">
-                                                <img src="images/images-app/PDF_file_example.svg" alt="PDF" style="width: 25px;height: 30px;cursor: pointer;">
-                                            </td>
-                                            <td>
-                                                <div>
-                                                    <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#modal_editar_constancias_and">
-                                                        <i class="material-icons">update</i>
-                                                        <span>Editar</span>
-                                                    </button>
-                                                    <button type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#modal_eliminar_constancias_and">
-                                                        <i class="material-icons">delete</i>
-                                                        <span>Eliminar</span>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>Curso de Flutter</td>
-                                            <td>16-09-2020</td>
-                                            <td>30</td>
-                                            <td class="view_file">
-                                                <img src="images/images-app/PDF_file_example.svg" alt="PDF" style="width: 25px;height: 30px;cursor: pointer;">
-                                            </td>
-                                            <td>
-                                                <div class="bg-green text-center">
-                                                    <span data-toggle="tooltip" data-placement="right" title="Constancia aceptada." style="cursor: pointer;">
-                                                        Validada
-                                                    </span>
-                                                </div>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>Curso de React Native</td>
-                                            <td>13-12-2019</td>
-                                            <td>20</td>
-                                            <td class="view_file">
-                                                <img src="images/images-app/PDF_file_example.svg" alt="PDF" style="width: 25px;height: 30px;cursor: pointer;">
-                                            </td>
-                                            <td>
-                                                <div class="bg-red text-center">
-                                                    <span data-toggle="tooltip" data-placement="right" title="La constancia no especifíca horas." style="cursor: pointer;">
-                                                        Rechazada
-                                                    </span>
-                                                </div>
-                                            </td>
-                                        </tr>
-
-                                        
-                                        <tr>
-                                            <td>Curso de Blender</td>
-                                            <td>23-12-2020</td>
-                                            <td>20</td>
-                                            <td class="view_file">
-                                                <img src="images/images-app/PDF_file_example.svg" alt="PDF" style="width: 25px;height: 30px;cursor: pointer;">
-                                            </td>
-                                            <td>
-                                                <div>
-                                                    <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#modal_editar_constancias">
-                                                        <i class="material-icons">update</i>
-                                                        <span>Editar</span>
-                                                    </button>
-                                                    <button type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#modal_eliminar_constancias">
-                                                        <i class="material-icons">delete</i>
-                                                        <span>Eliminar</span>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-
                                     </tbody>
                                     <tfoot>
                                         <tr>
@@ -440,7 +370,7 @@
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <div class="form-group form-float">
                                             <div class="form-line">
-                                                <input type="text" class="form-control">
+                                                <input type="text" class="form-control" id="newRowNombreActividad">
                                                 <label class="form-label">Nombre de la Actividad</label>
                                             </div>
                                         </div>
@@ -450,7 +380,7 @@
                                         <div class="form-group">
                                             <label style="font-weight: 100;font-size: 12px;opacity: 0.8;">Fecha de Inicio</label>
                                             <div class="form-line">
-                                                <input type="date" class="form-control">
+                                                <input type="date" class="form-control" id="newRowFechaInicio">
                                             </div>
                                         </div>
                                     </div>
@@ -459,7 +389,7 @@
                                         <div class="form-group">
                                             <label style="font-weight: 100;font-size: 12px;opacity: 0.8;">Fecha de Término</label>
                                             <div class="form-line">
-                                                <input type="date" class="form-control">
+                                                <input type="date" class="form-control" id="newRowFechaFin">
                                             </div>
                                         </div>
                                     </div>
@@ -467,7 +397,7 @@
                                     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                         <div class="form-group form-float">
                                             <div class="form-line">
-                                                <input type="number" class="form-control" min="1">
+                                                <input type="number" class="form-control" min="1" id="newRowHoras">
                                                 <label class="form-label">Horas</label>
                                             </div>
                                         </div>
@@ -477,14 +407,14 @@
                                         <div class="input-group">
                                             <label style="font-weight: 100;font-size: 12px;opacity: 0.8;">Archivo (sólo <b>1 archivo</b> y en formato <b>PDF</b>)</label>
                                             <span class="badge bg-white"><img src="images/images-app/PDF_file_example.svg" alt="PDF" style="width: 25px;height: 30px;"></span>
-                                            <input type="file" class="form-control">
+                                            <input type="file" class="form-control" id="newRowFile">
                                         </div>
                                     </div>
 
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <div class="form-group form-float">
                                             <div class="form-line">
-                                                <textarea name="observaciones" id="oberv" cols="30" rows="3" class="form-control"></textarea>
+                                                <textarea name="observaciones" cols="30" rows="3" class="form-control" id="newRowObservaciones"></textarea>
                                                 <label class="form-label">Observaciones</label>
                                             </div>
                                         </div>
@@ -499,7 +429,7 @@
                             <div style="padding-right: 10px;">
                                 <ul style="list-style:none;">
                                     <li style="display: inline-block;">
-                                        <a href="javascript:void(0);">
+                                        <a href="javascript:addNewConstancia()">
                                             <i class="material-icons" style="color: #4CAF50;">done</i>
                                         </a>
                                     </li>
@@ -533,8 +463,8 @@
 
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" class="form-control" value="Curso de Android">
+                                        <div class="form-line focused" >
+                                            <input type="text" class="form-control" value="" id="updateActividad">
                                             <label class="form-label">Nombre de la Actividad</label>
                                         </div>
                                     </div>
@@ -543,8 +473,8 @@
                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                     <div class="form-group">
                                         <label style="font-weight: 100;font-size: 12px;opacity: 0.8;">Fecha de Inicio</label>
-                                        <div class="form-line">
-                                            <input type="date" class="form-control" value="2020-12-23">
+                                        <div class="form-line focused">
+                                            <input type="date" class="form-control" value="" id="updateFechaInicio">
                                         </div>
                                     </div>
                                 </div>
@@ -552,33 +482,34 @@
                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                     <div class="form-group">
                                         <label style="font-weight: 100;font-size: 12px;opacity: 0.8;">Fecha de Término</label>
-                                        <div class="form-line">
-                                            <input type="date" class="form-control" value="2020-12-30">
+                                        <div class="form-line focused">
+                                            <input type="date" class="form-control" value="" id="updateFechaFin">
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                     <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="number" class="form-control" min="1"value="20">
+                                        <div class="form-line focused">
+                                            <input type="number" class="form-control" min="1"value="" id="updateHoras">
                                             <label class="form-label">Horas</label>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="input-group">
+                                    <div class="input-group" style="margin-bottom: 5px;">
                                         <label style="font-weight: 100;font-size: 12px;opacity: 0.8;">Archivo (sólo <b>1 archivo</b> y en formato <b>PDF</b>)</label>
-                                        <span class="badge bg-white"><img src="images/images-app/PDF_file_example.svg" alt="PDF" style="width: 25px;height: 30px;"></span>
-                                        <input type="file" class="form-control">
+                                        <span class="badge bg-white"><img src="images/images-app/PDF_file_example.svg" alt="PDF" style="width: 25px;height: 30px;display: block;"></span>
+                                        <input type="file" class="form-control" id="updateNewFile">
                                     </div>
+                                    <p style="overflow-x: hidden; text-overflow: clip; white-space: nowrap;"><span style="display: block;margin-bottom: 25px;display: block;" class="label bg-blue">Archivo subido<a href="" id="actualFile" target="_blank" style="display: block;"><i style="color: white;"></i></a></span></p>
                                 </div>
 
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <textarea name="observaciones" id="oberv" cols="30" rows="3" class="form-control">Ninguna</textarea>
+                                        <div class="form-line focused">
+                                            <textarea name="observaciones" id="updateObservaciones" cols="30" rows="3" class="form-control"></textarea>
                                             <label class="form-label">Observaciones</label>
                                         </div>
                                     </div>
@@ -593,7 +524,7 @@
                             <div style="padding-right: 10px;">
                                 <ul style="list-style:none;">
                                     <li style="display: inline-block;">
-                                        <a href="javascript:void(0);">
+                                        <a href="javascript:updateConstancia();">
                                             <i class="material-icons" style="color: #2196F3;">update</i>
                                         </a>
                                     </li>
@@ -626,8 +557,8 @@
 
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" class="form-control" value="Curso de Android" readonly>
+                                        <div class="form-line focused">
+                                            <input type="text" class="form-control" value="" id="actividadDelete" readonly>
                                             <label class="form-label">Nombre de la Actividad</label>
                                         </div>
                                     </div>
@@ -636,8 +567,8 @@
                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                     <div class="form-group">
                                         <label style="font-weight: 100;font-size: 12px;opacity: 0.8;">Fecha de Inicio</label>
-                                        <div class="form-line">
-                                            <input type="date" class="form-control" value="2020-12-23" readonly>
+                                        <div class="form-line focused">
+                                            <input type="date" class="form-control" value="" id="fechaInicioDelete" readonly>
                                         </div>
                                     </div>
                                 </div>
@@ -645,16 +576,16 @@
                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                     <div class="form-group">
                                         <label style="font-weight: 100;font-size: 12px;opacity: 0.8;">Fecha de Término</label>
-                                        <div class="form-line">
-                                            <input type="date" class="form-control" value="2020-12-30" readonly>
+                                        <div class="form-line focused">
+                                            <input type="date" class="form-control" value="" id="fechaFinDelete" readonly>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                     <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="number" class="form-control" min="1"value="20" readonly>
+                                        <div class="form-line focused">
+                                            <input type="number" class="form-control" min="1"value="" id="horasDelete" readonly>
                                             <label class="form-label">Horas</label>
                                         </div>
                                     </div>
@@ -663,14 +594,14 @@
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="form-group">
                                         <label style="font-weight: 100;font-size: 12px;opacity: 0.8;">Archivo</label>
-                                        <p>Constancia1.pdf<span class="badge bg-white view_file"><img src="images/images-app/PDF_file_example.svg" alt="PDF" style="width: 25px;height: 30px;cursor: pointer;"></span></p>
+                                        <p id="nameFileDelete"><span class="badge bg-white view_file"><img src="images/images-app/PDF_file_example.svg" alt="PDF" style="width: 25px;height: 30px;cursor: pointer;"></span></p>
                                     </div>
                                 </div>
 
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <textarea name="observaciones" id="oberv" cols="30" rows="3" class="form-control" readonly>Ninguna</textarea>
+                                        <div class="form-line focused">
+                                            <textarea name="observaciones" id="observacionesDelete" cols="30" rows="3" class="form-control" readonly>Ninguna</textarea>
                                             <label class="form-label">Observaciones</label>
                                         </div>
                                     </div>
@@ -685,7 +616,7 @@
                             <div style="padding-right: 10px;">
                                 <ul style="list-style:none;">
                                     <li style="display: inline-block;">
-                                        <a href="javascript:void(0);">
+                                        <a href="javascript:deleteConstancia();">
                                             <i class="material-icons" style="color: #e21d0e;">delete_forever</i>
                                         </a>
                                     </li>
@@ -713,8 +644,8 @@
                             <h4 class="modal-title" id="defaultModalLabel">Archivo Subido</h4>
                         </div>
 
-                        <div class="modal-body" style="height: 100%;">
-                            <embed src="files/ejemplo1.pdf" type="application/pdf" style="width: 100%;height: 70vh;overflow-y: scroll;">
+                        <div class="modal-body" style="height: 100%;" id="fileViewerContainer">
+                            <embed src="" type="application/pdf" style="width: 100%;height: 70vh;overflow-y: scroll;" id="fileViewer">
                         </div>
                         <!--Modal Body-->
 
@@ -753,7 +684,10 @@
 
    <!-- Waves Effect Plugin Js -->
    <script src="plugins/node-waves/waves.js"></script>
-  
+
+    <!-- Bootstrap Notify Plugin Js -->
+    <script src="plugins/bootstrap-notify/bootstrap-notify.js"></script>
+
    <!-- Jquery DataTable Plugin Js -->
    <script src="plugins/jquery-datatable/jquery.dataTables.js"></script>
    <script src="plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js"></script>
@@ -764,18 +698,18 @@
    <script src="plugins/jquery-datatable/extensions/export/vfs_fonts.js"></script>
    <script src="plugins/jquery-datatable/extensions/export/buttons.html5.min.js"></script>
    <script src="plugins/jquery-datatable/extensions/export/buttons.print.min.js"></script>
-  
+
+    <!-- SweetAlert Plugin Js -->
+    <script src="plugins/sweetalert/sweetalert.min.js"></script>
+
    <!-- Custom Js -->
    <script src="js/admin.js"></script>
    <script src="js/pages/tables/jquery-datatable.js"></script>
    <script src="js/pages/ui/tooltips-popovers.js"></script>
-   <script src="js/personal_files/alta_constancias.js"></script>
+   <script src="js/personal_files/constancias/alta_constancias.js"></script>
 
    <!--Configuramos el idioma de la tabla-->
    <script src="js/es_LanguageDataTable.js"></script>
-
-   <!--Configuracion de los listeners-->
-   <script src="js/view_file.js"></script>
 </body>
 
 </html>

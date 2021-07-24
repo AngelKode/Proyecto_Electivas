@@ -1,12 +1,35 @@
 let idRowTable = 0;
 let allDataDenominacion = [];//Aqui guardaremos toda la información, para no tener que hacer otra petición
 let dataRegisterToBeModified = {};
-let notify;
 
 const setIDRow = (id,action) =>{
     idRowTable = id;
     //De acuerdo a la accion, vamos a llenar los datos del modal
     setShownData(action);
+}
+
+const showNotification = ({message = "", type = "info", element = "body", offset = {x : 30,y : 75},placement = {from : "top", align : "right"}, icon = "ok"}) => {
+    $.notify({
+        message: message,
+        icon : `glyphicon glyphicon-${icon}`
+    },{
+        type: type,
+        allow_dismiss: false,
+        newest_on_top: true,
+        element : element,
+        placement: placement,
+        delay: 3000,
+        timer: 1000,
+        offset : offset,
+        animate: {
+            enter: 'animated fadeInDown',
+            exit: 'animated fadeOutUp'
+        },
+        template : `<div data-notify="container" class="alert alert-{0}" role="alert">
+                        <span data-notify="icon"></span>
+                        <span data-notify="message">{2}</span>
+                    </div>`
+    })
 }
 
 const addLocalDataDenominacion = (Register) => {
@@ -54,28 +77,6 @@ const setShownData = (action) => {
         document.getElementById('deleteEjemplos').value = Ejemplos;
     }
 
-}
-
-const showNotification = ({message = "", type = "info", element = "body", offset = {x : 30,y : 75},placement = {from : "top", align : "right"}}) => {
-    notify = $.notify({
-        message: message
-    },{
-        type: type,
-        allow_dismiss: false,
-        newest_on_top: true,
-        element : element,
-        placement: placement,
-        delay: 3000,
-        timer: 1000,
-        offset : offset,
-        animate: {
-            enter: 'animated fadeInDown',
-            exit: 'animated fadeOutUp'
-        },
-        template : `<div data-notify="container" class="alert alert-{0}" role="alert">
-                        <span data-notify="message">{2}</span>
-                    </div>`
-    });
 }
 
 const fetchData = () => {
@@ -170,6 +171,7 @@ const addNewDenominacion = () => {
     
                 const jsonResponse = JSON.parse(serverResponse);
                 const {status, message} = jsonResponse; 
+                let icon = "warning-sign";
                  
                 if(status === "success"){
                     //Obtenemos el ID que se le asignó al registro
@@ -214,20 +216,14 @@ const addNewDenominacion = () => {
                     addLocalDataDenominacion(dataRegisterToBeAdded);
                     
                     $("#modal_alta_denominaciones").modal('hide');//Cerramos el modal
-    
-                    //Mostramos una notificación
-                    showNotification({
-                        message : message,
-                        type : status
-                    });
-                }else{
-                    //Mostramos una notificación
-                    showNotification({
-                        message : message,
-                        type : status
-                    });
+                    icon = "ok";
                 }
-    
+                //Mostramos una notificación
+                showNotification({
+                    message : message,
+                    type : status,
+                    icon : icon
+                });
             }
         });
     }else{
@@ -276,7 +272,7 @@ const updateDenominacion = () => {
             success : (serverResponse) => {
                 //Obtenemos la respuesta del servidor
                 const {status, message} = JSON.parse(serverResponse);
-    
+                let icon = "warning-sign";
                 $("#modal_editar_denominaciones").modal('hide');//Cerramos el modal
     
                 //De acuerdo a la respuesta del servidor, mostramos la notificación
@@ -316,18 +312,14 @@ const updateDenominacion = () => {
                     }
                     //Actualizamos el dato
                     updateLocalDataDenominacion(dataRegisterToBeModified);
-    
-                    //Mostramos la notificacion al usuario
-                    showNotification({
-                        message : message,
-                        type : status
-                    })
-                }else{
-                    showNotification({
-                        message : message,
-                        type : status
-                    })
+                    icon = "ok";
                 }
+                //Mostramos la notificacion al usuario
+                showNotification({
+                    message : message,
+                    type : status,
+                    icon : icon
+                })
             }
         });
     }else{
@@ -373,6 +365,7 @@ const deleteDenominacion = () => {
                 success : (serverResponse) => {
                     //Obtenemos la respuesta del servidor
                     const {status, message} = JSON.parse(serverResponse);
+                    let icon = "warning-sign";
 
                     $("#modal_eliminar_denominaciones").modal('hide');//Cerramos el modal
 
@@ -382,11 +375,13 @@ const deleteDenominacion = () => {
 
                         //Eliminamos el registro de la tabla y actualizamos
                         tablaData.row(`#row_ID_${idRowTable}`).remove().draw();
+                        icon = "ok";
                     }
                     //Mostramos la notificación al usuario
                     showNotification({
                         message : message,
-                        type : status
+                        type : status,
+                        icon : icon
                     })
                 }
             });
