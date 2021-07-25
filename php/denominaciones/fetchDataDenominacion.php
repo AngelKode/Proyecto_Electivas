@@ -1,33 +1,29 @@
 <?php
     include '../database/databaseConection.php';
 
-    //Ahora hacemos la peticion, y obtenemos los datos
+    //Definimos el encabezado para configurar el set de caracteres
+    header("Content-Type: text/html;charset=utf-8");
+
+    //Configuramos el set de caracteres para la consulta
+    mysqli_set_charset($link, "utf8");
+
+    //Hacemos la peticion a la BD
     $mysql_request = "SELECT * FROM `denominacion`;";
-    $mysql_response = mysqli_query($link,$mysql_request);
-    
+    $mysql_response = mysqli_query($link, $mysql_request);
+
+    $serverResponse = array();
 
     if($mysql_response){
-        //Arreglo donde estarán los resultados
-        $responseServer = array();
-
-        //Para cada renglon, vamos agregándolo al arreglo
-        while($mysql_data = mysqli_fetch_array($mysql_response)){
-            array_push($responseServer, $mysql_data);
+         while($mysql_row = mysqli_fetch_array($mysql_response)){
+            array_push($serverResponse, $mysql_row);
         }
-
-        //Codificamos a json el resultado, y lo mandamos
-        echo json_encode($responseServer);
     }else{
-        //En caso de algun error, mandamos un mensaje
-        $responseServer = array(
-            "status"  => 'danger',
-            "message" => 'No se ha podido hacer la petición a la base de datos. Inténtelo nuevamente.'
-        );
-
-        //Mandamos la respuesta
-        echo json_encode($responseServer);
+        $serverResponse['status'] = "danger";
+        $serverResponse['message'] = "Error del servidor. Recargue la página.";
     }
+    //Mandamos la respuesta
+    echo json_encode($serverResponse);
 
-    //Nos desconectamos de la BD
+    //Cerramos la conexión
     mysqli_close($link);
 ?>

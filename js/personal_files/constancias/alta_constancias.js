@@ -184,80 +184,94 @@ const addNewConstancia = () => {
     const valueHoras = $("#newRowHoras").val();
         const inputFileDOM = $("#newRowFile");
         const {files} = inputFileDOM[0]; 
-        const {name : valueNameFile, size} = files[0];
     const valueObservaciones = $("#newRowObservaciones").val();
-    
-    let formDataToAdd = new FormData();
-    formDataToAdd.append('FileData',files[0]);
-    formDataToAdd.append('Actividad',valueNombreActividad);
-    formDataToAdd.append('FechaInicio', valueFechaInicio);
-    formDataToAdd.append('FechaFin',valueFechaFin);
-    formDataToAdd.append('Horas', valueHoras);
-    formDataToAdd.append('FileName', valueNameFile);
-    formDataToAdd.append('Observaciones', valueObservaciones);
 
-    $.ajax({
-        method : "POST",
-        url    : "./php/constancias/addNewConstancia.php",
-        data   : formDataToAdd,
-        contentType: false,
-        processData: false,
-        success : (serverResponse) => {
+    //Verificamos que no haya dejado espacios en blanco y que haya elegido un archivo
+    if(!(valueNombreActividad.trim() === "" || valueFechaInicio.trim() === "" || valueFechaFin.trim() === "" ||
+         valueHoras.trim() === "" || files[0] === undefined || valueObservaciones.trim() === "")){
+            //Obtenemos el nombre y el tamaño del archivo
+            const {name : valueNameFile, size} = files[0];
 
-            //Obtenemos la respuesta del servidor
-            const {status,message,ID,newFileName} = JSON.parse(serverResponse);
-            let icon = "warning-sign";
-
-            //Si el status es 'success', la constancia se subió correctamente y lo agregamos a la tabla
-            if(status === "success"){
-                //Obtenemos el objeto DataTable
-                const dataTable = $("#tabla_registros_constancias").DataTable();
-                //Creamos el icono para ver el archivo subido
-                const viewUploadedFile =`<div>
-                                            <img src="images/images-app/PDF_file_example.svg" alt="PDF" style="width: 3rem;height: 3rem;cursor: pointer;  role="button" onclick="openFileToView('${newFileName}')">
-                                        </div>`;
-                //Obtenemos que se va a mostrar en la columna de acciones, dependiendo el estado de revision de la constancia
-                //const statusRequest = getStatusRequestView(idRow,undefined);
-
-
-                //TODO
-                //Arreglar statusRequest
-
-                //Agregamos la constancia a la tabla
-                dataTable.row.add([
-                    valueNombreActividad, valueFechaFin, valueHoras, viewUploadedFile, valueHoras
-                ]).draw().node().id = `row_ID_${ID}`;
-
-                //Actualizamos los datos
-                dataRegisterToBeAdded = {
-                    ID : `${idRow}`,
-                    Actividad : valueNombreActividad,
-                    Alumno_id : 2,
-                    Archivo    : valueNameFile,
-                    Creditos : null,
-                    Denominacion : null,
-                    Fecha_fin : valueFechaFin,
-                    Fecha_inicio : valueFechaInicio,
-                    Horas : valueHoras,
-                    Observaciones : valueObservaciones,
-                    Observaciones_encargado : null,
-                    Valida : null
+            let formDataToAdd = new FormData();
+            formDataToAdd.append('FileData',files[0]);
+            formDataToAdd.append('Actividad',valueNombreActividad);
+            formDataToAdd.append('FechaInicio', valueFechaInicio);
+            formDataToAdd.append('FechaFin',valueFechaFin);
+            formDataToAdd.append('Horas', valueHoras);
+            formDataToAdd.append('FileName', valueNameFile);
+            formDataToAdd.append('Observaciones', valueObservaciones);
+        
+            $.ajax({
+                method : "POST",
+                url    : "./php/constancias/addNewConstancia.php",
+                data   : formDataToAdd,
+                contentType: false,
+                processData: false,
+                success : (serverResponse) => {
+        
+                    //Obtenemos la respuesta del servidor
+                    const {status,message,ID,newFileName} = JSON.parse(serverResponse);
+                    let icon = "warning-sign";
+        
+                    //Si el status es 'success', la constancia se subió correctamente y lo agregamos a la tabla
+                    if(status === "success"){
+                        //Obtenemos el objeto DataTable
+                        const dataTable = $("#tabla_registros_constancias").DataTable();
+                        //Creamos el icono para ver el archivo subido
+                        const viewUploadedFile =`<div>
+                                                    <img src="images/images-app/PDF_file_example.svg" alt="PDF" style="width: 3rem;height: 3rem;cursor: pointer;  role="button" onclick="openFileToView('${newFileName}')">
+                                                </div>`;
+                        //Obtenemos que se va a mostrar en la columna de acciones, dependiendo el estado de revision de la constancia
+                        const statusRequest = getStatusRequestView(ID,undefined);
+        
+        
+                        //Agregamos la constancia a la tabla
+                        dataTable.row.add([
+                            valueNombreActividad, valueFechaFin, valueHoras, viewUploadedFile, statusRequest
+                        ]).draw().node().id = `row_ID_${ID}`;
+        
+                        //Actualizamos los datos
+                        dataRegisterToBeAdded = {
+                            ID : `${ID}`,
+                            Actividad : valueNombreActividad,
+                            Alumno_id : 2,
+                            Archivo    : newFileName,
+                            Creditos : null,
+                            Denominacion : null,
+                            Fecha_fin : valueFechaFin,
+                            Fecha_inicio : valueFechaInicio,
+                            Horas : valueHoras,
+                            Observaciones : valueObservaciones,
+                            Observaciones_encargado : null,
+                            Valida : null
+                        }
+        
+                        //Agregamos el dato para tenerlo más a la mano
+                        addLocalDataConstancias(dataRegisterToBeAdded);
+        
+                        //Cerramos el modal
+                        $("#modal_alta_constancias").modal('hide');
+                        icon = "ok";//Le damos el valor al icono de 'ok' que se mostrará en la notificacion
+                    }
+        
+                    //Mostramos la notificacion
+                    showNotification({
+                        message : message,
+                        type : status,
+                        icon : icon
+                    });
                 }
-                addLocalDataConstancias(dataRegisterToBeAdded);
-
-                //Cerramos el modal
-                $("#modal_alta_constancias").modal('hide');
-                icon = "ok";//Le damos el valor al icono de 'ok' que se mostrará en la notificacion
-            }
-
-            //Mostramos la notificacion
-            showNotification({
-                message : message,
-                type : status,
-                icon : icon
-            });
-        }
-    });
+            });        
+    }else{
+         //Si hay espacios en blanco, se lo indicamos al usuario
+         swal({
+            title: "¡Cuidado!",
+            text: "1 o más datos faltantes. Chécalos:)",
+            type: "warning",
+            showConfirmButton : false,
+            timer: 2000
+        });
+    } 
 }
 
 const updateConstancia = () => {
@@ -271,97 +285,109 @@ const updateConstancia = () => {
         const {files} = updateFileDOM[0];
         const fileData = files[0];
 
-    //Verificamos si el usuario eligio un archivo o no
-    const fileAvailable = (fileData) ? fileData.name : null;
+    //Verificamos que no haya dejado espacios vacíos
+    if(!(valueUpdateActividad.trim() === "" || valueUpdateFechaInicio.trim() === "" || valueUpdateFechaFin.trim() === "" ||
+       valueUpdateHoras.trim() === "" || valueUpdateObservaciones.trim() === "")){
+         //Verificamos si el usuario eligio un archivo o no
+        const fileAvailable = (fileData) ? fileData.name : null;
 
-    //Dependiendo si eligió un archivo, será el contenido de formData
-    const formData = new FormData();
-    formData.append('Actividad', valueUpdateActividad);
-    formData.append('FechaInicio', valueUpdateFechaInicio);
-    formData.append('FechaFin',valueUpdateFechaFin);
-    formData.append('Horas', valueUpdateHoras);
-    formData.append('Observaciones', valueUpdateObservaciones);
-    formData.append('ID', idRow);
+        //Dependiendo si eligió un archivo, será el contenido de formData
+        const formData = new FormData();
+        formData.append('Actividad', valueUpdateActividad);
+        formData.append('FechaInicio', valueUpdateFechaInicio);
+        formData.append('FechaFin',valueUpdateFechaFin);
+        formData.append('Horas', valueUpdateHoras);
+        formData.append('Observaciones', valueUpdateObservaciones);
+        formData.append('ID', idRow);
 
-    if(fileAvailable !== null){
-        formData.append('FileData', fileData); 
-        formData.append('FileName', fileData.name);
-        formData.append('OldFileName', constanciaToBeUpdated.Archivo);
-    }
+        if(fileAvailable !== null){
+            formData.append('FileData', fileData); 
+            formData.append('FileName', fileData.name);
+            formData.append('OldFileName', constanciaToBeUpdated.Archivo);
+        }
 
-    //Teniendo todos los datos, hacemos la peticion
-    $.ajax({
-        method : "POST",
-        url : "./php/constancias/updateConstancia.php",
-        data : formData,
-        contentType : false,
-        processData : false,
-        success : (serverResponse) => { 
-            //Convertimos a JSON
-            const jsonServerResponse = JSON.parse(serverResponse);
-            const {status, message, newFileName} = jsonServerResponse;
-            const fileName = (newFileName === undefined) ? constanciaToBeUpdated.Archivo : newFileName;
-            if(status === "success"){
-                //Creamos el nuevo objeto modificado
-                dataRegisterToBeModified = {
-                    ID : `${idRow}`,
-                    Actividad : valueUpdateActividad,
-                    Alumno_id : 2,
-                    Archivo    : fileName,
-                    Creditos : null,
-                    Denominacion : null,
-                    Fecha_fin : valueUpdateFechaFin,
-                    Fecha_inicio : valueUpdateFechaInicio,
-                    Horas : valueUpdateHoras,
-                    Observaciones : valueUpdateObservaciones,
-                    Observaciones_encargado : null,
-                    Valida : null
+        //Teniendo todos los datos, hacemos la peticion
+        $.ajax({
+            method : "POST",
+            url : "./php/constancias/updateConstancia.php",
+            data : formData,
+            contentType : false,
+            processData : false,
+            success : (serverResponse) => { 
+                //Convertimos a JSON
+                const jsonServerResponse = JSON.parse(serverResponse);
+                const {status, message, newFileName} = jsonServerResponse;
+                const fileName = (newFileName === undefined) ? constanciaToBeUpdated.Archivo : newFileName;
+                if(status === "success"){
+                    //Creamos el nuevo objeto modificado
+                    dataRegisterToBeModified = {
+                        ID : `${idRow}`,
+                        Actividad : valueUpdateActividad,
+                        Alumno_id : 2,
+                        Archivo    : fileName,
+                        Creditos : null,
+                        Denominacion : null,
+                        Fecha_fin : valueUpdateFechaFin,
+                        Fecha_inicio : valueUpdateFechaInicio,
+                        Horas : valueUpdateHoras,
+                        Observaciones : valueUpdateObservaciones,
+                        Observaciones_encargado : null,
+                        Valida : null
+                    }
+                    //Actualizamos los datos
+                    updateLocalDataConstancias(dataRegisterToBeModified);
+                    
+                    //Actualizamos la tabla
+                    const tablaData = $("#tabla_registros_constancias").DataTable();
+                    const oldRow = tablaData.row(`#row_ID_${idRow}`);
+                    const oldRowData = oldRow.data();
+                    let newData = [];
+                    
+                    if(newFileName !== undefined){
+                        //Creamos el icono para ver el archivo subido
+                        const viewUploadedFile =`<div class="view_file">
+                                                        <img src="images/images-app/PDF_file_example.svg" alt="PDF" style="width: 3rem;height: 3rem;cursor: pointer;" role="button" onclick="openFileToView('${newFileName}')">
+                                                </div>`;
+                        newData = [
+                            valueUpdateActividad, valueUpdateFechaFin, valueUpdateHoras, viewUploadedFile,oldRowData[4] 
+                        ];
+                    }else{
+                        newData = [
+                            valueUpdateActividad, valueUpdateFechaFin, valueUpdateHoras, oldRowData[3],oldRowData[4] 
+                        ];
+                    }
+
+                    oldRow.data(newData);
                 }
-                //Actualizamos los datos
-                updateLocalDataConstancias(dataRegisterToBeModified);
-                
-                //Actualizamos la tabla
-                const tablaData = $("#tabla_registros_constancias").DataTable();
-                const oldRow = tablaData.row(`#row_ID_${idRow}`);
-                const oldRowData = oldRow.data();
-                let newData = [];
-                
-                if(newFileName !== undefined){
-                    //Creamos el icono para ver el archivo subido
-                    const viewUploadedFile =`<div class="view_file">
-                                                    <img src="images/images-app/PDF_file_example.svg" alt="PDF" style="width: 3rem;height: 3rem;cursor: pointer;" role="button" onclick="openFileToView('${newFileName}')">
-                                            </div>`;
-                    newData = [
-                        valueUpdateActividad, valueUpdateFechaFin, valueUpdateHoras, viewUploadedFile,oldRowData[4] 
-                    ];
-                }else{
-                    newData = [
-                        valueUpdateActividad, valueUpdateFechaFin, valueUpdateHoras, oldRowData[3],oldRowData[4] 
-                    ];
-                }
 
-                oldRow.data(newData);
+                showNotification({
+                    message : message,
+                    type : status
+                });
+
+                //Cerramos el modal
+                $("#modal_editar_constancias_and").modal('hide'); 
             }
-
-            showNotification({
-                message : message,
-                type : status
-            });
-
-            //Cerramos el modal
-            $("#modal_editar_constancias_and").modal('hide'); 
-         }
-    });
+        });
+    }else{
+        //Si hay espacios en blanco, se lo indicamos al usuario
+        swal({
+            title: "¡Cuidado!",
+            text: "1 o más datos faltantes. Chécalos:)",
+            type: "warning",
+            showConfirmButton : false,
+            timer: 2000
+        });
+    }
 }
 
 const deleteConstancia = () => {
-    //TODO
-    //Arreglar eliminar renglon
+
     //Obtenemos el modal
     const modalDeleteConstancia = $("#modal_eliminar_constancias_and");
     //Obtenemos el nombre del archivo
     const {Archivo} = allDataConstancias.find((register) => register.ID === `${idRow}`);
-    alert(Archivo+""+idRow);
+
         //Confirmamos si de verdad quiere eliminar el registro
         swal({
             title: "¿Está seguro de eliminar la constancia?",
@@ -392,16 +418,15 @@ const deleteConstancia = () => {
                         //Obtenemos la respuesta del servidor
                         const {status, message} = JSON.parse(serverResponse);
                         let icon = "warning-sign";
-    
+                        
                         modalDeleteConstancia.modal('hide')//Cerramos el modal
     
                         if(status === "success"){
                             //Actualizamos los datos de la data
-                            const tablaData = $("#tabla_registros_denominaciones").DataTable();
+                            const tablaData = $("#tabla_registros_constancias").DataTable();
     
                             //Eliminamos el registro de la tabla y actualizamos
                             tablaData.row(`#row_ID_${idRow}`).remove().draw();
-                            console.log(idRow)
                             icon = "ok";
                         }
                         //Mostramos la notificación al usuario
@@ -423,5 +448,3 @@ $(document).ready(() => {
         $('#modal_archivo_subido').on('hidden.bs.modal', refreshEmbedFile);
     });
 })
-//TODO
-//UD de Constancias

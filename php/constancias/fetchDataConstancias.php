@@ -1,6 +1,12 @@
 <?php
     include '../database/databaseConection.php';
 
+     //Definimos el encabezado para setear el set de caracteres
+     header("Content-Type: text/html;charset=utf-8");
+
+     //Configuramos el set de caracteres para la consulta
+     mysqli_set_charset($link, "utf8");
+
     $mysql_request = "SELECT * FROM `constancia`;";
     $mysql_response = mysqli_query($link, $mysql_request);
 

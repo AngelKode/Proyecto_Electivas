@@ -1,8 +1,9 @@
 <?php
-    $server = 'localhost';
-    $username = 'root';
-    $data_base = 'constancias';
-    $password = '';
+
+    $server = "localhost";
+    $username = "root";
+    $data_base = "constancias";
+    $password = "";
 
     //Hacemos la conexion a la Base de Datos
     $link =  mysqli_connect($server, $username,$password,$data_base);

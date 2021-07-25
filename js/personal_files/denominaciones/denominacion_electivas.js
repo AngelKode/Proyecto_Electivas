@@ -80,6 +80,7 @@ const setShownData = (action) => {
 }
 
 const fetchData = () => {
+
     $.ajax({
         method : 'GET',
         url : "./php/denominaciones/fetchDataDenominacion.php",
