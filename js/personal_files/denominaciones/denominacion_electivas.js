@@ -52,29 +52,44 @@ const updateLocalDataDenominacion = (newData) => {
 }
 
 const setShownData = (action) => {
-    //Obtenemos el registro relacionado con el ID
-    dataRegisterToBeModified = allDataDenominacion.find(({Register}) => Register.ID === idRowTable);
-
-    const {Register} = dataRegisterToBeModified;
-    const {Descripcion, Ejemplos, EjeTematico, Factor, Modalidad} = Register
-    const {Creditos : FactorCreditos, Horas : FactorHoras} = Factor;
-
+    
     if(action === "update"){
+        //Obtenemos el registro relacionado con el ID
+        dataRegisterToBeModified = allDataDenominacion.find(({Register}) => Register.ID === idRowTable);
+
+        const {Register} = dataRegisterToBeModified;
+        const {Descripcion, Ejemplos, EjeTematico, Factor, Modalidad} = Register
+        
         //Actualizamos los elementos con los datos obtenidos del modal para actualizar
         document.getElementById('updateEjeTematico').value = EjeTematico;
         document.getElementById('updateModalidad').value = Modalidad;
         document.getElementById('updateDescripcion').value = Descripcion;
-        document.getElementById('updateFactorCreditos').value = FactorCreditos;
-        document.getElementById('updateFactorHoras').value = FactorHoras;
+        document.getElementById('updateFactor').value = Factor;
         document.getElementById('updateEjemplos').value = Ejemplos;
     }else{
-        //Actualizamos los elementos con los datos obtenidos del modal para actualizar
-        document.getElementById('deleteEjeTematico').value = EjeTematico;
-        document.getElementById('deleteModalidad').value = Modalidad;
-        document.getElementById('deleteDescripcion').value = Descripcion;
-        document.getElementById('deleteFactorCreditos').value = FactorCreditos;
-        document.getElementById('deleteFactorHoras').value = FactorHoras;
-        document.getElementById('deleteEjemplos').value = Ejemplos;
+        //Mostramos en la notificación el nombre de la denominación
+        swal({
+            title: "¿Desea eliminarlo?",
+            type: "warning",
+            showConfirmButton : true,
+            showCancelButton : true,
+            confirmButtonText: "Eliminar registro",
+            cancelButtonText: "Cancelar",
+            confirmButtonColor: "#DD6B55",
+            closeOnConfirm: true,
+            closeOnCancel: true,
+        }, function(isConfirm){
+
+            if(!isConfirm){
+                showNotification({
+                    message : "El registro no se ha elminado",
+                    type : "info"
+                })
+            }else{
+                deleteDenominacion();
+            }
+
+        });
     }
 
 }
@@ -101,7 +116,7 @@ const fetchData = () => {
                                                 <i class="material-icons">update</i>
                                                 <span>Editar</span>
                                             </button>&nbsp&nbsp`;
-                    const btnDelete =  `    <button type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#modal_eliminar_denominaciones" onclick = "setIDRow(${ID},'delete')">
+                    const btnDelete =  `    <button type="button" class="btn btn-danger waves-effect" onclick = "setIDRow(${ID},'delete')">
                                                 <i class="material-icons">delete</i>
                                                 <span>Eliminar</span>
                                             </button>
@@ -119,10 +134,7 @@ const fetchData = () => {
                             Descripcion : Descripcion,
                             Ejemplos    : Ejemplos,
                             EjeTematico : EjeTematico,
-                            Factor      : {
-                                Creditos : parseInt(Factor.substring(0,Factor.lastIndexOf('x') - 1)),
-                                Horas    : parseInt(Factor.substring(Factor.lastIndexOf('x') + 2, Factor.lastIndexOf('horas') - 1))
-                            },
+                            Factor      : parseInt(Factor.substring(Factor.lastIndexOf('x') + 2, Factor.lastIndexOf('horas') - 1)),
                             Modalidad   : Modalidad,
                         }
                     });
@@ -143,13 +155,12 @@ const addNewDenominacion = () => {
     const ejeTematico = document.getElementById('newRowEjeTematico').value;
     const modalidad =  document.getElementById('newRowModalidad').value;
     const descripcion = document.getElementById('newRowDescripcion').value;
-    const factorCreditos = document.getElementById('newRowFactorCreditos').value;
-    const factorHoras = document.getElementById('newRowFactorHoras').value;
-        const factor = `${factorCreditos} x ${factorHoras} horas`;
+    const factorHoras = document.getElementById('newRowFactor').value;
+    const factor = `1 x ${factorHoras} horas`;
     const ejemplos = document.getElementById('newRowEjemplos').value;
 
     //Verificamos que todos tengan datos
-    const values = [ejeTematico, modalidad, descripcion, factorCreditos, factorHoras, ejemplos];
+    const values = [ejeTematico, modalidad, descripcion,factorHoras, ejemplos];
     let isAllData = true;
     values.forEach((value) => {
         if(value.trim() === ""){
@@ -187,7 +198,7 @@ const addNewDenominacion = () => {
                                                     <i class="material-icons">update</i>
                                                     <span>Editar</span>
                                             </button>&nbsp&nbsp`;
-                    const btnDelete =  `    <button type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#modal_eliminar_denominaciones" onclick = "setIDRow(${ID},'delete')">
+                    const btnDelete =  `    <button type="button" class="btn btn-danger waves-effect" onclick = "setIDRow(${ID},'delete')">
                                                 <i class="material-icons">delete</i>
                                                 <span>Eliminar</span>
                                             </button>
@@ -244,13 +255,12 @@ const updateDenominacion = () => {
     const ejeTematico = document.getElementById('updateEjeTematico').value;
     const modalidad =  document.getElementById('updateModalidad').value;
     const descripcion = document.getElementById('updateDescripcion').value;
-    const factorCreditos = document.getElementById('updateFactorCreditos').value;
-    const factorHoras = document.getElementById('updateFactorHoras').value;
-        const factor = `${factorCreditos} x ${factorHoras} horas`;
+    const factorHoras = document.getElementById('updateFactor').value;
+    const factor = `${1} x ${factorHoras} horas`;
     const ejemplos = document.getElementById('updateEjemplos').value;
     
     //Verificamos que todos tengan datos
-    const values = [ejeTematico, modalidad, descripcion, factorCreditos, factorHoras, ejemplos];
+    const values = [ejeTematico, modalidad, descripcion, factorHoras, ejemplos];
     let isAllData = true;
     values.forEach((value) => {
         if(value.trim() === ""){
@@ -304,10 +314,7 @@ const updateDenominacion = () => {
                             Descripcion : descripcion,
                             Ejemplos    : ejemplos,
                             EjeTematico : ejeTematico,
-                            Factor      : {
-                                Creditos : factorCreditos,
-                                Horas    : factorHoras
-                            },
+                            Factor      : factorHoras,
                             Modalidad   : modalidad,
                         }
                     }
@@ -335,57 +342,31 @@ const updateDenominacion = () => {
 }
 
 const deleteDenominacion = () => {
-    //Obtenemos el modal
-    const modalDeleteRegister = $("#modal_eliminar_denominaciones");
+    $.ajax({
+        method : "POST",
+        url    : "./php/denominaciones/deleteDenominacion.php",
+        data   : {
+            ID : idRowTable
+        },
+        success : (serverResponse) => {
+            //Obtenemos la respuesta del servidor
+            const {status, message} = JSON.parse(serverResponse);
+            let icon = "warning-sign";
 
-    //Confirmamos si de verdad quiere eliminar el registro
-    swal({
-        title: "¿Está seguro de eliminar el registro?",
-        text: "Si lo elimina, tendrá que crearlo de nuevo",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#DD6B55",
-        confirmButtonText: "Eliminar registro",
-        cancelButtonText: "Cancelar operación",
-        closeOnConfirm: true,
-        closeOnCancel: true
-    }, function (isConfirm) {
-        if (!isConfirm) {
+            if(status === "success"){
+                //Actualizamos los datos de la data
+                const tablaData = $("#tabla_registros_denominaciones").DataTable();
+
+                //Eliminamos el registro de la tabla y actualizamos
+                tablaData.row(`#row_ID_${idRowTable}`).remove().draw();
+                icon = "ok";
+            }
+            //Mostramos la notificación al usuario
             showNotification({
-                message : "El registro no se ha elminado",
-                type : "info"
+                message : message,
+                type : status,
+                icon : icon
             })
-            modalDeleteRegister.modal('hide');
-        }else{
-            $.ajax({
-                method : "POST",
-                url    : "./php/denominaciones/deleteDenominacion.php",
-                data   : {
-                    ID : idRowTable
-                },
-                success : (serverResponse) => {
-                    //Obtenemos la respuesta del servidor
-                    const {status, message} = JSON.parse(serverResponse);
-                    let icon = "warning-sign";
-
-                    $("#modal_eliminar_denominaciones").modal('hide');//Cerramos el modal
-
-                    if(status === "success"){
-                        //Actualizamos los datos de la data
-                        const tablaData = $("#tabla_registros_denominaciones").DataTable();
-
-                        //Eliminamos el registro de la tabla y actualizamos
-                        tablaData.row(`#row_ID_${idRowTable}`).remove().draw();
-                        icon = "ok";
-                    }
-                    //Mostramos la notificación al usuario
-                    showNotification({
-                        message : message,
-                        type : status,
-                        icon : icon
-                    })
-                }
-            });
         }
     });
 }

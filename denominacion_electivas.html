@@ -384,27 +384,19 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                         <div class="form-group form-float">
                                             <div class="form-line">
-                                                <input type="text" class="form-control" id="newRowFactorCreditos">
-                                                <label class="form-label"># Créditos</label>
+                                                <input type="number" class="form-control" id="newRowFactor">
+                                                <label class="form-label">Factor</label>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                                        <div class="form-group form-float">
-                                            <div class="form-line">
-                                                <input type="text" class="form-control" id="newRowFactorHoras">
-                                                <label class="form-label"># Horas</label>
-                                            </div>
-                                            <div class="help-info">Para conseguir el # de créditos indicado</div>
+                                            <div class="help-info">Cantidad de horas para conseguir 1 crédito</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group form-float" style="padding-top: 10px;">
                                     <div class="form-line">
-                                        <textarea cols="30" rows="3" class="form-control no-resize" required id="newRowEjemplos"></textarea>
+                                        <textarea name="text" cols="30" rows="5" class="form-control no-resize" oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"' id="newRowEjemplos"></textarea>
                                         <label class="form-label">Ejemplos de Actividades</label>
                                     </div>
                                 </div>
@@ -470,27 +462,19 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                         <div class="form-group form-float">
                                             <div class="form-line focused">
-                                                <input type="text" class="form-control" value="" id="updateFactorCreditos">
-                                                <label class="form-label"># Créditos</label>
+                                                <input type="number" class="form-control" id="updateFactor">
+                                                <label class="form-label">Factor</label>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                                        <div class="form-group form-float">
-                                            <div class="form-line focused">
-                                                <input type="text" class="form-control" value="" id="updateFactorHoras">
-                                                <label class="form-label"># Horas</label>
-                                            </div>
-                                            <div class="help-info">Para conseguir el # de créditos indicado</div>
+                                            <div class="help-info">Cantidad de horas para conseguir 1 crédito</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group form-float" style="padding-top: 10px;">
                                     <div class="form-line focused">
-                                        <textarea cols="30" rows="3" class="form-control no-resize" id="updateEjemplos"></textarea>
+                                        <textarea cols="30" rows="5" class="form-control no-resize" id="updateEjemplos"></textarea>
                                         <label class="form-label">Ejemplos de Actividades</label>
                                     </div>
                                 </div>
@@ -521,90 +505,6 @@
             </div>
             <!--Modal Editar Denominaciones-->
 
-            <!--Modal Eliminar Denominaciones-->
-            <div class="modal fade" id="modal_eliminar_denominaciones" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title" id="defaultModalLabel">Eliminar Denominación</h4>
-                        </div>
-
-                        <div class="modal-body">
-                                <div class="row clearfix">
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                        <div class="form-group form-float">
-                                            <div class="form-line focused">
-                                                <input type="text" class="form-control" value="" id="deleteEjeTematico" disabled>
-                                                <label class="form-label">Eje Temático</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                        <div class="form-group form-float">
-                                            <div class="form-line focused">
-                                                <input type="text" class="form-control" value="" id="deleteModalidad" disabled>
-                                                <label class="form-label">Modalidad</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                        <div class="form-group form-float">
-                                            <div class="form-line focused">
-                                                <input type="text" class="form-control" value="" id="deleteDescripcion" disabled>
-                                                <label class="form-label">Descripción de Créditos</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                                        <div class="form-group">
-                                            <div class="form-line focused">
-                                                <input type="text" class="form-control" value="" id="deleteFactorCreditos" disabled>
-                                                <label class="form-label"># Créditos</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                                        <div class="form-group form-float">
-                                            <div class="form-line focused">
-                                                <input type="text" class="form-control" value="" id="deleteFactorHoras" disabled>
-                                                <label class="form-label"># Horas</label>
-                                            </div>
-                                            <div class="help-info">Para conseguir el # de créditos indicado</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group form-float" style="padding-top: 10px;">
-                                    <div class="form-line focused">
-                                        <textarea cols="30" rows="3" class="form-control no-resize" id="deleteEjemplos" disabled></textarea>
-                                        <label class="form-label">Ejemplos de Actividades</label>
-                                    </div>
-                                </div>
-                        </div>
-                        <!--Modal Body-->
-
-                        <div class="modal-footer" style="padding-top: 0;">
-                            <div style="padding-right: 10px;">
-                                <ul style="list-style:none;">
-                                    <li style="display: inline-block;">
-                                        <a href="javascript:deleteDenominacion();">
-                                            <i class="material-icons" style="color: #e21d0e;">delete_forever</i>
-                                        </a>
-                                    </li>
-                                    <li style="display: inline-block;">
-                                        <a href="javascript:void(0);">
-                                            <i class="material-icons" style="color: #F44336;"  data-dismiss="modal">close</i>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <!--Footer-->
-                    </div>
-                    <!--Content-->
-                </div>
-                <!--Dialog-->
-            </div>
-            <!--Modal Eliminar Denominaciones-->
 
         </div>
         <!--Container Fluid-->
