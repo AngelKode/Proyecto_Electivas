@@ -32,6 +32,19 @@ const showNotification = ({message = "", type = "info", element = "body", offset
     })
 }
 
+const showWaitingForServerResponse = (message) => {
+    swal({
+        title: message,
+        text: "Espere un momento por favor...",
+        type: "info",
+        showConfirmButton : false
+    });
+}
+
+const closeAlert = () =>{
+    swal.close();
+}
+
 const addLocalDataDenominacion = (Register) => {
     //Agregamos el nuevo registro
     allDataDenominacion = [
@@ -59,7 +72,7 @@ const setShownData = (action) => {
 
         const {Register} = dataRegisterToBeModified;
         const {Descripcion, Ejemplos, EjeTematico, Factor, Modalidad} = Register
-        
+
         //Actualizamos los elementos con los datos obtenidos del modal para actualizar
         document.getElementById('updateEjeTematico').value = EjeTematico;
         document.getElementById('updateModalidad').value = Modalidad;
@@ -146,6 +159,8 @@ const fetchData = () => {
                 })
             }
             
+            //Quitamos la pantalla de carga
+            setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
         }
     })
 }
@@ -169,6 +184,9 @@ const addNewDenominacion = () => {
     });
 
     if(isAllData){
+
+        showWaitingForServerResponse("Agregando registro...");
+
         $.ajax({
             method : 'POST',
             url    : "./php/denominaciones/addDenominacion.php",
@@ -217,24 +235,36 @@ const addNewDenominacion = () => {
                             Descripcion : descripcion,
                             Ejemplos    : ejemplos,
                             EjeTematico : ejeTematico,
-                            Factor      : {
-                                Creditos : parseInt(factor.substring(0,factor.lastIndexOf('x') - 1)),
-                                Horas    : parseInt(factor.substring(factor.lastIndexOf('x') + 2, factor.lastIndexOf('horas') - 1))
-                            },
+                            Factor      : parseInt(factor.substring(factor.lastIndexOf('x') + 2, factor.lastIndexOf('horas') - 1)),
                             Modalidad   : modalidad,
                         }
                     };
                     //Agregamos ese nuevo dato al arreglo de datos
                     addLocalDataDenominacion(dataRegisterToBeAdded);
-                    
-                    $("#modal_alta_denominaciones").modal('hide');//Cerramos el modal
                     icon = "ok";
                 }
-                //Mostramos una notificación
-                showNotification({
-                    message : message,
-                    type : status,
-                    icon : icon
+
+                const waitTime = () => {
+                    return new Promise((resolve) => {
+                        const timeOutObject = setTimeout(()=>{
+                            resolve(timeOutObject);
+                        },800);
+                    })
+                }
+
+                waitTime().then((timeOutObject) =>{
+                    closeAlert();
+
+                    //Mostramos la notificacion al usuario
+                    showNotification({
+                        message : message,
+                        type : status,
+                        icon : icon
+                    });
+
+                    $("#modal_alta_denominaciones").modal('hide');//Cerramos el modal
+
+                    clearTimeout(timeOutObject);
                 });
             }
         });
@@ -269,6 +299,9 @@ const updateDenominacion = () => {
     });
 
     if(isAllData){
+
+        showWaitingForServerResponse("Actualizando registro...");
+
         $.ajax({
             method : "POST",
             url    : "./php/denominaciones/updateDenominacion.php",
@@ -284,7 +317,6 @@ const updateDenominacion = () => {
                 //Obtenemos la respuesta del servidor
                 const {status, message} = JSON.parse(serverResponse);
                 let icon = "warning-sign";
-                $("#modal_editar_denominaciones").modal('hide');//Cerramos el modal
     
                 //De acuerdo a la respuesta del servidor, mostramos la notificación
                 if(status === "success"){
@@ -322,12 +354,30 @@ const updateDenominacion = () => {
                     updateLocalDataDenominacion(dataRegisterToBeModified);
                     icon = "ok";
                 }
-                //Mostramos la notificacion al usuario
-                showNotification({
-                    message : message,
-                    type : status,
-                    icon : icon
-                })
+
+                const waitTime = () => {
+                    return new Promise((resolve) => {
+                        const timeOutObject = setTimeout(()=>{
+                            resolve(timeOutObject);
+                        },800);
+                    })
+                }
+
+                waitTime().then((timeOutObject) =>{
+                    closeAlert();
+
+                    //Mostramos la notificacion al usuario
+                    showNotification({
+                        message : message,
+                        type : status,
+                        icon : icon
+                    });
+
+                    $("#modal_editar_denominaciones").modal('hide');//Cerramos el modal
+
+                    clearTimeout(timeOutObject);
+                });
+
             }
         });
     }else{
@@ -342,6 +392,20 @@ const updateDenominacion = () => {
 }
 
 const deleteDenominacion = () => {
+
+    const waitForPastAlert = () =>{
+        return new Promise((resolve) =>{
+            const timeOutObject = setTimeout(()=>{
+                showWaitingForServerResponse("Eliminando registro...");
+                resolve(timeOutObject);
+            },200);
+        });
+    }
+
+    waitForPastAlert().then((timeOutObject) => {
+        clearTimeout(timeOutObject);
+    })
+
     $.ajax({
         method : "POST",
         url    : "./php/denominaciones/deleteDenominacion.php",
@@ -361,12 +425,27 @@ const deleteDenominacion = () => {
                 tablaData.row(`#row_ID_${idRowTable}`).remove().draw();
                 icon = "ok";
             }
-            //Mostramos la notificación al usuario
-            showNotification({
-                message : message,
-                type : status,
-                icon : icon
-            })
+
+            const waitTime = () => {
+                return new Promise((resolve) => {
+                    const timeOutObject = setTimeout(()=>{
+                        resolve(timeOutObject);
+                    },800);
+                })
+            }
+
+            waitTime().then((timeOutObject) =>{
+                closeAlert();
+
+                //Mostramos la notificacion al usuario
+                showNotification({
+                    message : message,
+                    type : status,
+                    icon : icon
+                });
+
+                clearTimeout(timeOutObject);
+            });
         }
     });
 }

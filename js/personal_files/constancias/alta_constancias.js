@@ -22,6 +22,19 @@ const showNotification = ({message = "", type = "info", element = "body", offset
         })
 }
 
+const showWaitingForServerResponse = (message) => {
+    swal({
+        title: message,
+        text: "Espere un momento por favor...",
+        type: "info",
+        showConfirmButton : false
+    });
+}
+
+const closeAlert = () =>{
+    swal.close();
+}
+
 const getStatusRequestView = (IDRow,doneRevision = undefined,reasonRejected="Faltan especificar horas.") => {
 
     if(!doneRevision){
@@ -200,7 +213,9 @@ const addNewConstancia = () => {
             formDataToAdd.append('Horas', valueHoras);
             formDataToAdd.append('FileName', valueNameFile);
             formDataToAdd.append('Observaciones', valueObservaciones);
-        
+
+            showWaitingForServerResponse("Añadiendo registro...");
+
             $.ajax({
                 method : "POST",
                 url    : "./php/constancias/addNewConstancia.php",
@@ -208,7 +223,7 @@ const addNewConstancia = () => {
                 contentType: false,
                 processData: false,
                 success : (serverResponse) => {
-        
+
                     //Obtenemos la respuesta del servidor
                     const {status,message,ID,newFileName} = JSON.parse(serverResponse);
                     let icon = "warning-sign";
@@ -248,17 +263,31 @@ const addNewConstancia = () => {
         
                         //Agregamos el dato para tenerlo más a la mano
                         addLocalDataConstancias(dataRegisterToBeAdded);
-        
-                        //Cerramos el modal
-                        $("#modal_alta_constancias").modal('hide');
                         icon = "ok";//Le damos el valor al icono de 'ok' que se mostrará en la notificacion
                     }
-        
-                    //Mostramos la notificacion
-                    showNotification({
-                        message : message,
-                        type : status,
-                        icon : icon
+                    
+                    const waitTime = () => {
+                        return new Promise((resolve) => {
+                            const timeOutObject = setTimeout(()=>{
+                                resolve(timeOutObject);
+                            },800);
+                        })
+                    }
+    
+                    waitTime().then((timeOutObject) =>{
+                        closeAlert();
+    
+                        //Mostramos la notificacion al usuario
+                        showNotification({
+                            message : message,
+                            type : status,
+                            icon : icon
+                        });
+    
+                        //Cerramos el modal
+                        $("#modal_alta_constancias").modal('hide');
+
+                        clearTimeout(timeOutObject);
                     });
                 }
             });        
@@ -306,6 +335,8 @@ const updateConstancia = () => {
             formData.append('OldFileName', constanciaToBeUpdated.Archivo);
         }
 
+        showWaitingForServerResponse("Actualizando registro...");
+
         //Teniendo todos los datos, hacemos la peticion
         $.ajax({
             method : "POST",
@@ -318,6 +349,8 @@ const updateConstancia = () => {
                 const jsonServerResponse = JSON.parse(serverResponse);
                 const {status, message, newFileName} = jsonServerResponse;
                 const fileName = (newFileName === undefined) ? constanciaToBeUpdated.Archivo : newFileName;
+                let icon = "warning-sign";
+
                 if(status === "success"){
                     //Creamos el nuevo objeto modificado
                     dataRegisterToBeModified = {
@@ -358,15 +391,33 @@ const updateConstancia = () => {
                     }
 
                     oldRow.data(newData);
+                    icon = "ok";
                 }
 
-                showNotification({
-                    message : message,
-                    type : status
+                const waitTime = () => {
+                    return new Promise((resolve) => {
+                        const timeOutObject = setTimeout(()=>{
+                            resolve(timeOutObject);
+                        },800);
+                    })
+                }
+
+                waitTime().then((timeOutObject) =>{
+                    closeAlert();
+
+                    //Mostramos la notificacion al usuario
+                    showNotification({
+                        message : message,
+                        type : status,
+                        icon : icon
+                    });
+
+                    //Cerramos el modal
+                    $("#modal_editar_constancias_and").modal('hide'); 
+
+                    clearTimeout(timeOutObject);
                 });
 
-                //Cerramos el modal
-                $("#modal_editar_constancias_and").modal('hide'); 
             }
         });
     }else{
@@ -407,6 +458,20 @@ const deleteConstancia = () => {
                 })
                 modalDeleteConstancia.modal('hide');
             }else{
+
+                const waitForPastAlert = () =>{
+                    return new Promise((resolve) =>{
+                        const timeOutObject = setTimeout(()=>{
+                            showWaitingForServerResponse("Eliminando registro...");
+                            resolve(timeOutObject);
+                        },200);
+                    });
+                }
+            
+                waitForPastAlert().then((timeOutObject) => {
+                    clearTimeout(timeOutObject);
+                });
+
                 $.ajax({
                     method : "POST",
                     url    : "./php/constancias/deleteConstancia.php",
@@ -419,8 +484,6 @@ const deleteConstancia = () => {
                         const {status, message} = JSON.parse(serverResponse);
                         let icon = "warning-sign";
                         
-                        modalDeleteConstancia.modal('hide')//Cerramos el modal
-    
                         if(status === "success"){
                             //Actualizamos los datos de la data
                             const tablaData = $("#tabla_registros_constancias").DataTable();
@@ -429,22 +492,41 @@ const deleteConstancia = () => {
                             tablaData.row(`#row_ID_${idRow}`).remove().draw();
                             icon = "ok";
                         }
-                        //Mostramos la notificación al usuario
-                        showNotification({
-                            message : message,
-                            type : status,
-                            icon : icon
-                        })
+
+                        const waitTime = () => {
+                            return new Promise((resolve) => {
+                                const timeOutObject = setTimeout(()=>{
+                                    resolve(timeOutObject);
+                                },800);
+                            })
+                        }
+        
+                        waitTime().then((timeOutObject) =>{
+                            closeAlert();
+        
+                            //Mostramos la notificacion al usuario
+                            showNotification({
+                                message : message,
+                                type : status,
+                                icon : icon
+                            });
+                            
+                            modalDeleteConstancia.modal('hide')//Cerramos el modal
+    
+                            clearTimeout(timeOutObject);
+                        });
                     }
                 });
             }
         });
-    
 }
 
 $(document).ready(() => {
     fetchDataConstancias().then(() => {
         //Configuramos para refrescar el embed donde se muetra el PDF
         $('#modal_archivo_subido').on('hidden.bs.modal', refreshEmbedFile);
+
+        //Quitamos la pantalla de carga
+        setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
     });
 })
