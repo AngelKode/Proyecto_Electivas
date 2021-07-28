@@ -28,7 +28,7 @@ $.AdminBSB.options = {
         white: '#ffffff'
     },
     leftSideBar: {
-        scrollColor: 'rgba(0,0,0,0.5)',
+        scrollColor: 'rgba(0,0,0,1)',
         scrollWidth: '4px',
         scrollAlwaysVisible: false,
         scrollBorderRadius: '0',
