@@ -1,9 +1,18 @@
 $(document).ready(function(){
 
-    const tablasRegistros = ["denominaciones", "constancias"];
+    const tablasRegistros = ["denominaciones", "constancias","constancias_validar"];
     const configuraciones = {
         "paging" : true,
         "pageLength": 5,
+        "drawCallback": function () {
+            //Activamos el tooltip en cualquier cambio, en caso de que esa tabla cuente con tooltips
+            $('.tooltipStatusDone').tooltip({
+                template : `<div class="tooltip" role="tooltip"><div class="arrow"></div><div class="tooltip-inner" style = "background-color:white;color:green;border: 1px solid green"></div></div>`
+            });
+            $('.tooltipStatusRejected').tooltip({
+                template : `<div class="tooltip" role="tooltip"><div class="arrow"></div><div class="tooltip-inner" style = "background-color:white;color:red;border: 1px solid red"></div></div>`
+            });
+        },
         "language": {
             "lengthMenu": "Mostrar _MENU_ registros",
             "zeroRecords": "Sin registros actualmente",

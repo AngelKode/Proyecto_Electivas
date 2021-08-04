@@ -108,61 +108,61 @@ const setShownData = (action) => {
 }
 
 const fetchData = () => {
-
-    $.ajax({
-        method : 'GET',
-        url : "./php/denominaciones/fetchDataDenominacion.php",
-        success: (serverResponse) => {
-            //Convertimos a JSON la respuesta
-            const jsonResponse = JSON.parse(serverResponse);
-            //Obtenemos message y status, en caso de ser undefined, quiere decir que se hizo correctamente la peticion
-            const {message, status} = jsonResponse;
-
-            if(status === undefined){
-                //Obtenemos el data-table
-                const tablaData = $("#tabla_registros_denominaciones").DataTable();                
-
-                //Recorremos cada registro y agregamos a la tabla
-                jsonResponse.forEach(({ID,EjeTematico,Modalidad, Descripcion,Factor,Ejemplos}) => {
-                    const btnUpdate =  `<div>
-                                            <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#modal_editar_denominaciones" onclick = "setIDRow(${ID},'update')">
-                                                <i class="material-icons">update</i>
-                                                <span>Editar</span>
-                                            </button>&nbsp&nbsp`;
-                    const btnDelete =  `    <button type="button" class="btn btn-danger waves-effect" onclick = "setIDRow(${ID},'delete')">
-                                                <i class="material-icons">delete</i>
-                                                <span>Eliminar</span>
-                                            </button>
-                                        </div>`;
-                    const btnGroup = btnUpdate + btnDelete;
-
-                    tablaData.row.add([
-                        EjeTematico,Modalidad, Factor, btnGroup
-                    ]).draw().node().id = `row_ID_${ID}`
-
-                    //Agregamos los datos al objeto que contiene toda la información
-                    addLocalDataDenominacion({
-                        Register : {
-                            ID          : parseInt(ID),
-                            Descripcion : Descripcion,
-                            Ejemplos    : Ejemplos,
-                            EjeTematico : EjeTematico,
-                            Factor      : parseInt(Factor.substring(Factor.lastIndexOf('x') + 2, Factor.lastIndexOf('horas') - 1)),
-                            Modalidad   : Modalidad,
-                        }
+    return new Promise((resolve) => {
+        $.ajax({
+            method : 'GET',
+            url : "./php/denominaciones/fetchDataDenominacion.php",
+            success: (serverResponse) => {
+                //Convertimos a JSON la respuesta
+                const jsonResponse = JSON.parse(serverResponse);
+                //Obtenemos message y status, en caso de ser undefined, quiere decir que se hizo correctamente la peticion
+                const {message, status} = jsonResponse;
+    
+                if(status === undefined){
+                    //Obtenemos el data-table
+                    const tablaData = $("#tabla_registros_denominaciones").DataTable();                
+    
+                    //Recorremos cada registro y agregamos a la tabla
+                    jsonResponse.forEach(({ID,EjeTematico,Modalidad, Descripcion,Factor,Ejemplos}) => {
+                        const btnUpdate =  `<div>
+                                                <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#modal_editar_denominaciones" onclick = "setIDRow(${ID},'update')">
+                                                    <i class="material-icons">update</i>
+                                                    <span>Editar</span>
+                                                </button>&nbsp&nbsp`;
+                        const btnDelete =  `    <button type="button" class="btn btn-danger waves-effect" onclick = "setIDRow(${ID},'delete')">
+                                                    <i class="material-icons">delete</i>
+                                                    <span>Eliminar</span>
+                                                </button>
+                                            </div>`;
+                        const btnGroup = btnUpdate + btnDelete;
+    
+                        tablaData.row.add([
+                            EjeTematico,Modalidad, Factor, btnGroup
+                        ]).draw().node().id = `row_ID_${ID}`
+    
+                        //Agregamos los datos al objeto que contiene toda la información
+                        addLocalDataDenominacion({
+                            Register : {
+                                ID          : parseInt(ID),
+                                Descripcion : Descripcion,
+                                Ejemplos    : Ejemplos,
+                                EjeTematico : EjeTematico,
+                                Factor      : parseInt(Factor.substring(Factor.lastIndexOf('x') + 2, Factor.lastIndexOf('horas') - 1)),
+                                Modalidad   : Modalidad,
+                            }
+                        });
                     });
-                });
-            }else{
-                showNotification({
-                    message : message,
-                    type : status
-                })
+                }else{
+                    showNotification({
+                        message : message,
+                        type : status
+                    })
+                }
+                
+                resolve();
             }
-            
-            //Quitamos la pantalla de carga
-            setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
-        }
-    })
+        })
+    });
 }
 
 const addNewDenominacion = () => {
@@ -433,7 +433,7 @@ const deleteDenominacion = () => {
                     },800);
                 })
             }
-
+            
             waitTime().then((timeOutObject) =>{
                 closeAlert();
 
@@ -451,5 +451,8 @@ const deleteDenominacion = () => {
 }
 
 $(document).ready(() =>{
-    fetchData();
+    fetchData().then(() => {
+        //Quitamos la pantalla de carga al obtener todos los datos y mostrarlos en la tabla
+        setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
+    });
 })

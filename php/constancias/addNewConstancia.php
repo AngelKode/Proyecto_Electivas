@@ -20,7 +20,7 @@
     //Verificamos que los datos se hayan mandado
     if(isset($dataActividad) && isset($dataFechaInicio) && isset($dataFechaFin) && isset($dataHoras) && isset($dataFileName) && isset($dataObservaciones)){
         //Hacemos la peticion a la base de datos
-        $mysql_request = "INSERT INTO `constancia`(`Alumno_id`, `Actividad`, `Fecha_inicio`, `Fecha_fin`, `Horas`, `Archivo`, `Observaciones`) VALUES (2,'".$dataActividad."','".$dataFechaInicio."','".$dataFechaFin."','".$dataHoras."','".$dataFileName."','".$dataObservaciones."')";
+        $mysql_request = "INSERT INTO `constancia`(`Alumno_id`, `Actividad`, `Fecha_inicio`, `Fecha_fin`, `Horas`, `Archivo`, `Observaciones`,`Valida`) VALUES (2,'".$dataActividad."','".$dataFechaInicio."','".$dataFechaFin."','".$dataHoras."','".$dataFileName."','".$dataObservaciones."','1')";
         $mysql_response = mysqli_query($link, $mysql_request);
 
         //Verificamos que la peticion se haya realizado correctamente

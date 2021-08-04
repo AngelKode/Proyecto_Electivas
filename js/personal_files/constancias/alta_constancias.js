@@ -35,35 +35,33 @@ const closeAlert = () =>{
     swal.close();
 }
 
-const getStatusRequestView = (IDRow,doneRevision = undefined,reasonRejected="Faltan especificar horas.") => {
+const getStatusRequestView = (IDRow,doneRevision,reasonRejected="") => {
 
-    if(!doneRevision){
-        return `<div>
-                    <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#modal_editar_constancias_and" onclick="setIDRow(${IDRow},'update')">
-                        <i class="material-icons">update</i>
-                        <span>Editar</span>
-                    </button>
-                    <button type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#modal_eliminar_constancias_and" onclick="setIDRow(${IDRow},'delete')">
-                        <i class="material-icons">delete</i>
-                        <span>Eliminar</span>
-                    </button>
-                </div>`;;
-    }
-    
     let statusRevision = "";
-
-    if(doneRevision === 0){
-        statusRevision = `<div class="bg-red text-center">
-                            <span data-toggle="tooltip" data-placement="right" title="${reasonRejected}" style="cursor: pointer;">
+    
+    if(parseInt(doneRevision) === 1){
+        statusRevision =   `<div>
+                                <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#modal_editar_constancias_and" onclick="setIDRow(${IDRow},'update')">
+                                    <i class="material-icons">update</i>
+                                    <span>Editar</span>
+                                </button>
+                                <button type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#modal_eliminar_constancias_and" onclick="setIDRow(${IDRow},'delete')">
+                                    <i class="material-icons">delete</i>
+                                    <span>Eliminar</span>
+                                </button>
+                            </div>`;
+    }else if(parseInt(doneRevision) === 2){
+        statusRevision =   `<div class="bg-green text-center tooltipStatusDone" data-toggle="tooltip" data-placement="top" title="Constancia aceptada" style="cursor: pointer;">
+                                <span>
+                                    Validada
+                                </span>
+                            </div>`;
+    }else{
+        statusRevision = `<div class="bg-red text-center tooltipStatusRejected" data-toggle="tooltip" data-placement="top" title="${reasonRejected}" style="cursor: pointer;">
+                            <span>
                                 Rechazada
                             </span>
-                         </div>`;
-    }else{
-        statusRevision = `<div class="bg-green text-center">
-                            <span data-toggle="tooltip" data-placement="right" title="Constancia aceptada." style="cursor: pointer;">
-                                Validada
-                            </span>
-                         </div>`;
+                          </div>`;
     }
 
     return statusRevision;
@@ -155,7 +153,7 @@ const fetchDataConstancias = () => {
                             ID, 
                             Actividad,  
                             Fecha_fin, Horas, Archivo,  
-                            Valida, 
+                            Valida,Observaciones_encargado 
                             } = dataRow;
 
                         //Creamos el icono para ver el archivo subido
@@ -163,7 +161,7 @@ const fetchDataConstancias = () => {
                                                         <img src="images/images-app/PDF_file_example.svg" alt="PDF" style="width: 3rem;height: 3rem;cursor: pointer;" role="button" onclick="openFileToView('${Archivo}')">
                                                  </div>`;
                         //De acuerdo al estado de la solicitud, mostramos los elementos en la tabla
-                        const statusRequest = getStatusRequestView(ID,Valida);
+                        const statusRequest = getStatusRequestView(ID,Valida,Observaciones_encargado);
 
                         //Agregamos el dato a la tabla
                         tablaData.row.add([
@@ -237,7 +235,7 @@ const addNewConstancia = () => {
                                                     <img src="images/images-app/PDF_file_example.svg" alt="PDF" style="width: 3rem;height: 3rem;cursor: pointer;  role="button" onclick="openFileToView('${newFileName}')">
                                                 </div>`;
                         //Obtenemos que se va a mostrar en la columna de acciones, dependiendo el estado de revision de la constancia
-                        const statusRequest = getStatusRequestView(ID,undefined);
+                        const statusRequest = getStatusRequestView(ID,1);
         
         
                         //Agregamos la constancia a la tabla
@@ -249,7 +247,7 @@ const addNewConstancia = () => {
                         dataRegisterToBeAdded = {
                             ID : `${ID}`,
                             Actividad : valueNombreActividad,
-                            Alumno_id : 2,
+                            Alumno_id : 1,
                             Archivo    : newFileName,
                             Creditos : null,
                             Denominacion : null,
@@ -526,7 +524,7 @@ $(document).ready(() => {
         //Configuramos para refrescar el embed donde se muetra el PDF
         $('#modal_archivo_subido').on('hidden.bs.modal', refreshEmbedFile);
 
-        //Quitamos la pantalla de carga
+        //Quitamos la pantalla de carga al obtener todos los datos y mostrarlos en la tabla
         setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
     });
 })

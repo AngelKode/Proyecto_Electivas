@@ -40,6 +40,9 @@
     <!-- Bootstrap DatePicker Css -->
     <link href="plugins/bootstrap-datepicker/css/bootstrap-datepicker.css" rel="stylesheet" />
 
+    <!-- Sweetalert Css -->
+    <link href="plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+
 
 </head>
 
@@ -126,19 +129,19 @@
                     </li>
                     <li>
                         <a href="alta_constancias.html">
-                            <i class="material-icons">folder</i>
+                            <i class="material-icons">upload_file</i>
                             <span>Alta de Constancias</span>
                         </a>
                     </li>
                     <li class="active">
                         <a href="validar_constancias.html">
-                            <i class="material-icons">check</i>
+                            <i class="material-icons">task</i>
                             <span>Validación de Constancias</span>
                         </a>
                     </li>
                     <li>
                         <a href="desglose_creditos.html">
-                            <i class="material-icons">view_list</i>
+                            <i class="material-icons">list</i>
                             <span>Desglose de Créditos</span>
                         </a>
                     </li>
@@ -320,7 +323,7 @@
                         </div>
                         <div class="body">
                             <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-hover dataTable js-exportable" id="tabla_registros_constancias">
+                                <table class="table table-bordered table-striped table-hover dataTable js-exportable" id="tabla_registros_constancias_validar">
                                     <thead>
                                         <tr>
                                             <th>Programa Académico</th>
@@ -331,52 +334,6 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-
-                                        <tr>
-                                            <td>Sistemas Computacionales</td>
-                                            <td>Luis Humberto Ruíz</td>
-                                            <td>Curso de Android</td>
-                                            <td>20</td>
-                                            <td style="width: 30px; height: 30px;">
-                                                <div style="width: 100%; height: 100%;">
-                                                    <button type="button" style="width: 100%; height: 100%;" class="btn btn-warning waves-effect">
-                                                        <i class="material-icons">query_builder</i>
-                                                        <span>Validar</span>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>Sistemas Computacionales</td>
-                                            <td>Luis Humberto Ruíz</td>
-                                            <td>Curso de React</td>
-                                            <td>20</td>
-                                            <td style="width: 30px; height: 30px;">
-                                                <div style="width: 100%; height: 100%;">
-                                                    <button type="button" style="width: 100%; height: 100%;" class="btn btn-warning waves-effect">
-                                                        <i class="material-icons">query_builder</i>
-                                                        <span>Validar</span>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>Ingeniería Mecatrónica</td>
-                                            <td>Luis Humberto Ruíz</td>
-                                            <td>Curso de Arduino</td>
-                                            <td>30</td>
-                                            <td style="width: 30px; height: 30px;">
-                                                <div style="width: 100%; height: 100%;">
-                                                    <button type="button" style="width: 100%; height: 100%;" class="btn btn-warning waves-effect" data-toggle="modal" data-target="#modal_validar_constancias">
-                                                        <i class="material-icons">query_builder</i>
-                                                        <span>Validar</span>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-
                                     </tbody>
                                     <tfoot>
                                         <tr>
@@ -400,7 +357,7 @@
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h4 class="modal-title" id="defaultModalLabel" style="font-weight: 100;">Validar constancia de <b>Luis López Aguilar</b></h4>
+                            <h4 class="modal-title" id="defaultModalLabel" style="font-weight: 100;">Validar constancia de <b id="alumnoConstancia"></b></h4>
                         </div>
 
                         <div class="modal-body">
@@ -408,8 +365,8 @@
 
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <div class="form-group form-float">
-                                            <div class="form-line">
-                                                <input type="text" class="form-control" value="Curso de Arduino">
+                                            <div class="form-line focused">
+                                                <input type="text" class="form-control" value="" id="nombreActividadConstancia" disabled>
                                                 <label class="form-label">Nombre de la Actividad</label>
                                             </div>
                                         </div>
@@ -419,8 +376,8 @@
                                         <div class="form-group">
                                             <label style="font-weight: 100;font-size: 12px;opacity: 0.8;">Fecha de Inicio</label>
                                             <div class="input-daterange input-group" id="date_picker_inicio">
-                                                <div class="form-line">
-                                                    <input type="text" class="form-control" placeholder="Escoga una fecha">
+                                                <div class="form-line focused">
+                                                    <input type="date" class="form-control" id="fechaInicioConstancia" disabled>
                                                 </div>
                                             </div>
                                         </div>
@@ -430,8 +387,8 @@
                                         <div class="form-group">
                                             <label style="font-weight: 100;font-size: 12px;opacity: 0.8;">Fecha de Término</label>
                                             <div class="input-daterange input-group" id="date_picker_fin">
-                                                <div class="form-line">
-                                                    <input type="text" class="form-control" placeholder="Escoga una fecha">
+                                                <div class="form-line focused">
+                                                    <input type="date" class="form-control" id="fechaFinConstancia" disabled>
                                                 </div>
                                             </div>
                                         </div>
@@ -440,57 +397,40 @@
                                     <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                                         <div class="form-group">
                                             <label style="font-weight: 100;font-size: 12px;opacity: 0.8;">Horas</label>
-                                            <div class="form-line">
-                                                <input type="number" class="form-control" value="0" min="0">
+                                            <div class="form-line focused">
+                                                <input type="number" class="form-control" value="" id="horasConstancia" disabled>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    </div>
-                                   
-                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <div style="display: inline-block;">
+                                        <div style="display: inline-block;width: 40%;">
                                             <label style="font-weight: 100;font-size: 12px;opacity: 0.8;">Mostrar Archivo</label>
-                                            <button style="width: 100%;height: 90%;" class="btn btn-warning waves-effect view_uploaded_file">
+                                            <button style="width: 100%;height: 90%;" class="btn btn-warning waves-effect" onclick="setFileToView()">
                                                 <i class="material-icons">loupe</i>
                                             </button>
                                         </div>
                                         
-                                        <div style="display: inline-block;float: right;">
+                                        <div style="display: inline-block;float: right;width: 40%;">
                                             <label style="font-weight: 100;font-size: 12px;opacity: 0.8;">¿Constancia Válida?</label>
-                                            <select class="selectpicker" title="Seleccione" data-width="100%">
-                                                <option>Si</option>
-                                                <option>No</option>
+                                            <select class="selectpicker" title="Seleccione" data-width="100%" id="isValidaConstancia">
+                                                <option value="2">Si</option>
+                                                <option value="3">No</option>
                                             </select> 
                                         </div> 
                                     </div>
 
-                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    </div>
 
-                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="padding-top: 25px;">
-                                        <label style="font-weight: 100;font-size: 12px;opacity: 0.8;">Eje Temático</label>
-                                        <select class="selectpicker" title="Seleccione una opción" data-width="100%">
-                                            <option selected>Complementarias a la formación</option>
-                                            <option>Énfasis en la profesión</option>
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding-top: 25px;">
+                                        <label style="font-weight: 100;font-size: 12px;opacity: 0.8;">Denominacion</label>
+                                        <select class="selectpicker" data-size="5" data-dropup-auto="true" title="Seleccione una opción" data-width="100%" id="denominacionConstancia">
                                         </select>  
                                     </div>
-
-                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="padding-top: 25px;">
-                                        <label style="font-weight: 100;font-size: 12px;opacity: 0.8;">Modalidad</label>
-                                        <select class="selectpicker" title="Seleccione una opción" data-width="100%">
-                                            <option>Docencia</option>
-                                            <option selected>Trabajo de Campo Supervisado</option>
-                                            <option>Independientes</option>
-                                        </select>  
-                                    </div>
-
                                     
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding-top: 25px;">
                                         <div class="form-group form-float">
                                             <div class="form-line">
-                                                <textarea name="observaciones" id="oberv" cols="30" rows="3" class="form-control">Ninguna</textarea>
+                                                <textarea name="observaciones" cols="30" rows="3" class="form-control" id="observacionesConstancia"></textarea>
                                                 <label class="form-label">Observaciones</label>
                                             </div>
                                         </div>
@@ -505,8 +445,8 @@
                             <div style="padding-right: 10px;">
                                 <ul style="list-style:none;">
                                     <li style="display: inline-block;">
-                                        <a href="javascript:void(0);">
-                                            <i class="material-icons" style="color: #2196F3;" data-dismiss="modal">save</i>
+                                        <a href="javascript:void(0)" onclick="uploadRevision()">
+                                            <i class="material-icons" style="color: #2196F3;">save</i>
                                         </a>
                                     </li>
                                     <li style="display: inline-block;">
@@ -533,8 +473,8 @@
                             <h4 class="modal-title" id="defaultModalLabel">Archivo Subido</h4>
                         </div>
 
-                        <div class="modal-body" style="height: 100%;">
-                            <embed src="files/ejemplo1.pdf" type="application/pdf" style="width: 100%;height: 70vh;overflow-y: scroll;">
+                        <div class="modal-body" style="height: 100%;" id="fileViewerContainer">
+                            <embed src="" type="application/pdf" style="width: 100%;height: 70vh;overflow-y: scroll;" id="fileViewer">
                         </div>
                         <!--Modal Body-->
 
@@ -571,6 +511,9 @@
     <!-- Jquery CountTo Plugin Js -->
     <script src="plugins/jquery-countto/jquery.countTo.js"></script>
 
+    <!-- Bootstrap Notify Plugin Js -->
+    <script src="plugins/bootstrap-notify/bootstrap-notify.js"></script>
+
     <!-- Jquery DataTable Plugin Js -->
     <script src="plugins/jquery-datatable/jquery.dataTables.js"></script>
     <script src="plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js"></script>
@@ -581,6 +524,9 @@
     <script src="plugins/jquery-datatable/extensions/export/vfs_fonts.js"></script>
     <script src="plugins/jquery-datatable/extensions/export/buttons.html5.min.js"></script>
     <script src="plugins/jquery-datatable/extensions/export/buttons.print.min.js"></script>
+
+    <!-- SweetAlert Plugin Js -->
+    <script src="plugins/sweetalert/sweetalert.min.js"></script>
 
     <!-- Moment Plugin Js -->
     <script src="plugins/momentjs/moment.js"></script>
@@ -593,18 +539,19 @@
    
     <!-- Select Plugin Js -->
     <script src="plugins/bootstrap-select/js/bootstrap-select.js"></script>
-  
+
    <!-- Custom Js -->
    <script src="js/admin.js"></script>
    <script src="js/pages/tables/jquery-datatable.js"></script>
    <script src="js/pages/ui/tooltips-popovers.js"></script>
 
-   <!--Configuramos el idioma de la tabla-->
-   <script src="js/es_LanguageDataTable.js"></script>
-
    <!--Inicializaciones de componentes de la página-->
    <script src="js/inicializaciones.js"></script>
+   <script src="js/personal_files/validacion/validacion_constancias.js"></script>
+   <script src="js/personal_files/validacion/onChangeObjects.js"></script>
 
+    <!--Configuramos el idioma de la tabla-->
+    <script src="js/es_LanguageDataTable.js"></script>
 </body>
 
 </html>
