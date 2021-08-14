@@ -11,12 +11,15 @@
     $serverResponse = array();
 
     if(isset($_POST['Alumno_id'])){
-        $mysql_request = "SELECT * FROM `electiva` WHERE `Alumno_id` = ".$_POST['Alumno_id']. ";";
+        $mysql_request = "SELECT * FROM `electiva` WHERE `Alumno_id` = ".$_POST['Alumno_id']. " ORDER BY Nombre;";
         $mysql_response = mysqli_query($link, $mysql_request);
 
         if(mysqli_num_rows($mysql_response) > 0){
             while($row = mysqli_fetch_array($mysql_response)){
-                array_push($serverResponse,$row);
+                $answer['ID'] = $row['ID'];
+                $answer['Creditos'] = $row['Creditos'];
+                $answer['Creditos_acumulados'] = $row['Creditos_acumulados'];
+                array_push($serverResponse,$answer);
             }
         }else{
             $serverResponse['status'] = "danger";

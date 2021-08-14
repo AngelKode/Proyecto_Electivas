@@ -218,7 +218,7 @@ const fetchData = () => {
     });
 }
 
-const uploadRevision = () => {
+const uploadRevision = async () =>{
 
     const isValida = $('#isValidaConstancia').val().trim();
     const observacionesEncargado = $('#observacionesConstancia').val().trim();
@@ -234,9 +234,9 @@ const uploadRevision = () => {
                 timer: 2000
             });
         }else{
-
+            
             let dataSend = {
-                ID  : ID_Constancia,
+                ID_Constancia  : ID_Constancia,
                 Denominacion_id : 0,
                 Valida : parseInt(isValida),
                 Observaciones_encargado : "",
@@ -269,11 +269,11 @@ const uploadRevision = () => {
                     //Obtenemos el factor de la denominacion
                     const {Factor} = allDataDenominaciones.find(({ID}) => ID === denominacion);
 
-                    const creditosOtorgados = getCreditosOtorgados(Factor);
+                    const creditosOtorgados = getCreditosOtorgados(Factor).toPrecision(5);
                     
                     dataSend.Denominacion_id = parseInt(denominacion);
                     dataSend.Observaciones_encargado = observacionesEncargado;
-                    dataSend.Creditos = creditosOtorgados.toFixed(3);
+                    dataSend.Creditos = creditosOtorgados;
 
                     newDataConstancia.Denominacion_id = parseInt(denominacion);
                 }else{
@@ -286,73 +286,82 @@ const uploadRevision = () => {
                     });
                 }
             }
-            //Hacemos la petición
-            $.ajax({
-                method : "POST",
-                url    : "./php/constancias_validar/update_status_constancia.php",
-                data   : dataSend,
-                success : (serverResponse) => {
-                    const {status, message} = JSON.parse(serverResponse);
 
-                    if(status === "success"){
-                        //Actualizamos la tabla
-                        const dataTable = $("#tabla_registros_constancias_validar").DataTable();
-                        let data = dataTable.row(`#row_ID_${ID_Constancia}`).data();
-
-                        data[data.length - 1] = `<div style="width: 100%; height: 100%;">
-                                                    <button type="button" style="width: 100%; height: 100%;" class="btn btn-info waves-effect" onclick="setIDConstancia(${ID_Constancia},true)">
-                                                        <i class="material-icons">update</i>
-                                                        <span>Editar validación</span>
-                                                    </button>
-                                                </div>`;
-                        dataTable.row(`#row_ID_${ID_Constancia}`).data(data);
-                    }
-
-                    showNotification({
-                        message : message,
-                        type : status
-                    })
-                    
-                    updateLocalDataConstancias(newDataConstancia);
-
-                    //Cerramos el modal
-                    $("#modal_validar_constancias").modal('hide');
+            //Actualizamos la constancia
+            updateConstanciaAlumno(dataSend)
+            .then(() => {
+                //Obtenemos los créditos de electivas del alumno, para hacer la suma en caso de que se valide
+                if(parseInt(isValida) === 2){
+                    getElectivasAlumno(constanciaActual)
+                    .then(async (electivasAlumno) => {
+                        //Obtenemos los nuevos valores de las electivas del alumno
+    
+                        //Creamos un arreglo para guardar la relacion entre el ID de la constancia y el ID de la electiva a la que pertenece la constancia 
+                        let idElectivaConstancia = [];
+                        
+                        //Obtenemos el nuevo arreglo de electivas sumando los creditos que se liberaron 
+                        let [nuevasElectivas,creditosByElectiva] = await getNewCreditosElectivas_Add(electivasAlumno, dataSend.Creditos);
+                                                
+                        //Agregamos un nuevo objeto con el ID de la constancia y cuantos creditos pertenecen a cada electiva
+                        idElectivaConstancia.push({
+                            ID_Constancia  : constanciaActual.ID,
+                            Creditos : {...creditosByElectiva}
+                        });
+                        
+                        //Actualizamos las electivas del alumno
+                        await updateElectivasAlumno(nuevasElectivas.slice());
+    
+                        //Agregamos los nuevos registros a la tabla de las constancias validadas
+                        await addNewConstanciaValidada(idElectivaConstancia)
+                        .then(() => {})
+                        .catch(({status, message}) => {
+                            showNotification({
+                                message : message,
+                                type : status
+                            })
+                        });
+                    });
                 }
+
+                //Actualizamos la constancia actual
+                constanciaActual.Creditos = parseFloat(dataSend.Creditos).toPrecision(5);
+                constanciaActual.Denominacion_id = dataSend.Denominacion_id + "";
+                constanciaActual.Observaciones_encargado = dataSend.Observaciones_encargado;
+                constanciaActual.Valida = dataSend.Valida + "";    
+                                        
+                //Actualizamos los datos en el arreglo de todas las constancas
+                updateLocalDataConstancias(newDataConstancia);
+                    
+                //Actualizamos la tabla
+                const dataTable = $("#tabla_registros_constancias_validar").DataTable();
+                let data = dataTable.row(`#row_ID_${ID_Constancia}`).data();
+                    
+                data[data.length - 1] = `<div style="width: 100%; height: 100%;">
+                                            <button type="button" style="width: 100%; height: 100%;" class="btn btn-info waves-effect" onclick="setIDConstancia(${ID_Constancia},true)">
+                                                <i class="material-icons">update</i>
+                                                <span>Editar validación</span>
+                                            </button>
+                                        </div>`;
+                dataTable.row(`#row_ID_${ID_Constancia}`).data(data);
+                    
+                //Mostramos la notificacion de que se hicieron los cambios
+                showNotification({
+                    message : "La revisión se ha guardado correctamente.",
+                    type : 'success'
+                })
+                    
+                //Cerramos el modal
+                $("#modal_validar_constancias").modal('hide');
             });
         }
     }else{
 
-        //Aqui, haremos las actualizaciones correspondientes de las electivas del alumno
-        let dataSend = {
-            ID  : ID_Constancia,
-            Denominacion_id : 0,
-            Valida : parseInt(isValida),
-            Observaciones_encargado : "",
-            Creditos : 0,
-            Alumno_id : constanciaActual.Alumno_id
-        };
-
-        let newDataConstancia = {
-            Denominacion_id : 0,
-            Observaciones_encargado : observacionesEncargado,
-            Valida : isValida
-        };
-
-        const isNewStatusConstanciaValida = (isValida === "2") ? true : false;
+        const isNewStatusConstanciaValida = (parseInt(isValida) === 2) ? true : false;
         const isDenominacionElegida = ($("#denominacionConstancia").val() === null) ? false : true;
         const newDenominacionConstancia = (isDenominacionElegida && isNewStatusConstanciaValida) ? $("#denominacionConstancia").val().trim() : 0;
 
-        if(isDenominacionElegida && isNewStatusConstanciaValida){
-            const {Factor} = allDataDenominaciones.find(({ID}) => ID === newDenominacionConstancia);
-                    
-            const creditosOtorgados = getCreditosOtorgados(Factor);
-
-            dataSend.Denominacion_id = parseInt(newDenominacionConstancia);
-            dataSend.Observaciones_encargado = observacionesEncargado;
-            dataSend.Creditos = creditosOtorgados;
-
-            newDataConstancia.Denominacion_id = parseInt(newDenominacionConstancia);
-        }else if((!isDenominacionElegida) && isNewStatusConstanciaValida){
+        //Verificamos que no se dejen espacios vacios
+        if((!isDenominacionElegida && isNewStatusConstanciaValida) || (observacionesEncargado === "")){
             swal({
                 title: "¡Cuidado!",
                 text: "1 o más datos faltantes. Chécalos:)",
@@ -360,48 +369,121 @@ const uploadRevision = () => {
                 showConfirmButton : false,
                 timer: 2000
             });
+        }else{
+            //Encontramos la nueva denominación que se le asignará a la constancia
+            let denominacionNueva = (parseInt(newDenominacionConstancia) !== 0) ? allDataDenominaciones.find(({ID}) => ID === newDenominacionConstancia) 
+                                                                                : {ID : 0, Factor : '1 x 0 horas'};
+            
+            const {Factor : FactorNuevo} = denominacionNueva;                             
+            const newCreditosToAdd = (parseInt(denominacionNueva.ID) !== 0) ? getCreditosOtorgados(FactorNuevo).toPrecision(5) : 0 + "";
+
+            let dataSend = {
+                ID_Constancia  : ID_Constancia,
+                Denominacion_id : newDenominacionConstancia,
+                Observaciones_encargado : observacionesEncargado,
+                Creditos : newCreditosToAdd,
+                Alumno_id : constanciaActual.Alumno_id,
+                Valida : parseInt(isValida),
+            };
+
+            let newDataConstancia = {
+                Denominacion_id : newDenominacionConstancia + "",
+                Observaciones_encargado : observacionesEncargado,
+                Valida : isValida + ""
+            };
+
+            updateConstanciaAlumno(dataSend)
+                .then(() => {
+                    getCreditosConstanciasAlumno(dataSend.Alumno_id)
+                    .then(async (creditosAlumno) => {
+                        //Creo un nuevo objeto, pero con los creditos acumulados todos iguales a 0
+                        let electivasAlumno = await getElectivasAlumno(constanciaActual);
+                        let electivasAlumnoEmpty = electivasAlumno.map((el) => {
+                            el.Creditos_acumulados = 0+"";
+                            return el;
+                        });
+
+                        //Creamos un arreglo para guardar la relacion entre el ID de la constancia y el(las) ID de la electiva a la que pertenece cada constancia 
+                        let idElectivasConstancias = [];
+
+                        //Recorro todos los créditos autorizados para el alumno, para sumarlos y obtener las nuevas electivas
+                        creditosAlumno.forEach(async (el) => {
+                            //Obtenemos el nuevo arreglo sumando los creditos 
+                            let [newConstancia, creditosByElectiva] = await getNewCreditosElectivas_Add(electivasAlumnoEmpty, el.Creditos);
+                            
+                            //Agregamos un nuevo objeto con el ID de la constancia y cuantos creditos pertenecen a cada electiva
+                            idElectivasConstancias.push({
+                                ID_Constancia  : el.ID,
+                                Creditos : {...creditosByElectiva}
+                            });
+
+                            //Referenciamos el nuevo resultado
+                            electivasAlumnoEmpty = newConstancia;
+                        });
+
+                        //Actualizamos las electivas del alumno
+                        await updateElectivasAlumno(electivasAlumnoEmpty.slice());
+
+                        //Obtenemos la ID de la constancia que se le eliminaran todos los registros, en caso de que se vaya a eliminar
+                        const idConstanciaToDelete = (parseInt(denominacionNueva.ID) === 0) ? ID_Constancia : 0;
+
+                        //Actualizamos los registros en la tabla de creditos liberados, y dependiendo si se actualizan datos, o si se
+                        //invalida la constancia, hacemos los cambios
+                        await updateCreditosLiberadosAlumno(idConstanciaToDelete,idElectivasConstancias.slice())
+                        .then(() => {
+                            showNotification({
+                                message : "Constancia actualizada correctamente.",
+                                type : 'success'
+                            });
+                        })
+                        .catch(({status, message}) => {
+                            showNotification({
+                                message : message,
+                                type : status
+                            })
+                        });
+
+                        //Actualizo el valor de la constancia actual
+                        constanciaActual.Creditos = parseFloat(newCreditosToAdd).toPrecision(5);
+                        constanciaActual.Denominacion_id = newDenominacionConstancia + "";
+                        constanciaActual.Observaciones_encargado = observacionesEncargado;
+                        constanciaActual.Valida = isValida + "";
+
+                        //Actualizo el registro en el arreglo de todas las constancias
+                        updateLocalDataConstancias(newDataConstancia);
+
+                        //Cerramos el modal
+                        $("#modal_validar_constancias").modal('hide');
+                    });
+                });
         }
-
-        getElectivasAlumno(constanciaActual)
-            .then((electivasAlumno) => {
-                const denominacionNueva = allDataDenominaciones.find(({ID}) => ID === newDenominacionConstancia);
-                if(isNewStatusConstanciaValida){
-                    //Si es valida, checamos si va a haber cambios, se adaptan los créditos o si se va a eliminar
-                    if(isValida){
-                        //Checamos si habrá cambios en los créditos
-                        if(constanciaActual.Denominacion_id !== newDenominacionConstancia){
-                            dataSend.Denominacion_id = parseInt(newDenominacionConstancia);
-                        }
-                        //Checamos que se hayan ingresado las observaciones del encargado
-                        if(observacionesEncargado !== ""){
-                            dataSend.Observaciones_encargado = observacionesEncargado;
-                        } 
-                    }else{
-
-                    }
-                }else{
-                    //Si no es valida, checamos si va a seguir igual o si va a cambiar a 'Válida'
-                }
-               return getNewCreditosElectivas(electivasAlumno,4);
-            }).then((newDataElectivas) => {
-                swal({
-                    title: "¡Implementación en proceso!",
-                    text: "Edición de validación de constancias en proceso...",
-                    type: "warning",
-                    showConfirmButton : false,
-                    timer: 3000
-                })
-                /* $.ajax({
-                    method : "POST",
-                    url    : "./php/constancias_validar/updateValidaciones.php",
-                    data : dataSend,
-                    success : (serverResponse) => {
-        
-                    }
-                }) */
-            }).catch(console.log);
     }
     
+}
+
+const addNewConstanciaValidada = (newConstanciaLiberada) => {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            method : "POST",
+            url    : "./php/constancias_validar/addCreditosLiberados.php",
+            data : {
+                newRegistroElectivasLiberadas : JSON.stringify(newConstanciaLiberada)
+            },
+            success : (serverResponse) => {
+
+                const jsonResponse = JSON.parse(serverResponse);
+                const {status, message} = jsonResponse;
+                
+                if(status !== "success"){
+                    reject({
+                        status : status,
+                        message : message
+                    });
+                }
+                resolve();
+            }
+        });
+    });
 }
 
 const getElectivasAlumno = ({Alumno_id}) => {
@@ -413,6 +495,7 @@ const getElectivasAlumno = ({Alumno_id}) => {
                 Alumno_id : Alumno_id
             },
             success : (serverResponse) => {
+
                 const jsonResponse = JSON.parse(serverResponse);
                 const {status, message} = jsonResponse;
 
@@ -425,32 +508,149 @@ const getElectivasAlumno = ({Alumno_id}) => {
     });
 }
 
-const getNewCreditosElectivas = (electivasAlumno, cantidadAlterar) => {
+const getAllConstanciasAlumno = ({Alumno_id}) => {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            method : "POST",
+            url    : "./php/constancias_validar/getElectivasAlumno.php",
+            data : {
+                Alumno_id : Alumno_id
+            },
+            success : (serverResponse) => {
+
+                const jsonResponse = JSON.parse(serverResponse);
+                const {status, message} = jsonResponse;
+
+                if(status === "danger"){
+                    reject(message);
+                }
+                resolve(jsonResponse);
+            }
+        })
+    });
+}
+
+const getNewCreditosElectivas_Add = (electivasAlumno, cantidadAlterar) => {
     return new Promise((resolve) => {
 
         let puntosElectivas = [];
-        electivasAlumno.forEach((electiva) => puntosElectivas.push({Creditos : electiva.Creditos, CreditosObtenidos : electiva.Creditos_acumulados}));
+        electivasAlumno.forEach((electiva) => puntosElectivas.push({Creditos : electiva.Creditos, Creditos_acumulados : electiva.Creditos_acumulados, ID : electiva.ID}));
 
-        valoresElectivas = puntosElectivas.reverse();
+        let creditosByElectiva = [];
 
-        valoresElectivas = valoresElectivas.reduce((acc,cv,ci) => {
+        let valoresElectivasNuevas = electivasAlumno.reduce((acc,cv) => {
+            if(!(parseFloat(cv.Creditos_acumulados) >= parseFloat(cv.Creditos))){
+                let sumaCreditos = parseFloat(cv.Creditos_acumulados) + parseFloat(cantidadAlterar);
+                
+                //Agregamos un objeto que contiene el ID de la electiva, y cuantos creditos pertenecen a esa electiva,
+                //Cada objeto es una constancia
+                creditosByElectiva.push({
+                    IDElectiva : cv.ID,
+                    Creditos   : (parseFloat(sumaCreditos) > parseFloat(cv.Creditos)) ? cantidadAlterar - (parseFloat(sumaCreditos) - cv.Creditos) : parseFloat(cantidadAlterar)
+                })
 
-            if(cantidadAlterar > 0 || ci === 0){
-                let sobrante = (parseFloat(cv.CreditosObtenidos)) - (parseFloat(cantidadAlterar) * -1);
-
-                if(sobrante >= 0){
-                    cv.CreditosObtenidos = sobrante;
-                    cantidadAlterar = 0;   
+                if(parseFloat(sumaCreditos) >= parseFloat(cv.Creditos)){
+                    cv.Creditos_acumulados = parseFloat(cv.Creditos).toPrecision(5);
+                    cantidadAlterar = Math.abs((sumaCreditos - parseFloat(cv.Creditos))); 
                 }else{
-                    cv.CreditosObtenidos = 0;
-                    cantidadAlterar = Math.abs(sobrante);    
-                }  
+                    cv.Creditos_acumulados = sumaCreditos.toPrecision(5);   
+                    cantidadAlterar = 0; 
+                }
             }
             acc.push({...cv});
-            return acc; 
-        },[])
+            return acc;            
+        },[]);
         
-        resolve(valoresElectivas.reverse());
+        resolve([valoresElectivasNuevas, creditosByElectiva]);
+    });
+}
+
+const updateElectivasAlumno = (newDataElectivas) => {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            method : "POST",
+            url    : "./php/constancias_validar/updateElectivas.php",
+            data : {
+                newDataElectivas : JSON.stringify(newDataElectivas)
+            },
+            success : (serverResponse) => {
+
+                const {status, message} = JSON.parse(serverResponse);
+
+                if(!status === "success"){
+                    showNotification({
+                        message : message,
+                        type : status
+                    })
+                    reject(message);
+                }
+                resolve();
+            }
+        });
+    })
+}
+
+const updateConstanciaAlumno = ({ID_Constancia, Denominacion_id, Observaciones_encargado, Creditos, Valida}) => {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            method : "POST",
+            url    : "./php/constancias_validar/updateConstancia.php",
+            data   : {
+                ID  : ID_Constancia,
+                Denominacion_id : Denominacion_id,
+                Observaciones_encargado : Observaciones_encargado,
+                Creditos : Creditos,
+                Valida : Valida
+            },
+            success : resolve  
+        })
+    });
+}
+
+const updateCreditosLiberadosAlumno = (idConstanciaToDelete = 0,newRegistrosElectivasLiberadas) => {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            method : "POST",
+            url    : "./php/constancias_validar/updateCreditosLiberados.php",
+            data : {
+                IDConstanciaToDelete : idConstanciaToDelete,
+                newRegistrosElectivasLiberadas : JSON.stringify(newRegistrosElectivasLiberadas)
+            },
+            success : (serverResponse) => {
+
+                const jsonResponse = JSON.parse(serverResponse);
+                const {status, message} = jsonResponse;
+                
+                if(status !== "success"){
+                    reject({
+                        status : status,
+                        message : message
+                    });
+                }
+                resolve();
+            }
+        });
+    });
+}
+
+const getCreditosConstanciasAlumno = (Alumno_id) => {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            method : "POST",
+            url    : "./php/constancias_validar/getConstanciasAlumno.php",
+            data   : {
+                Alumno_id : Alumno_id
+            },
+            success : (serverResponse) => {
+                const serverResponseJSON = JSON.parse(serverResponse);
+                const {status, message} = serverResponseJSON;
+
+                if(!status){
+                    resolve(serverResponseJSON);
+                }
+                reject(message);
+            }  
+        })
     });
 }
 
