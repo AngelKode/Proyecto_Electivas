@@ -12,7 +12,7 @@ const getCard = ({Creditos, Creditos_acumulados, Nombre}) => {
                     </div>
                     <div class="body" style="padding: 10px;">
                         <div class="progress" style="margin: 5px;">
-                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">Completado</div>
+                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"><em>Completado</em></div>
                         </div>
                     </div>
                 </div>`;
@@ -25,7 +25,7 @@ const getCard = ({Creditos, Creditos_acumulados, Nombre}) => {
                     </div>
                     <div class="body" style="padding: 10px;">
                         <div class="progress" style="margin: 5px;">
-                            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: ${parseInt(percentageElectiva)}%;">${parseInt(percentageElectiva)}%</div>
+                            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: ${parseInt(percentageElectiva)}%;"><em>${parseInt(percentageElectiva)}%</em></div>
                         </div>
                     </div>
                 </div>`;
@@ -39,8 +39,8 @@ const getCard = ({Creditos, Creditos_acumulados, Nombre}) => {
                 </div>
                 <div class="body" style="padding: 10px;">
                     <div class="progress" style="margin: 5px;text-align: center;">
-                        <span>0%</span>
-                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">Sin avance.</div>
+                        <span><em style = "color:red">0%</em></span>
+                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
                     </div>
                 </div>
             </div>`;

@@ -48,6 +48,12 @@ const refreshEmbedFile = () => {
     $("#fileViewerContainer").html(`<embed src="" type="application/pdf" style="width: 100%;height: 70vh;overflow-y: scroll;" id="fileViewer">`); 
 }
 
+const setDataFile = () => {
+    //Actualizamos el encabezado del modal al ver el documento PDF
+    $("#nombreActividadTitle").html(constanciaActual.Actividad);
+    $("#horasActividadTitle").html(constanciaActual.Horas);
+}
+
 const setFileToView = () => {
     $("#fileViewer").attr("src",`./files/${constanciaActual.Archivo}`);
     $('#modal_archivo_subido').modal('show');
@@ -658,6 +664,8 @@ $(document).ready(() => {
     fetchData().then(() => {
         //Configuramos para refrescar el embed donde se muetra el PDF
         $('#modal_archivo_subido').on('hidden.bs.modal', refreshEmbedFile);
+        //Configuramos para que cada que se abra el modal, se actualicen los datos del mismo
+        $('#modal_archivo_subido').on('show.bs.modal', setDataFile);
         //Quitamos la pantalla de carga al obtener todos los datos y mostrarlos en la tabla
         setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
     })
