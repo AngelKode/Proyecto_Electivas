@@ -15,7 +15,14 @@
 
     if($mysql_response){
          while($mysql_row = mysqli_fetch_array($mysql_response)){
-            array_push($serverResponse, $mysql_row);
+            $newData = array();
+            $newData['ID'] = $mysql_row['ID'];
+            $newData['EjeTematico'] = $mysql_row['EjeTematico'];
+            $newData['Modalidad'] = $mysql_row['Modalidad'];
+            $newData['Descripcion'] = $mysql_row['Descripcion'];
+            $newData['Factor'] = $mysql_row['Factor'];
+            $newData['Ejemplos'] = $mysql_row['Ejemplos'];
+            array_push($serverResponse, $newData);
         }
     }else{
         $serverResponse['status'] = "danger";

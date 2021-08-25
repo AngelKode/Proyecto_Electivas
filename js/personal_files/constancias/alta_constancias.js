@@ -1,3 +1,38 @@
+
+const setDataMenu = () => {
+    return new Promise((resolve, reject) => {
+        //Obtenemos las cookies, y si es valido el acceso
+        $.ajax({
+            method : "GET",
+            url    : "./php/api/COOKIES.php",
+            success : (serverResponse) => {
+                
+                const jsonResponse = JSON.parse(serverResponse);
+                const {status} = jsonResponse;
+
+                if(status !== "OK"){
+                    const {message} = jsonResponse;
+                    reject(message);
+                }else{
+                    const {Nombre, Programa} = jsonResponse;
+
+                    $(".name").html(Nombre.substr(Nombre.indexOf("=") + 1, Nombre.length));
+                    $(".name").css({
+                        "font-size" : "18px"
+                    })
+                    
+                    $(".program").append("Ingeniería: " + Programa.substr(Programa.indexOf("=") + 1, Programa.length));
+                    $(".program").css({
+                        "color" : "white",
+                        "font-size" : "12px"
+                    });
+                    resolve();
+                }
+            }
+        })
+    })
+}
+
 const showNotification = ({message = "", type = "info", element = "body", offset = {x : 30,y : 75},placement = {from : "top", align : "right"}, icon="ok"}) => {
         $.notify({
             message: message,
@@ -244,7 +279,7 @@ const addNewConstancia = () => {
                         ]).draw().node().id = `row_ID_${ID}`;
         
                         //Actualizamos los datos
-                        dataRegisterToBeAdded = {
+                        const dataRegisterToBeAdded = {
                             ID : `${ID}`,
                             Actividad : valueNombreActividad,
                             Alumno_id : 1,
@@ -520,11 +555,30 @@ const deleteConstancia = () => {
 }
 
 $(document).ready(() => {
-    fetchDataConstancias().then(() => {
-        //Configuramos para refrescar el embed donde se muetra el PDF
-        $('#modal_archivo_subido').on('hidden.bs.modal', refreshEmbedFile);
-
-        //Quitamos la pantalla de carga al obtener todos los datos y mostrarlos en la tabla
-        setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
-    });
+    //Checamos si existen cookies
+    if(document.cookie.split(";").length >= 3){
+        //Agregamos los listeners de los botones
+        setDataMenu()
+        .then(() => {
+            fetchDataConstancias().then(() => {
+                //Configuramos para refrescar el embed donde se muetra el PDF
+                $('#modal_archivo_subido').on('hidden.bs.modal', refreshEmbedFile);
+        
+                //Quitamos la pantalla de carga al obtener todos los datos y mostrarlos en la tabla
+                setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
+            });
+        })
+        .catch((errMessage) => {
+            console.log("aqui")
+            const messageHTML = `<div>
+                                ${errMessage}
+                                </div>`;
+            $('.page-loader-wrapper').append(messageHTML);
+        })
+    }else{
+        const messageHTML = `<div>
+                                Acceso denegado. Inicie sesión
+                            </div>`;
+        $('.page-loader-wrapper').append(messageHTML);
+    }
 })

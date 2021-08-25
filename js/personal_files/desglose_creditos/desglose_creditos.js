@@ -1,4 +1,4 @@
-const ID_Alumno = 2;
+import setDataMenu from "../setting_data/setDataMenu.js"
 
 const getPanelContainer = ({Title = "", CountPanel = 1, TableBody = "", TotalCreditos = 0}) => {
     return `<div class="panel panel-success">
@@ -71,9 +71,6 @@ const fetchData = () => {
         $.ajax({
             method : "POST",
             url    : "./php/desglose_creditos/fetchData.php",
-            data :{
-                Alumno_id : ID_Alumno
-            },
             success : (serverResponse) => {
                  
                 const jsonResponse = JSON.parse(serverResponse);
@@ -92,14 +89,11 @@ const fetchData = () => {
     });
 }
 
-const getElectivasAlumno = ({Alumno_id}) => {
+const getElectivasAlumno = () => {
     return new Promise((resolve, reject) => {
         $.ajax({
             method : "POST",
             url    : "./php/constancias_validar/getElectivasAlumno.php",
-            data : {
-                Alumno_id : Alumno_id
-            },
             success : (serverResponse) => {
     
                 const jsonResponse = JSON.parse(serverResponse);
@@ -161,47 +155,57 @@ const createSectionsElectivas = (dataOfEachElectiva) => {
 }
 
 $(document).ready(()=>{
-    fetchData()
-    .then(async ({electivas}) => {
-        
-        //Obtenemos las electivas del alumno
-        getElectivasAlumno({Alumno_id : ID_Alumno})
-        .then( async (electivasAlumno) => {
 
-            //Separamos las constancias por electiva
-            const separatedElectivasByName = [];
-            electivasAlumno.forEach(({Nombre}) => {
-                separatedElectivasByName[Nombre] = [];
-            });
+    setDataMenu()
+    .then(() => {
+        fetchData()
+        .then(async ({electivas}) => {
+            
+            //Obtenemos las electivas del alumno
+            getElectivasAlumno()
+            .then( async (electivasAlumno) => {
 
-            //Ya teniendo todas las electivas, agregamos las constancias a la electiva donde pertenencen
-            electivas.forEach((constancia) => {
-                separatedElectivasByName[constancia.Nombre].push({...constancia});
-            });
+                //Separamos las constancias por electiva
+                const separatedElectivasByName = [];
+                electivasAlumno.forEach(({Nombre}) => {
+                    separatedElectivasByName[Nombre] = [];
+                });
 
-            //Teniendo todos los datos, creamos las secciones
-            await createSectionsElectivas(separatedElectivasByName)
-                  .then(() => {
-                        setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
-                  })
-                  .catch(({message}) => {
-                    const messageHTML = `<div>
-                                       ${message}
-                                    </div>`;
-                    $('.page-loader-wrapper').append(messageHTML);
-                })
+                //Ya teniendo todas las electivas, agregamos las constancias a la electiva donde pertenencen
+                electivas.forEach((constancia) => {
+                    separatedElectivasByName[constancia.Nombre].push({...constancia});
+                });
+
+                //Teniendo todos los datos, creamos las secciones
+                await createSectionsElectivas(separatedElectivasByName)
+                    .then(() => {
+                            setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
+                    })
+                    .catch(({message}) => {
+                        const messageHTML = `<div>
+                                        ${message}
+                                        </div>`;
+                        $('.page-loader-wrapper').append(messageHTML);
+                    })
+            })
+            .catch(({message}) => {
+                const messageHTML = `<div>
+                                ${message}
+                                </div>`;
+                $('.page-loader-wrapper').append(messageHTML);
+            })
         })
         .catch(({message}) => {
             const messageHTML = `<div>
-                               ${message}
+                            ${message}
                             </div>`;
             $('.page-loader-wrapper').append(messageHTML);
         })
     })
-    .catch(({message}) => {
+    .catch((errMessage) => {
         const messageHTML = `<div>
-                           ${message}
-                        </div>`;
+                                ${errMessage}
+                            </div>`;
         $('.page-loader-wrapper').append(messageHTML);
     })
 })

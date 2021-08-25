@@ -86,18 +86,17 @@
                     <img src="images/user.png" width="48" height="48" alt="User" />
                 </div>
                 <div class="info-container">
-                    <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">John Doe</div>
-                    <div class="email">john.doe@example.com</div>
-                    <div class="btn-group user-helper-dropdown">
+                    <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></div>
+                    <div class="program"></div>
+                    <div class="btn-group user-helper-dropdown" style="bottom: 0px;">
                         <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
                         <ul class="dropdown-menu pull-right">
-                            <li><a href="javascript:void(0);"><i class="material-icons">person</i>Profile</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="javascript:void(0);"><i class="material-icons">group</i>Followers</a></li>
-                            <li><a href="javascript:void(0);"><i class="material-icons">shopping_cart</i>Sales</a></li>
-                            <li><a href="javascript:void(0);"><i class="material-icons">favorite</i>Likes</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="javascript:void(0);"><i class="material-icons">input</i>Sign Out</a></li>
+                            <li>
+                                <a href="#" class="waves-effect waves-block" id="logout">
+                                    <i class="material-icons">input</i>
+                                    Cerrar Sesión
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -325,134 +324,7 @@
                             <!--Ejemplos de Actividades-->
                             <h3>Ejemplos de Actividades</h3>
 
-                            <div class="panel-group" id="accordion_2" role="tablist" aria-multiselectable="true">
-
-                                <div class="panel panel-info">
-                                    <div class="panel-heading" role="tab" id="headingOne_2">
-                                        <h4 class="panel-title">
-                                            <a role="button" data-toggle="collapse" data-parent="#accordion_2" href="#collapseOne_2" aria-expanded="true" aria-controls="collapseOne_2">
-                                                Inquietudes Vocacionales Propias
-                                            </a>
-                                        </h4>
-                                    </div>
-                                    <div id="collapseOne_2" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne_2">
-                                        <div class="panel-body">
-                                            <!--Tabla de información-->
-                                            <div class="body table-responsive">
-                                                <table class="table table-hover">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Modalidad</th>
-                                                            <th>Ejemplos de Actividades</th>
-                                                            <th>Créditos</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-
-                                                        <tr>
-                                                            <td>Docencia</td>
-                                                            <td>
-                                                                <ul>
-                                                                    <li>Cursos ofertados en las Unidades Académicas del IPN.</li>
-                                                                    <li>Estudio de una lengua extranjera que no se considere requisito de titulación.</li>
-                                                                </ul>
-                                                            </td>
-                                                            <td>1 crédito por cada 16 horas.</td>
-                                                        </tr>
-
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            <!--Tabla de información-->
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="panel panel-info">
-                                    <div class="panel-heading" role="tab" id="headingTwo_2">
-                                        <h4 class="panel-title">
-                                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion_2" href="#collapseTwo_2" aria-expanded="false"
-                                               aria-controls="collapseTwo_2">
-                                                Énfasis en la Profesión
-                                            </a>
-                                        </h4>
-                                    </div>
-                                    <div id="collapseTwo_2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo_2">
-                                        <div class="panel-body">
-                                            <!--Tabla de información-->
-                                            <div class="body table-responsive">
-                                                <table class="table table-hover">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Modalidad</th>
-                                                            <th>Ejemplos de Actividades</th>
-                                                            <th>Créditos</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-
-                                                        <tr>
-                                                            <td>Docencia</td>
-                                                            <td>
-                                                                <ul>
-                                                                    <li>Cursos ofertados en las Unidades Académicas del IPN.</li>
-                                                                    <li>Estudio de una lengua extranjera que no se considere requisito de titulación.</li>
-                                                                </ul>
-                                                            </td>
-                                                            <td>1 crédito por cada 16 horas.</td>
-                                                        </tr>
-
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            <!--Tabla de información-->
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="panel panel-info">
-                                    <div class="panel-heading" role="tab" id="headingThree_2">
-                                        <h4 class="panel-title">
-                                            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion_2" href="#collapseThree_2" aria-expanded="false"
-                                               aria-controls="collapseThree_2">
-                                                Complementarias a la Formación
-                                            </a>
-                                        </h4>
-                                    </div>
-                                    <div id="collapseThree_2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree_2">
-                                        <div class="panel-body">
-                                            <!--Tabla de información-->
-                                            <div class="body table-responsive">
-                                                <table class="table table-hover">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Modalidad</th>
-                                                            <th>Ejemplos de Actividades</th>
-                                                            <th>Créditos</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-
-                                                        <tr>
-                                                            <td>Docencia</td>
-                                                            <td>
-                                                                <ul>
-                                                                    <li>Cursos ofertados en las Unidades Académicas del IPN.</li>
-                                                                    <li>Estudio de una lengua extranjera que no se considere requisito de titulación.</li>
-                                                                </ul>
-                                                            </td>
-                                                            <td>1 crédito por cada 16 horas.</td>
-                                                        </tr>
-
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            <!--Tabla de información-->
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--Panel Success-->
-
+                            <div class="panel-group" id="panel_ejemplos" role="tablist" aria-multiselectable="true">
                             </div>
                             <!--Panel Group-->
                         </div>
@@ -496,7 +368,8 @@
     <script src="js/pages/tables/jquery-datatable.js"></script>
 
     <!--Fetch files-->
-    <script src="js/personal_files/estado_liberacion_electivas/liberacionElectivas.js"></script>
+    <script type="module" src="js/personal_files/estado_liberacion_electivas/liberacionElectivas.js"></script>
+    <script type = "module"src="js/personal_files/login/logout.js"></script>
 
 </body>
 

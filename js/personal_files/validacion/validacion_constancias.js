@@ -412,20 +412,32 @@ const uploadRevision = async () =>{
                         //Creamos un arreglo para guardar la relacion entre el ID de la constancia y el(las) ID de la electiva a la que pertenece cada constancia 
                         let idElectivasConstancias = [];
 
-                        //Recorro todos los créditos autorizados para el alumno, para sumarlos y obtener las nuevas electivas
-                        creditosAlumno.forEach(async (el) => {
-                            //Obtenemos el nuevo arreglo sumando los creditos 
-                            let [newConstancia, creditosByElectiva] = await getNewCreditosElectivas_Add(electivasAlumnoEmpty, el.Creditos);
+                        if(creditosAlumno.length > 0){
+                            //Recorro todos los créditos autorizados para el alumno, para sumarlos y obtener las nuevas electivas
+                            creditosAlumno.forEach(async (el) => {
+                                //Obtenemos el nuevo arreglo sumando los creditos 
+                                let [newConstancia, creditosByElectiva] = await getNewCreditosElectivas_Add(electivasAlumnoEmpty, el.Creditos);
+                                
+                                //Agregamos un nuevo objeto con el ID de la constancia y cuantos creditos pertenecen a cada electiva
+                                idElectivasConstancias.push({
+                                    ID_Constancia  : el.ID,
+                                    Creditos : {...creditosByElectiva}
+                                });
+
+                                //Referenciamos el nuevo resultado
+                                electivasAlumnoEmpty = newConstancia;
+                            });
+                        }else{
+                            //En caso de que sea 0, no tiene ninguna electiva validada, y solamente sumamos la actual y agregamos al arreglo
+                            let [,creditosByElectiva] = await getNewCreditosElectivas_Add(electivasAlumnoEmpty, newCreditosToAdd);
                             
                             //Agregamos un nuevo objeto con el ID de la constancia y cuantos creditos pertenecen a cada electiva
                             idElectivasConstancias.push({
-                                ID_Constancia  : el.ID,
+                                ID_Constancia  : ID_Constancia,
                                 Creditos : {...creditosByElectiva}
                             });
 
-                            //Referenciamos el nuevo resultado
-                            electivasAlumnoEmpty = newConstancia;
-                        });
+                        }
 
                         //Actualizamos las electivas del alumno
                         await updateElectivasAlumno(electivasAlumnoEmpty.slice());
@@ -572,6 +584,7 @@ const getNewCreditosElectivas_Add = (electivasAlumno, cantidadAlterar) => {
 }
 
 const updateElectivasAlumno = (newDataElectivas) => {
+    
     return new Promise((resolve, reject) => {
         $.ajax({
             method : "POST",
@@ -623,7 +636,7 @@ const updateCreditosLiberadosAlumno = (idConstanciaToDelete = 0,newRegistrosElec
                 newRegistrosElectivasLiberadas : JSON.stringify(newRegistrosElectivasLiberadas)
             },
             success : (serverResponse) => {
-
+                
                 const jsonResponse = JSON.parse(serverResponse);
                 const {status, message} = jsonResponse;
                 
@@ -648,6 +661,7 @@ const getCreditosConstanciasAlumno = (Alumno_id) => {
                 Alumno_id : Alumno_id
             },
             success : (serverResponse) => {
+
                 const serverResponseJSON = JSON.parse(serverResponse);
                 const {status, message} = serverResponseJSON;
 

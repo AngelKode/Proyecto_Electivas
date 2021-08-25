@@ -42,6 +42,7 @@
 
         if($mysql_response){
             $serverResponse['status'] = "success";
+            $serverResponse['message'] = "Constancia actualizada correctamente";
         }else{
             $serverResponse['status'] = "danger";
             $serverResponse['message'] = "Error al actualizar los créditos. Inténtelo nuevamente.";

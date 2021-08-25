@@ -1,4 +1,4 @@
-$(function () {
+$(document).ready(() => {
     $('#sign_in').validate({
         highlight: function (input) {
             console.log(input);
@@ -11,4 +11,4 @@ $(function () {
             $(element).parents('.input-group').append(error);
         }
     });
-});
+})
