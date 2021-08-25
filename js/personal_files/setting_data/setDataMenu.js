@@ -14,12 +14,12 @@ const setDataMenu = () => {
                 }else{
                     const {Nombre, Programa} = jsonResponse;
 
-                    $(".name").html(Nombre.substr(Nombre.indexOf("=") + 1, Nombre.length));
+                    $(".name").html(Nombre);
                     $(".name").css({
                         "font-size" : "18px"
                     })
                     
-                    $(".program").append("Ingeniería: " + Programa.substr(Programa.indexOf("=") + 1, Programa.length));
+                    $(".program").append("Ingeniería: " + Programa);
                     $(".program").css({
                         "color" : "white",
                         "font-size" : "12px"
