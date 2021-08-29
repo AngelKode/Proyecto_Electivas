@@ -2,6 +2,124 @@ let ID_Constancia;
 let allDataConstancias = [];
 let allDataDenominaciones = [];
 let constanciaActual;
+let tableData = [];
+
+const initDataTable = () => {
+    return new Promise((resolve) => {
+        const configuraciones = {
+            "paging" : true,
+            "pageLength": 5,
+            "drawCallback": function () {
+                //Activamos el tooltip en cualquier cambio, en caso de que esa tabla cuente con tooltips
+                $('.tooltipStatusDone').tooltip({
+                    template : `<div class="tooltip" role="tooltip"><div class="arrow"></div><div class="tooltip-inner" style = "background-color:white;color:green;border: 1px solid green"></div></div>`
+                });
+                $('.tooltipStatusRejected').tooltip({
+                    template : `<div class="tooltip" role="tooltip"><div class="arrow"></div><div class="tooltip-inner" style = "background-color:white;color:red;border: 1px solid red"></div></div>`
+                });
+            },
+            "language": {
+                "lengthMenu": "Mostrar _MENU_ registros",
+                "zeroRecords": "Sin registros actualmente",
+                "info": "Mostrando página _PAGE_ de _PAGES_",
+                "infoEmpty": "Mostrando 0 de 0 registros",
+                "infoFiltered": "(Filtrado de un total de _MAX_ registros)",
+                "paginate": {
+                    "first":      "Primero",
+                    "last":       "Último",
+                    "next":       "Siguiente",
+                    "previous":   "Anterior"
+                },
+                "loadingRecords": "Cargando...",
+                "processing":     "Procesando...",
+                "search":         "Buscar:",
+                "decimal":        ".",
+                "thousands":      ",",
+                "infoPostFix":    "",
+                "aria": {
+                    "sortAscending":  ": Habilitar orden de columna de forma ascendente",
+                    "sortDescending": ": Habilitar orden de columna de forma descendente"
+                },
+                "buttons" : {
+                    "copy": 'Copiar',
+                    "copySuccess": {
+                        "1": "Se guardó en el portapapeles 1 registro",
+                        "_": "Se guardó en el portapapeles %d registros"
+                    },
+                    "print" : "Imprimir",
+                    "copyTitle": 'Guardado en el portapapeles',
+                    "copyKeys": 'Presiona <kbd>ctrl</kbd> o <kbd>\u2318</kbd> + <kbd>C</kbd> para copiar la información de la tabla<br>al portapapeles de tu sistema.<br><br>Para cancelar, de click a este mensaje o presione <kbd>Esc</kbd>.'    
+                }
+            },
+            "dom": 'Bfrtip',
+            "buttons": [
+                'copy', 
+                'csv', 
+                'excel', 
+                'pdf', 
+                'print',
+                {   
+                    text: 'Constancias sin Revisión',
+                    action: function ( e, dt, node, config ) {
+                        renderConstanciasToValidate();
+                    },
+                    className : 'btn-warning'
+                },
+                {   
+                    text: 'Constancias Revisadas',
+                    action: function ( e, dt, node, config ) {
+                        renderAllValidatedConstancias();
+                    },
+                    className : 'btn-info'
+                },
+                {   
+                    text: 'Mostrar Todas',
+                    action: function ( e, dt, node, config ) {
+                        renderAllConstancias();
+                    },
+                    className : 'btn-success'
+                }
+            ],
+            "responsive" : "true",
+            "order" : [[4,'asc']]
+        };
+        
+        let table = $('#tabla_registros_constancias_validar').DataTable();
+        table.destroy();
+        table = $('#tabla_registros_constancias_validar').DataTable(configuraciones);
+        resolve();
+    });
+}
+
+const renderAllConstancias = () => {
+    const table = $("#tabla_registros_constancias_validar").DataTable();
+    table.clear();
+    tableData.forEach(({data,id}) => {
+        table.row.add(data).draw().node().id = id;
+    })
+}
+
+const renderAllValidatedConstancias = () => {
+    const table = $("#tabla_registros_constancias_validar").DataTable();
+    table.clear();
+    tableData.forEach(({data,id}) => {
+        if(!data[data.length - 1].includes("Validar")){
+            table.row.add(data).draw().node().id = id;
+        }
+    })
+    table.draw();
+}
+
+const renderConstanciasToValidate = () => {
+    const table = $("#tabla_registros_constancias_validar").DataTable();
+    table.clear();
+    tableData.forEach(({data,id}) => {
+        if(data[data.length - 1].includes("Validar")){
+            table.row.add(data).draw().node().id = id;
+        }
+    })
+    table.draw();
+}
 
 const showNotification = ({message = "", type = "info", element = "body", offset = {x : 30,y : 75},placement = {from : "top", align : "right"}, icon="ok"}) => {
     return $.notify({
@@ -211,10 +329,18 @@ const fetchData = () => {
                             Programa_Alumno, Nombre_Alumno, Actividad_Alumno, Horas, btnCheckConstancia
                         ]).draw().node().id = `row_ID_${ID_Constancia}`;
 
+                        //Guardamos todos los datos data-table en el arreglo de toda la data obtenida de las constancias
+                        tableData.push({
+                            data : dataTable.row(`#row_ID_${ID_Constancia}`).data().slice(),
+                            id : `row_ID_${ID_Constancia}`
+                        });
+
                         //Agregamos los datos
                         addDataConstancias(constancia);
                     });
                     
+                    //Al terminar de agregar los datos a la tabla, mostramos unicamente los que aun están por validar
+                    renderConstanciasToValidate();
                 }else{
 
                 }
@@ -675,13 +801,17 @@ const getCreditosConstanciasAlumno = (Alumno_id) => {
 }
 
 $(document).ready(() => {
-    fetchData().then(() => {
-        //Configuramos para refrescar el embed donde se muetra el PDF
-        $('#modal_archivo_subido').on('hidden.bs.modal', refreshEmbedFile);
-        //Configuramos para que cada que se abra el modal, se actualicen los datos del mismo
-        $('#modal_archivo_subido').on('show.bs.modal', setDataFile);
-        //Quitamos la pantalla de carga al obtener todos los datos y mostrarlos en la tabla
-        setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
-    })
+    //Inicializamos la tabla
+    initDataTable()
+    .then(() => {
+        fetchData().then(() => {
+            //Configuramos para refrescar el embed donde se muetra el PDF
+            $('#modal_archivo_subido').on('hidden.bs.modal', refreshEmbedFile);
+            //Configuramos para que cada que se abra el modal, se actualicen los datos del mismo
+            $('#modal_archivo_subido').on('show.bs.modal', setDataFile);
+            //Quitamos la pantalla de carga al obtener todos los datos y mostrarlos en la tabla
+            setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
+        })   
+    });    
 });
 
