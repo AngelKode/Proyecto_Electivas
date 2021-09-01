@@ -1,8 +1,15 @@
+const typeConstanciaShowing = {
+    NoValidada : 1,
+    Validada : 2,
+    Todas  : 3
+}
+
 let ID_Constancia;
 let allDataConstancias = [];
 let allDataDenominaciones = [];
 let constanciaActual;
 let tableData = [];
+let typeConstanciasActuales;
 
 const initDataTable = () => {
     return new Promise((resolve) => {
@@ -92,6 +99,9 @@ const initDataTable = () => {
 }
 
 const renderAllConstancias = () => {
+    //Actualizamos el tipo de constancias que se muestran actualmente
+    typeConstanciasActuales = typeConstanciaShowing.Todas;
+
     const table = $("#tabla_registros_constancias_validar").DataTable();
     table.clear();
     tableData.forEach(({data,id}) => {
@@ -100,6 +110,9 @@ const renderAllConstancias = () => {
 }
 
 const renderAllValidatedConstancias = () => {
+    //Actualizamos el tipo de constancias que se muestran actualmente
+    typeConstanciasActuales = typeConstanciaShowing.Validada;
+
     const table = $("#tabla_registros_constancias_validar").DataTable();
     table.clear();
     tableData.forEach(({data,id}) => {
@@ -111,6 +124,9 @@ const renderAllValidatedConstancias = () => {
 }
 
 const renderConstanciasToValidate = () => {
+    //Actualizamos el tipo de constancias que se muestran actualmente
+    typeConstanciasActuales = typeConstanciaShowing.NoValidada;
+
     const table = $("#tabla_registros_constancias_validar").DataTable();
     table.clear();
     tableData.forEach(({data,id}) => {
@@ -484,6 +500,16 @@ const uploadRevision = async () =>{
                     
                 //Cerramos el modal
                 $("#modal_validar_constancias").modal('hide');
+
+                //Checamos cuales se estan mostrando, para renderizar la tabla
+                if(typeConstanciasActuales === typeConstanciaShowing.Validada){
+                    renderAllValidatedConstancias();
+                }else if(typeConstanciasActuales === typeConstanciaShowing.NoValidada){
+                    renderConstanciasToValidate();
+                }else{
+                    renderAllConstancias();
+                }
+
             });
         }
     }else{
