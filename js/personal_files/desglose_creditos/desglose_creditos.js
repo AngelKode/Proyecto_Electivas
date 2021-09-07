@@ -119,7 +119,7 @@ const createSectionsElectivas = (dataOfEachElectiva) => {
         for(let electiva in dataOfEachElectiva){
             if (dataOfEachElectiva.hasOwnProperty(electiva)){
                 
-                //Checamos el tamaño del arreglo
+                //Checamos el tamaño del arreglo, y vemos si generamos o no la tabla para esa electiva
                 if(dataOfEachElectiva[electiva].length > 0){
                     //Recorremos el arreglo de las constancias
                     const [tableBody, totalCreditosAcumulados] = generateTableBody(dataOfEachElectiva[electiva]);
@@ -134,7 +134,7 @@ const createSectionsElectivas = (dataOfEachElectiva) => {
                     //Agregamos el panel
                     $("#panel_info").append(panel);
                 }else{
-
+                    //Si no tiene elementos, unicamente agregamos el titulo y creamos el panel del acordion
                     const panel = getPanelContainer({
                         Title : electiva,
                         CountPanel : panelCounter

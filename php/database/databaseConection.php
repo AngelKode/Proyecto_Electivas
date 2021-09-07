@@ -1,8 +1,8 @@
 <?php
 
-    $server = "localhost";
-    $username = "root";
-    $data_base = "constancias";
+    $server = "localhost"; 
+    $username = "root"; 
+    $data_base = "constancias"; 
     $password = "";
 
     //Hacemos la conexion a la Base de Datos

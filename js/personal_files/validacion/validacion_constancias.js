@@ -442,32 +442,38 @@ const uploadRevision = async () =>{
                 if(parseInt(isValida) === 2){
                     getElectivasAlumno(constanciaActual)
                     .then(async (electivasAlumno) => {
-                        //Obtenemos los nuevos valores de las electivas del alumno
-    
-                        //Creamos un arreglo para guardar la relacion entre el ID de la constancia y el ID de la electiva a la que pertenece la constancia 
-                        let idElectivaConstancia = [];
-                        
-                        //Obtenemos el nuevo arreglo de electivas sumando los creditos que se liberaron 
-                        let [nuevasElectivas,creditosByElectiva] = await getNewCreditosElectivas_Add(electivasAlumno, dataSend.Creditos);
-                                                
-                        //Agregamos un nuevo objeto con el ID de la constancia y cuantos creditos pertenecen a cada electiva
-                        idElectivaConstancia.push({
-                            ID_Constancia  : constanciaActual.ID,
-                            Creditos : {...creditosByElectiva}
-                        });
-                        
-                        //Actualizamos las electivas del alumno
-                        await updateElectivasAlumno(nuevasElectivas.slice());
-    
-                        //Agregamos los nuevos registros a la tabla de las constancias validadas
-                        await addNewConstanciaValidada(idElectivaConstancia)
-                        .then(() => {})
-                        .catch(({status, message}) => {
+                        try {
+                            //Creamos un arreglo para guardar la relacion entre el ID de la constancia y el ID de la electiva a la que pertenece la constancia 
+                            let idElectivaConstancia = [];
+                            
+                            //Obtenemos el nuevo arreglo de electivas sumando los creditos que se liberaron 
+                            let [nuevasElectivas,creditosByElectiva] = await getNewCreditosElectivas_Add(electivasAlumno, dataSend.Creditos);
+                                                    
+                            //Agregamos un nuevo objeto con el ID de la constancia y cuantos creditos pertenecen a cada electiva
+                            idElectivaConstancia.push({
+                                ID_Constancia  : constanciaActual.ID,
+                                Creditos : {...creditosByElectiva}
+                            });
+                            
+                            //Actualizamos las electivas del alumno
+                            await updateElectivasAlumno(nuevasElectivas.slice());
+        
+                            //Agregamos los nuevos registros a la tabla de las constancias validadas
+                            await addNewConstanciaValidada(idElectivaConstancia)
+                            .then(() => {})
+                            .catch(({status, message}) => {
+                                showNotification({
+                                    message : message,
+                                    type : status
+                                })
+                            });
+                        } catch (error) {
                             showNotification({
-                                message : message,
-                                type : status
+                                message : `Error al hacer los cambios. Inténtelo nuevamente`,
+                                type : 'danger',
+                                icon : 'warning'
                             })
-                        });
+                        }
                     });
                 }
 
@@ -554,76 +560,85 @@ const uploadRevision = async () =>{
                 .then(() => {
                     getCreditosConstanciasAlumno(dataSend.Alumno_id)
                     .then(async (creditosAlumno) => {
-                        //Creo un nuevo objeto, pero con los creditos acumulados todos iguales a 0
-                        let electivasAlumno = await getElectivasAlumno(constanciaActual);
-                        let electivasAlumnoEmpty = electivasAlumno.map((el) => {
-                            el.Creditos_acumulados = 0+"";
-                            return el;
-                        });
+                        //Encerramos dentro de un bloque try-catch para detectar posibles errores al hacer los cambios
+                        try {
+                            //Creo un nuevo objeto, pero con los creditos acumulados todos iguales a 0
+                            let electivasAlumno = await getElectivasAlumno(constanciaActual);
+                            let electivasAlumnoEmpty = electivasAlumno.map((el) => {
+                                el.Creditos_acumulados = 0+"";
+                                return el;
+                            });
 
-                        //Creamos un arreglo para guardar la relacion entre el ID de la constancia y el(las) ID de la electiva a la que pertenece cada constancia 
-                        let idElectivasConstancias = [];
+                            //Creamos un arreglo para guardar la relacion entre el ID de la constancia y el(las) ID de la electiva a la que pertenece cada constancia 
+                            let idElectivasConstancias = [];
 
-                        if(creditosAlumno.length > 0){
-                            //Recorro todos los créditos autorizados para el alumno, para sumarlos y obtener las nuevas electivas
-                            creditosAlumno.forEach(async (el) => {
-                                //Obtenemos el nuevo arreglo sumando los creditos 
-                                let [newConstancia, creditosByElectiva] = await getNewCreditosElectivas_Add(electivasAlumnoEmpty, el.Creditos);
+                            if(creditosAlumno.length > 0){
+                                //Recorro todos los créditos autorizados para el alumno, para sumarlos y obtener las nuevas electivas
+                                creditosAlumno.forEach(async (el) => {
+                                    //Obtenemos el nuevo arreglo sumando los creditos 
+                                    let [newConstancia, creditosByElectiva] = await getNewCreditosElectivas_Add(electivasAlumnoEmpty, el.Creditos);
+                                    
+                                    //Agregamos un nuevo objeto con el ID de la constancia y cuantos creditos pertenecen a cada electiva
+                                    idElectivasConstancias.push({
+                                        ID_Constancia  : el.ID,
+                                        Creditos : {...creditosByElectiva}
+                                    });
+
+                                    //Referenciamos el nuevo resultado
+                                    electivasAlumnoEmpty = newConstancia;
+                                });
+                            }else{
+                                //En caso de que sea 0, no tiene ninguna electiva validada, y solamente sumamos la actual y agregamos al arreglo
+                                let [,creditosByElectiva] = await getNewCreditosElectivas_Add(electivasAlumnoEmpty, newCreditosToAdd);
                                 
                                 //Agregamos un nuevo objeto con el ID de la constancia y cuantos creditos pertenecen a cada electiva
                                 idElectivasConstancias.push({
-                                    ID_Constancia  : el.ID,
+                                    ID_Constancia  : ID_Constancia,
                                     Creditos : {...creditosByElectiva}
                                 });
 
-                                //Referenciamos el nuevo resultado
-                                electivasAlumnoEmpty = newConstancia;
-                            });
-                        }else{
-                            //En caso de que sea 0, no tiene ninguna electiva validada, y solamente sumamos la actual y agregamos al arreglo
-                            let [,creditosByElectiva] = await getNewCreditosElectivas_Add(electivasAlumnoEmpty, newCreditosToAdd);
-                            
-                            //Agregamos un nuevo objeto con el ID de la constancia y cuantos creditos pertenecen a cada electiva
-                            idElectivasConstancias.push({
-                                ID_Constancia  : ID_Constancia,
-                                Creditos : {...creditosByElectiva}
-                            });
+                            }
 
-                        }
+                            //Actualizamos las electivas del alumno
+                            await updateElectivasAlumno(electivasAlumnoEmpty.slice());
 
-                        //Actualizamos las electivas del alumno
-                        await updateElectivasAlumno(electivasAlumnoEmpty.slice());
+                            //Obtenemos la ID de la constancia que se le eliminaran todos los registros, en caso de que se vaya a eliminar
+                            const idConstanciaToDelete = (parseInt(denominacionNueva.ID) === 0) ? ID_Constancia : 0;
 
-                        //Obtenemos la ID de la constancia que se le eliminaran todos los registros, en caso de que se vaya a eliminar
-                        const idConstanciaToDelete = (parseInt(denominacionNueva.ID) === 0) ? ID_Constancia : 0;
-
-                        //Actualizamos los registros en la tabla de creditos liberados, y dependiendo si se actualizan datos, o si se
-                        //invalida la constancia, hacemos los cambios
-                        await updateCreditosLiberadosAlumno(idConstanciaToDelete,idElectivasConstancias.slice())
-                        .then(() => {
-                            showNotification({
-                                message : "Constancia actualizada correctamente.",
-                                type : 'success'
-                            });
-                        })
-                        .catch(({status, message}) => {
-                            showNotification({
-                                message : message,
-                                type : status
+                            //Actualizamos los registros en la tabla de creditos liberados, y dependiendo si se actualizan datos, o si se
+                            //invalida la constancia, hacemos los cambios
+                            await updateCreditosLiberadosAlumno(idConstanciaToDelete,idElectivasConstancias.slice())
+                            .then(() => {
+                                showNotification({
+                                    message : "Constancia actualizada correctamente.",
+                                    type : 'success'
+                                });
                             })
-                        });
+                            .catch(({status, message}) => {
+                                showNotification({
+                                    message : message,
+                                    type : status
+                                })
+                            });
 
-                        //Actualizo el valor de la constancia actual
-                        constanciaActual.Creditos = parseFloat(newCreditosToAdd).toPrecision(5);
-                        constanciaActual.Denominacion_id = newDenominacionConstancia + "";
-                        constanciaActual.Observaciones_encargado = observacionesEncargado;
-                        constanciaActual.Valida = isValida + "";
+                            //Actualizo el valor de la constancia actual
+                            constanciaActual.Creditos = parseFloat(newCreditosToAdd).toPrecision(5);
+                            constanciaActual.Denominacion_id = newDenominacionConstancia + "";
+                            constanciaActual.Observaciones_encargado = observacionesEncargado;
+                            constanciaActual.Valida = isValida + "";
 
-                        //Actualizo el registro en el arreglo de todas las constancias
-                        updateLocalDataConstancias(newDataConstancia);
+                            //Actualizo el registro en el arreglo de todas las constancias
+                            updateLocalDataConstancias(newDataConstancia);
 
-                        //Cerramos el modal
-                        $("#modal_validar_constancias").modal('hide');
+                            //Cerramos el modal
+                            $("#modal_validar_constancias").modal('hide');
+                        } catch (error) {
+                            showNotification({
+                                message : `Error al hacer los cambios. Inténtelo nuevamente`,
+                                type : 'danger',
+                                icon : 'warning'
+                            })
+                        }
                     });
                 });
         }
