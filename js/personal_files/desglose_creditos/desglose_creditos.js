@@ -176,8 +176,9 @@ $(document).ready(()=>{
                     separatedElectivasByName[constancia.Nombre].push({...constancia});
                 });
 
-                //Teniendo todos los datos, creamos las secciones
-                await createSectionsElectivas(separatedElectivasByName)
+                try {
+                    //Teniendo todos los datos, creamos las secciones
+                    await createSectionsElectivas(separatedElectivasByName)
                     .then(() => {
                             setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
                     })
@@ -186,7 +187,14 @@ $(document).ready(()=>{
                                         ${message}
                                         </div>`;
                         $('.page-loader-wrapper').append(messageHTML);
+                    })   
+                } catch (error) {
+                    showNotification({
+                        message : 'Error al obtener los datos de tus electivas. Inténtelo nuevamente',
+                        type : 'danger',
+                        icon : 'warning'
                     })
+                }
             })
             .catch(({message}) => {
                 const messageHTML = `<div>
