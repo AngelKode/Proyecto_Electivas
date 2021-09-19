@@ -22,12 +22,6 @@
     <!-- Animation Css -->
     <link href="plugins/animate-css/animate.css" rel="stylesheet" />
 
-    <!-- Morris Chart Css-->
-    <link href="plugins/morrisjs/morris.css" rel="stylesheet" />
-
-    <!-- Custom Css -->
-    <link href="css/style.css" rel="stylesheet">
-
     <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
     <link href="css/themes/theme-blue.css" rel="stylesheet" />
 
@@ -43,6 +37,8 @@
     <!-- Sweetalert Css -->
     <link href="plugins/sweetalert/sweetalert.css" rel="stylesheet" />
 
+    <!-- Custom Css -->
+    <link href="css/style.css" rel="stylesheet">
 
 </head>
 
@@ -98,13 +94,12 @@
                     <div class="btn-group user-helper-dropdown">
                         <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
                         <ul class="dropdown-menu pull-right">
-                            <li><a href="javascript:void(0);"><i class="material-icons">person</i>Profile</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="javascript:void(0);"><i class="material-icons">group</i>Followers</a></li>
-                            <li><a href="javascript:void(0);"><i class="material-icons">shopping_cart</i>Sales</a></li>
-                            <li><a href="javascript:void(0);"><i class="material-icons">favorite</i>Likes</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="javascript:void(0);"><i class="material-icons">input</i>Sign Out</a></li>
+                            <li>
+                                <a href="#" class="waves-effect waves-block" id="logout-admin" style="width: max-content;">
+                                    <i class="material-icons">input</i>
+                                    Cerrar Sesión
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -116,21 +111,9 @@
                 <ul class="list">
                     <li class="header">Secciones</li>
                     <li>
-                        <a href="index.html">
-                            <i class="material-icons">home</i>
-                            <span>Inicio</span>
-                        </a>
-                    </li>
-                    <li>
                         <a href="denominacion_electivas.html">
                             <i class="material-icons">library_add</i>
                             <span>Denominación Electivas</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="alta_constancias.html">
-                            <i class="material-icons">upload_file</i>
-                            <span>Alta de Constancias</span>
                         </a>
                     </li>
                     <li class="active">
@@ -140,10 +123,15 @@
                         </a>
                     </li>
                     <li>
-                        <a href="desglose_creditos.html">
-                            <i class="material-icons">list</i>
-                            <span>Desglose de Créditos</span>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">settings</i>
+                            <span>Configuración</span>
                         </a>
+                        <ul class="ml-menu">
+                            <li>
+                                <a href="cambiar_credenciales.html">Cambiar contraseña</a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </div>
@@ -526,6 +514,9 @@
     <!-- Bootstrap Notify Plugin Js -->
     <script src="plugins/bootstrap-notify/bootstrap-notify.js"></script>
 
+    <!-- Slimscroll Plugin Js -->
+    <script src="plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+
     <!-- Jquery DataTable Plugin Js -->
     <script src="plugins/jquery-datatable/jquery.dataTables.js"></script>
     <script src="plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js"></script>
@@ -561,6 +552,7 @@
    <script src="js/inicializaciones.js"></script>
    <script src="js/personal_files/validacion/validacion_constancias.js"></script>
    <script src="js/personal_files/validacion/onChangeObjects.js"></script>
+   <script type = "module"src="js/personal_files/login/logout.js"></script>
 
 </body>
 

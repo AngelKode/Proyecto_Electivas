@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>Desglose de Créditos</title>
+    <title>Cambiar Credenciales</title>
     <!-- Favicon-->
     <link rel="icon" href="favicon.ico" type="image/x-icon">
 
@@ -30,6 +30,13 @@
 
     <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
     <link href="css/themes/theme-blue.css" rel="stylesheet" />
+
+    <!-- Sweetalert Css -->
+    <link href="plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+
+    <!-- JQuery DataTable Css -->
+    <link href="plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css" rel="stylesheet">
+
 
 </head>
 
@@ -80,13 +87,13 @@
                     <img src="images/user.png" width="48" height="48" alt="User" />
                 </div>
                 <div class="info-container">
-                    <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></div>
-                    <div class="program"></div>
-                    <div class="btn-group user-helper-dropdown" style="bottom: 0px;">
+                    <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</div>
+                    <div class="email"></div>
+                    <div class="btn-group user-helper-dropdown">
                         <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
                         <ul class="dropdown-menu pull-right">
                             <li>
-                                <a href="#" class="waves-effect waves-block" id="logout">
+                                <a href="#" class="waves-effect waves-block" id="logout-admin" style="width: max-content;">
                                     <i class="material-icons">input</i>
                                     Cerrar Sesión
                                 </a>
@@ -102,22 +109,27 @@
                 <ul class="list">
                     <li class="header">Secciones</li>
                     <li>
-                        <a href="index.html">
-                            <i class="material-icons">home</i>
-                            <span>Inicio</span>
+                        <a href="denominacion_electivas.html">
+                            <i class="material-icons">library_add</i>
+                            <span>Denominación Electivas</span>
                         </a>
                     </li>
                     <li>
-                        <a href="alta_constancias.html">
-                            <i class="material-icons">upload_file</i>
-                            <span>Alta de Constancias</span>
+                        <a href="validar_constancias.html">
+                            <i class="material-icons">task</i>
+                            <span>Validación de Constancias</span>
                         </a>
                     </li>
                     <li class="active">
-                        <a href="desglose_creditos.html">
-                            <i class="material-icons">list</i>
-                            <span>Desglose de Créditos</span>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">settings</i>
+                            <span>Configuración</span>
                         </a>
+                        <ul class="ml-menu">
+                            <li class="active">
+                                <a href="cambiar_credenciales.html">Cambiar contraseña</a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </div>
@@ -284,62 +296,85 @@
     <section class="content">
         <div class="container-fluid">
             <div class="block-header">
-                <h2>Desglose de Electivas</h2>
+                <h2>Configuraciones</h2>
             </div>
 
-            <div class="row clearfix">
+            <div class="row clearfix" id="body_page">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="card">
                         <div class="header">
-                            <h2>
-                                Desglose de los Créditos Acumulados
+                            <h2 style="display: inline-block;">
+                                Cambiar contraseña
                             </h2>
                         </div>
                         <div class="body">
-                            <div class="panel-group" id="panel_info" role="tablist" aria-multiselectable="true">
+                            <div class="row clearfix">
+                                <div class="col-sm-12" style="margin-bottom: 0;">
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <input type="password" class="form-control" placeholder="Contraseña anterior" id="oldPasswd">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <input type="password" class="form-control" placeholder="Contraseña nueva" id="newPasswd">    
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <input type="password" class="form-control" placeholder="Confirmar nueva contraseña" id="newPasswdCheck">
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-success waves-effect" disabled id="changePasswdBtn">Aplicar cambios</button>
+                                </div>
                             </div>
-                            <!--Panel Group-->
                         </div>
-                        <!--Body-->
                     </div>
-                    <!--Card-->
                 </div>
             </div>
-            <!--ROW-->
+            <!--Div Tabla-->
+
+
         </div>
         <!--Container Fluid-->
 
     </section>
 
-   <!-- Jquery Core Js -->
-   <script src="plugins/jquery/jquery.min.js"></script>
+    <!-- Jquery Core Js -->
+    <script src="plugins/jquery/jquery.min.js"></script>
 
-   <!-- Jquery CountTo Plugin Js -->
-   <script src="plugins/jquery-countto/jquery.countTo.js"></script>
+    <!-- Jquery CountTo Plugin Js -->
+    <script src="plugins/jquery-countto/jquery.countTo.js"></script>
 
-   <!-- Bootstrap Core Js -->
-   <script src="plugins/bootstrap/js/bootstrap.js"></script>
+    <!-- Bootstrap Core Js -->
+    <script src="plugins/bootstrap/js/bootstrap.js"></script>
 
-   <!-- Waves Effect Plugin Js -->
-   <script src="plugins/node-waves/waves.js"></script>
-  
-   <!-- Jquery DataTable Plugin Js -->
-   <script src="plugins/jquery-datatable/jquery.dataTables.js"></script>
-   <script src="plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js"></script>
-   <script src="plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js"></script>
-   <script src="plugins/jquery-datatable/extensions/export/buttons.flash.min.js"></script>
-   <script src="plugins/jquery-datatable/extensions/export/jszip.min.js"></script>
-   <script src="plugins/jquery-datatable/extensions/export/pdfmake.min.js"></script>
-   <script src="plugins/jquery-datatable/extensions/export/vfs_fonts.js"></script>
-   <script src="plugins/jquery-datatable/extensions/export/buttons.html5.min.js"></script>
-   <script src="plugins/jquery-datatable/extensions/export/buttons.print.min.js"></script>
-  
-   <!-- Custom Js -->
-   <script src="js/admin.js"></script>
+    <!-- Bootstrap Notify Plugin Js -->
+    <script src="plugins/bootstrap-notify/bootstrap-notify.js"></script>
 
-   <!--Fetch files-->
-   <script type="module" src="js/personal_files/desglose_creditos/desglose_creditos.js"></script>
-   <script type = "module"src="js/personal_files/login/logout.js"></script>
+    <!-- Waves Effect Plugin Js -->
+    <script src="plugins/node-waves/waves.js"></script>
+
+    <!-- Jquery DataTable Plugin Js -->
+    <script src="plugins/jquery-datatable/jquery.dataTables.js"></script>
+    <script src="plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js"></script>
+    <script src="plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js"></script>
+    <script src="plugins/jquery-datatable/extensions/export/buttons.flash.min.js"></script>
+    <script src="plugins/jquery-datatable/extensions/export/jszip.min.js"></script>
+    <script src="plugins/jquery-datatable/extensions/export/pdfmake.min.js"></script>
+    <script src="plugins/jquery-datatable/extensions/export/vfs_fonts.js"></script>
+    <script src="plugins/jquery-datatable/extensions/export/buttons.html5.min.js"></script>
+    <script src="plugins/jquery-datatable/extensions/export/buttons.print.min.js"></script>
+
+    <!-- SweetAlert Plugin Js -->
+    <script src="plugins/sweetalert/sweetalert.min.js"></script>
+
+    <!-- Custom Js -->
+    <script src="js/admin.js"></script>
+    <script type="module" src="js/personal_files/login/logout.js"></script>
+    <script src="js/pages/tables/jquery-datatable.js"></script>
+    <script src="js/personal_files/cambiar_credenciales/setListeners.js"></script>
+    <script src="js/personal_files/cambiar_credenciales/cambiar_contraseña.js"></script>
 
 </body>
 

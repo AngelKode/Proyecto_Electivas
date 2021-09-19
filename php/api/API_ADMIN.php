@@ -14,46 +14,25 @@
                 case "GET" : {
                     //Obtenemos los parametros
                     //Obtenemos la boleta y la contraseña
-                    $boletaAlumno = $_GET['boletaAlumno'];
-                    $passwdAlumno = $_GET['passwdAlumno'];
+                    $userAdmin = $_GET['userAdmin'];
+                    $passwdAdmin = $_GET['passwdAdmin'];
 
                     //Verificamos que no estén vacías
-                    if(!($boletaAlumno == "" || $passwdAlumno == "")){
+                    if(!($userAdmin == "" || $passwdAdmin == "")){
                         //Hacemos la petición para saber si las credenciales son validas
-                        $mysql_request = "SELECT * FROM `credenciales` WHERE `boleta` ='".intval($boletaAlumno)."' AND `passwd` = '".$passwdAlumno."';";
+                        $mysql_request = "SELECT * FROM `admin` WHERE `Usuario` ='".$userAdmin."' AND `Passwd` = '".$passwdAdmin."';";
                         $mysql_response = mysqli_query($link, $mysql_request);
 
                         if($mysql_response){
                             http_response_code(200);
                             if(mysqli_affected_rows($link) > 0){
-                                //Obtenemos el ID del alumno
-                                $ID_Alumno = mysqli_fetch_array($mysql_response)['Alumno_id'];
-
-                                //Obtenemos el nombre del alumno
-                                $mysql_query_nombre_alumno = "SELECT * FROM `alumno` WHERE ID = '".intval($ID_Alumno)."';";
-                                $mysql_response = mysqli_query($link,$mysql_query_nombre_alumno);
-
-                                if($mysql_response){
-                                    
-                                    //Obtenemos el nombre del alumno de la peticion
-                                    $dataAlumno = mysqli_fetch_array($mysql_response);
-
-                                    echo json_encode(array(
-                                        "message" => "Credenciales correctas",
-                                        "status" => "OK",
-                                    ));
-
-                                    //Guardamos las cookies, con expiracion de 1 hora
-                                    setcookie("token_id",$ID_Alumno,time() + (60*60),"/");
-                                    setcookie("nombre",$dataAlumno['Nombre'],time() + (60*60),"/");
-                                    setcookie("programa",$dataAlumno['Programa'],time() + (60*60),"/");
-
-                                }else{
-                                    echo json_encode(array(
-                                        "message" => "Error. No se pudo obtener datos del alumno.",
-                                        "status" => "Warning"
-                                    ));
-                                }
+                                //Guardamos las cookies, con expiracion de 1 hora
+                                setcookie("token_id",$userAdmin,time() + (60*60),"/");
+                                
+                                echo json_encode(array(
+                                    "message" => "Credenciales correctas",
+                                    "status" => "OK",
+                                ));    
                             }else{
                                 echo json_encode(array(
                                     "message" => "Credenciales incorrectas",

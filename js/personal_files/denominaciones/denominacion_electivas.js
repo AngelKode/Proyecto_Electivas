@@ -165,6 +165,25 @@ const fetchData = () => {
     });
 }
 
+const verifyUser = () => {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            method : 'GET',
+            url    : './php/api/COOKIES_ADMIN.php',
+            success : (serverResponse) => {
+                
+                const {status} = JSON.parse(serverResponse);
+
+                if(status === "OK"){
+                    resolve(JSON.parse(serverResponse))
+                }else{
+                    reject(JSON.parse(serverResponse))
+                }
+            }
+        })
+    })
+}
+
 const addNewDenominacion = () => {
 
     const ejeTematico = document.getElementById('newRowEjeTematico').value;
@@ -451,8 +470,18 @@ const deleteDenominacion = () => {
 }
 
 $(document).ready(() =>{
-    fetchData().then(() => {
-        //Quitamos la pantalla de carga al obtener todos los datos y mostrarlos en la tabla
-        setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
-    });
+    //Verificamos que el que ingresa sea administrador
+    verifyUser()
+    .then(() => {
+        fetchData().then(() => {
+            //Quitamos la pantalla de carga al obtener todos los datos y mostrarlos en la tabla
+            setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
+        });
+    })
+    .catch(({message}) => {
+        const messageHTML = `<div>
+                               ${message}
+                            </div>`;
+        $('.page-loader-wrapper').append(messageHTML);
+    })
 })

@@ -841,18 +841,47 @@ const getCreditosConstanciasAlumno = (Alumno_id) => {
     });
 }
 
+const verifyUser = () => {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            method : 'GET',
+            url    : './php/api/COOKIES_ADMIN.php',
+            success : (serverResponse) => {
+                
+                const {status} = JSON.parse(serverResponse);
+
+                if(status === "OK"){
+                    resolve(JSON.parse(serverResponse))
+                }else{
+                    reject(JSON.parse(serverResponse))
+                }
+            }
+        })
+    })
+}
+
 $(document).ready(() => {
-    //Inicializamos la tabla
-    initDataTable()
+    //Verificamos que el que ingresa sea administrador
+    verifyUser()
     .then(() => {
-        fetchData().then(() => {
-            //Configuramos para refrescar el embed donde se muetra el PDF
-            $('#modal_archivo_subido').on('hidden.bs.modal', refreshEmbedFile);
-            //Configuramos para que cada que se abra el modal, se actualicen los datos del mismo
-            $('#modal_archivo_subido').on('show.bs.modal', setDataFile);
-            //Quitamos la pantalla de carga al obtener todos los datos y mostrarlos en la tabla
-            setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
-        })   
-    });    
+        //Inicializamos la tabla
+        initDataTable()
+        .then(() => {
+            fetchData().then(() => {
+                //Configuramos para refrescar el embed donde se muetra el PDF
+                $('#modal_archivo_subido').on('hidden.bs.modal', refreshEmbedFile);
+                //Configuramos para que cada que se abra el modal, se actualicen los datos del mismo
+                $('#modal_archivo_subido').on('show.bs.modal', setDataFile);
+                //Quitamos la pantalla de carga al obtener todos los datos y mostrarlos en la tabla
+                setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
+            })   
+        });   
+    })
+    .catch(({message}) => {
+        const messageHTML = `<div>
+                                ${message}
+                            </div>`;
+        $('.page-loader-wrapper').append(messageHTML);
+    }) 
 });
 

@@ -21,17 +21,35 @@ const deleteCookies = () => {
 }
 
 $(document).ready(() => {
-    document.getElementById("logout").addEventListener('click', async () => {
-        //Y eliminamos las cookies
-        try {
-            await deleteCookies();
-            //Si todo salió bien, cambiamos de página
-            window.location.replace("login.html");
-        } catch (error) {
-            showNotification({
-                message : error,
-                type : 'danger'
-            })
-        }
-    })
+    if(document.getElementById("logout")){
+        document.getElementById("logout").addEventListener('click', async () => {
+            //Y eliminamos las cookies
+            try {
+                await deleteCookies();
+                //Si todo salió bien, cambiamos de página
+                window.location.replace("login.html");
+            } catch (error) {
+                showNotification({
+                    message : error,
+                    type : 'danger'
+                })
+            }
+        })
+    }
+    
+    if(document.getElementById("logout-admin")){
+        document.getElementById("logout-admin").addEventListener('click', async () => {
+            //Y eliminamos las cookies
+            try {
+                await deleteCookies();
+                //Si todo salió bien, cambiamos de página
+                window.location.replace("login_admin.html");
+            } catch (error) {
+                showNotification({
+                    message : error,
+                    type : 'danger'
+                })
+            }
+        })
+    }
 })

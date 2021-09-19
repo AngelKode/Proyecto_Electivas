@@ -1,20 +1,19 @@
 import showNotification from "../notificaciones/notificacion.js";
 
-const requestLogIn = (boletaAlumno, passwdAlumno) => {
-    return new Promise( async (resolve, reject) => {
+const requestLoginAdmin = ({adminUser, adminPasswd}) => {
+    return new Promise((resolve, reject) => {
         $.ajax({
             method : "GET",
-            url    : "./php/api/API_ALUMNO.php",
+            url    : "./php/api/API_ADMIN.php",
             data   : {
-                boletaAlumno : boletaAlumno,
-                passwdAlumno : passwdAlumno
+                userAdmin : adminUser,
+                passwdAdmin : adminPasswd
             },
             success : (serv) => {
-                //Si no se pudo autenticar, no se inicia sesión
-                resolve(serv)
+                resolve(serv);
             }
         })
-    });
+    })
 }
 
 $(document).ready(() => {
@@ -25,10 +24,10 @@ $(document).ready(() => {
         event.preventDefault();
 
         //Obtenemos los datos
-        const boletaValue = formDOM.elements['boleta_value'].value;
+        const userValue = formDOM.elements['user_value'].value;
         const passwdValue = formDOM.elements['passwd_value'].value;
         //Hacemos la peticion
-        await requestLogIn(boletaValue, passwdValue).then(({message,status})=> {
+        await requestLoginAdmin({adminUser: userValue, adminPasswd : passwdValue}).then(({message,status})=> {
             console.log(message,status)
             //Checamos la respuesta del servidor
             if(status !== "OK"){
@@ -50,7 +49,7 @@ $(document).ready(() => {
             }else{
                 //Iniciar sesión
                 //Cambiamos de pagina
-                window.location.replace("./"); 
+                window.location.replace("./denominacion_electivas.html"); 
             }
         });
     });

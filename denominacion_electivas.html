@@ -88,7 +88,18 @@
                 </div>
                 <div class="info-container">
                     <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</div>
-                    <div class="program"></div>
+                    <div class="email"></div>
+                    <div class="btn-group user-helper-dropdown">
+                        <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
+                        <ul class="dropdown-menu pull-right">
+                            <li>
+                                <a href="#" class="waves-effect waves-block" id="logout-admin" style="width: max-content;">
+                                    <i class="material-icons">input</i>
+                                    Cerrar Sesión
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
 
@@ -97,22 +108,10 @@
             <div class="menu">
                 <ul class="list">
                     <li class="header">Secciones</li>
-                    <li>
-                        <a href="index.html">
-                            <i class="material-icons">home</i>
-                            <span>Inicio</span>
-                        </a>
-                    </li>
                     <li class="active">
                         <a href="denominacion_electivas.html">
                             <i class="material-icons">library_add</i>
                             <span>Denominación Electivas</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="alta_constancias.html">
-                            <i class="material-icons">upload_file</i>
-                            <span>Alta de Constancias</span>
                         </a>
                     </li>
                     <li>
@@ -122,10 +121,15 @@
                         </a>
                     </li>
                     <li>
-                        <a href="desglose_creditos.html">
-                            <i class="material-icons">list</i>
-                            <span>Desglose de Créditos</span>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">settings</i>
+                            <span>Configuración</span>
                         </a>
+                        <ul class="ml-menu">
+                            <li>
+                                <a href="cambiar_credenciales.html">Cambiar contraseña</a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </div>
@@ -534,6 +538,7 @@
 
     <!--Configuramos el idioma de la tabla-->
     <script src="js/es_LanguageDataTable.js"></script>
+    <script type = "module"src="js/personal_files/login/logout.js"></script>
 
 </body>
 
