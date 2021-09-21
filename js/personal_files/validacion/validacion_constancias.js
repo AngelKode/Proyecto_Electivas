@@ -5,8 +5,6 @@ const typeConstanciaShowing = {
 }
 
 let ID_Constancia;
-let allDataConstancias = [];
-let allDataDenominaciones = [];
 let constanciaActual;
 let tableData = [];
 let typeConstanciasActuales;
@@ -160,9 +158,9 @@ const showNotification = ({message = "", type = "info", element = "body", offset
     })
 }
 
-const setIDConstancia = (ID, isRevisada = false) => {
+const setIDConstancia = async (ID, isRevisada = false) => {
     ID_Constancia = ID;
-    constanciaActual = allDataConstancias.find((constancia) => constancia.ID === `${ID_Constancia}`);
+    constanciaActual = await getConstanciaDataById(parseInt(ID_Constancia));
 
     const notification = showNotification({
         message : "Obteniendo la información..."
@@ -251,33 +249,6 @@ const getCreditosOtorgados = (Factor) => {
     return horasConstancia / horasPorCredito;
 }
 
-const addDataConstancias = (newConstancia) => {
-    //Agregamos el nuevo registro
-    allDataConstancias = [
-        ...allDataConstancias,
-        {...newConstancia}
-    ];
-}
-
-const addDataDenominacion = (newDenominacion) => {
-    //Agregamos el nuevo registro
-    allDataDenominaciones = [
-        ...allDataDenominaciones,
-        {...newDenominacion}
-    ];
-}
-
-const updateLocalDataConstancias = (newData) => {
-    //Lo agregamos al arreglo de todos los datos
-    allDataConstancias.find(({ID},index) => {
-        if(ID === `${ID_Constancia}`){
-            allDataConstancias[index] = {...allDataConstancias[index], ...newData};
-            return true;
-        }
-        return false;
-    });
-}
-
 const getDenominacionData = () => {
     return new Promise((resolve) => {
         $.ajax({
@@ -285,7 +256,6 @@ const getDenominacionData = () => {
             url    : "./php/denominaciones/fetchDataDenominacion.php",
             data : {},
             success : (serverResponse) => {
-                allDataDenominaciones = [];//Limpiamos los anteriores datos
 
                 const jsonResponse = JSON.parse(serverResponse);//Convertimos a JSON la respuesta
                 $("#denominacionConstancia>option").remove();//Removemos todas las opciones del eje tematico
@@ -296,7 +266,6 @@ const getDenominacionData = () => {
                     const {ID,EjeTematico,Modalidad} = denominacion;
                     //Agregamos las opciones al select
                     selectElementDenominaciones.append(`<option value="${ID}">${EjeTematico} -- ${Modalidad}</option>`);
-                    addDataDenominacion({...denominacion});
                 });
 
                 //Una vez agregadas todas las opciones, refrescamos el select
@@ -308,8 +277,54 @@ const getDenominacionData = () => {
     });
 }
 
-const fetchData = () => {
+const getDenominacionDataById = (ID) => {
     return new Promise((resolve) => {
+        $.ajax({
+            method : "GET",
+            url    : "./php/denominaciones/fetchDataDenominacion.php",
+            data : {
+                ID : ID
+            },
+            success : (serverResponse) => {
+                const jsonResponse = JSON.parse(serverResponse);//Convertimos a JSON la respuesta
+                const {status} = jsonResponse[0];
+
+                if(status){
+                    const {message} = jsonResponse[0]
+                    reject(message)
+                }else{
+                    resolve(jsonResponse[0]);
+                }
+            }
+        })
+    });
+}
+
+const getConstanciaDataById = () => {
+    return new Promise((resolve) => {
+        $.ajax({
+            method : "GET",
+            url    : "./php/constancias_validar/getConstanciasAlumno.php",
+            data : {
+                ID_Constancia : ID_Constancia
+            },
+            success : (serverResponse) => {
+                const jsonResponse = JSON.parse(serverResponse);//Convertimos a JSON la respuesta
+                const {status} = jsonResponse[0];
+
+                if(status){
+                    const {message} = jsonResponse[0]
+                    reject(message)
+                }else{
+                    resolve(jsonResponse[0]);
+                }
+            }
+        })
+    });
+}
+
+const fetchData = () => {
+    return new Promise((resolve,reject) => {
         $.ajax({
             method : "GET",
             url    : "./php/constancias_validar/fetchDataValidaciones.php",
@@ -350,15 +365,14 @@ const fetchData = () => {
                             data : dataTable.row(`#row_ID_${ID_Constancia}`).data().slice(),
                             id : `row_ID_${ID_Constancia}`
                         });
-
-                        //Agregamos los datos
-                        addDataConstancias(constancia);
                     });
                     
                     //Al terminar de agregar los datos a la tabla, mostramos unicamente los que aun están por validar
                     renderConstanciasToValidate();
                 }else{
-
+                    reject({
+                        message : 'Error al obtener los datos.'
+                    });
                 }
                 resolve();
             }
@@ -368,7 +382,7 @@ const fetchData = () => {
 
 const uploadRevision = async () =>{
 
-    const isValida = $('#isValidaConstancia').val().trim();
+    const isValida = ($('#isValidaConstancia').val() !== null) ? $('#isValidaConstancia').val().trim() : "";
     const observacionesEncargado = $('#observacionesConstancia').val().trim();
 
     if(parseInt(constanciaActual.Valida) === 1){
@@ -383,6 +397,7 @@ const uploadRevision = async () =>{
             });
         }else{
             
+            //Obtenemos los datos que serán enviados
             let dataSend = {
                 ID_Constancia  : ID_Constancia,
                 Denominacion_id : 0,
@@ -401,6 +416,86 @@ const uploadRevision = async () =>{
             if(parseInt(isValida) === 3){
                 if(!(observacionesEncargado === "")){
                     dataSend.Observaciones_encargado = observacionesEncargado;
+
+                    //Actualizamos la constancia
+                    updateConstanciaAlumno(dataSend)
+                    .then(() => {
+                        //Obtenemos los créditos de electivas del alumno, para hacer la suma en caso de que se valide
+                        if(parseInt(isValida) === 2){
+                            getElectivasAlumno(constanciaActual)
+                            .then(async (electivasAlumno) => {
+                                try {
+                                    //Creamos un arreglo para guardar la relacion entre el ID de la constancia y el ID de la electiva a la que pertenece la constancia 
+                                    let idElectivaConstancia = [];
+                                                        
+                                    //Obtenemos el nuevo arreglo de electivas sumando los creditos que se liberaron 
+                                    let [nuevasElectivas,creditosByElectiva] = await getNewCreditosElectivas_Add(electivasAlumno, dataSend.Creditos);
+                                                                                
+                                    //Agregamos un nuevo objeto con el ID de la constancia y cuantos creditos pertenecen a cada electiva
+                                    idElectivaConstancia.push({
+                                        ID_Constancia  : constanciaActual.ID,
+                                        Creditos : {...creditosByElectiva}
+                                    });
+                                                        
+                                    //Actualizamos las electivas del alumno
+                                    await updateElectivasAlumno(nuevasElectivas.slice());
+                                    
+                                    //Agregamos los nuevos registros a la tabla de las constancias validadas
+                                    await addNewConstanciaValidada(idElectivaConstancia)
+                                    .then(() => {})
+                                    .catch(({status, message}) => {
+                                        showNotification({
+                                            message : message,
+                                            type : status
+                                        })
+                                    });
+                                } catch (error) {
+                                    showNotification({
+                                        message : `Error al hacer los cambios. Inténtelo nuevamente`,
+                                        type : 'danger',
+                                        icon : 'warning'
+                                    })
+                                }
+                            });
+                        }
+                    
+                        //Actualizamos la constancia actual
+                        constanciaActual.Creditos = parseFloat(dataSend.Creditos).toPrecision(5);
+                        constanciaActual.Denominacion_id = dataSend.Denominacion_id + "";
+                        constanciaActual.Observaciones_encargado = dataSend.Observaciones_encargado;
+                        constanciaActual.Valida = dataSend.Valida + "";    
+                                                                    
+                                                
+                        //Actualizamos la tabla
+                        const dataTable = $("#tabla_registros_constancias_validar").DataTable();
+                        let data = dataTable.row(`#row_ID_${ID_Constancia}`).data();
+                                                
+                        data[data.length - 1] = `<div style="width: 100%; height: 100%;">
+                                                    <button type="button" style="width: 100%; height: 100%;" class="btn btn-info waves-effect" onclick="setIDConstancia(${ID_Constancia},true)">
+                                                        <i class="material-icons">update</i>
+                                                        <span>Editar validación</span>
+                                                    </button>
+                                                </div>`;
+                        dataTable.row(`#row_ID_${ID_Constancia}`).data(data);
+                                                
+                        //Mostramos la notificacion de que se hicieron los cambios
+                        showNotification({
+                            message : "La revisión se ha guardado correctamente.",
+                            type : 'success'
+                        })
+                                                
+                        //Cerramos el modal
+                        $("#modal_validar_constancias").modal('hide');
+                    
+                        //Checamos cuales se estan mostrando, para renderizar la tabla
+                        if(typeConstanciasActuales === typeConstanciaShowing.Validada){
+                            renderAllValidatedConstancias();
+                        }else if(typeConstanciasActuales === typeConstanciaShowing.NoValidada){
+                            renderConstanciasToValidate();
+                        }else{
+                            renderAllConstancias();
+                        }
+                    });
                 }else{
                     swal({
                         title: "¡Cuidado!",
@@ -415,7 +510,7 @@ const uploadRevision = async () =>{
                 //Checamos si todos los campos están llenos
                 if(!(denominacion === "" || observacionesEncargado === "")){
                     //Obtenemos el factor de la denominacion
-                    const {Factor} = allDataDenominaciones.find(({ID}) => ID === denominacion);
+                    const {Factor} = await getDenominacionDataById(parseInt(denominacion))
 
                     const creditosOtorgados = getCreditosOtorgados(Factor).toPrecision(5);
                     
@@ -424,6 +519,85 @@ const uploadRevision = async () =>{
                     dataSend.Creditos = creditosOtorgados;
 
                     newDataConstancia.Denominacion_id = parseInt(denominacion);
+
+                    //Actualizamos la constancia
+                    updateConstanciaAlumno(dataSend)
+                    .then(() => {
+                        //Obtenemos los créditos de electivas del alumno, para hacer la suma en caso de que se valide
+                        if(parseInt(isValida) === 2){
+                            getElectivasAlumno(constanciaActual)
+                            .then(async (electivasAlumno) => {
+                                try {
+                                    //Creamos un arreglo para guardar la relacion entre el ID de la constancia y el ID de la electiva a la que pertenece la constancia 
+                                    let idElectivaConstancia = [];
+                                    
+                                    //Obtenemos el nuevo arreglo de electivas sumando los creditos que se liberaron 
+                                    let [nuevasElectivas,creditosByElectiva] = await getNewCreditosElectivas_Add(electivasAlumno, dataSend.Creditos);
+                                    //Agregamos un nuevo objeto con el ID de la constancia y cuantos creditos pertenecen a cada electiva
+                                    idElectivaConstancia.push({
+                                        ID_Constancia  : constanciaActual.ID,
+                                        Creditos : {...creditosByElectiva}
+                                    });
+                                    
+                                    //Actualizamos las electivas del alumno
+                                    await updateElectivasAlumno(nuevasElectivas.slice());
+                
+                                    //Agregamos los nuevos registros a la tabla de las constancias validadas
+                                    await addNewConstanciaValidada(idElectivaConstancia)
+                                    .then(() => {})
+                                    .catch(({status, message}) => {
+                                        showNotification({
+                                            message : message,
+                                            type : status
+                                        })
+                                    });
+                                } catch (error) {
+                                    showNotification({
+                                        message : `Error al hacer los cambios. Inténtelo nuevamente`,
+                                        type : 'danger',
+                                        icon : 'warning'
+                                    })
+                                }
+                            });
+                        }
+
+                        //Actualizamos la constancia actual
+                        constanciaActual.Creditos = parseFloat(dataSend.Creditos).toPrecision(5);
+                        constanciaActual.Denominacion_id = dataSend.Denominacion_id + "";
+                        constanciaActual.Observaciones_encargado = dataSend.Observaciones_encargado;
+                        constanciaActual.Valida = dataSend.Valida + "";    
+                                                
+                            
+                        //Actualizamos la tabla
+                        const dataTable = $("#tabla_registros_constancias_validar").DataTable();
+                        let data = dataTable.row(`#row_ID_${ID_Constancia}`).data();
+                            
+                        data[data.length - 1] = `<div style="width: 100%; height: 100%;">
+                                                    <button type="button" style="width: 100%; height: 100%;" class="btn btn-info waves-effect" onclick="setIDConstancia(${ID_Constancia},true)">
+                                                        <i class="material-icons">update</i>
+                                                        <span>Editar validación</span>
+                                                    </button>
+                                                </div>`;
+                        dataTable.row(`#row_ID_${ID_Constancia}`).data(data);
+                            
+                        //Mostramos la notificacion de que se hicieron los cambios
+                        showNotification({
+                            message : "La revisión se ha guardado correctamente.",
+                            type : 'success'
+                        })
+                            
+                        //Cerramos el modal
+                        $("#modal_validar_constancias").modal('hide');
+
+                        //Checamos cuales se estan mostrando, para renderizar la tabla
+                        if(typeConstanciasActuales === typeConstanciaShowing.Validada){
+                            renderAllValidatedConstancias();
+                        }else if(typeConstanciasActuales === typeConstanciaShowing.NoValidada){
+                            renderConstanciasToValidate();
+                        }else{
+                            renderAllConstancias();
+                        }
+                    });
                 }else{
                     swal({
                         title: "¡Cuidado!",
@@ -434,89 +608,6 @@ const uploadRevision = async () =>{
                     });
                 }
             }
-
-            //Actualizamos la constancia
-            updateConstanciaAlumno(dataSend)
-            .then(() => {
-                //Obtenemos los créditos de electivas del alumno, para hacer la suma en caso de que se valide
-                if(parseInt(isValida) === 2){
-                    getElectivasAlumno(constanciaActual)
-                    .then(async (electivasAlumno) => {
-                        try {
-                            //Creamos un arreglo para guardar la relacion entre el ID de la constancia y el ID de la electiva a la que pertenece la constancia 
-                            let idElectivaConstancia = [];
-                            
-                            //Obtenemos el nuevo arreglo de electivas sumando los creditos que se liberaron 
-                            let [nuevasElectivas,creditosByElectiva] = await getNewCreditosElectivas_Add(electivasAlumno, dataSend.Creditos);
-                                                    
-                            //Agregamos un nuevo objeto con el ID de la constancia y cuantos creditos pertenecen a cada electiva
-                            idElectivaConstancia.push({
-                                ID_Constancia  : constanciaActual.ID,
-                                Creditos : {...creditosByElectiva}
-                            });
-                            
-                            //Actualizamos las electivas del alumno
-                            await updateElectivasAlumno(nuevasElectivas.slice());
-        
-                            //Agregamos los nuevos registros a la tabla de las constancias validadas
-                            await addNewConstanciaValidada(idElectivaConstancia)
-                            .then(() => {})
-                            .catch(({status, message}) => {
-                                showNotification({
-                                    message : message,
-                                    type : status
-                                })
-                            });
-                        } catch (error) {
-                            showNotification({
-                                message : `Error al hacer los cambios. Inténtelo nuevamente`,
-                                type : 'danger',
-                                icon : 'warning'
-                            })
-                        }
-                    });
-                }
-
-                //Actualizamos la constancia actual
-                constanciaActual.Creditos = parseFloat(dataSend.Creditos).toPrecision(5);
-                constanciaActual.Denominacion_id = dataSend.Denominacion_id + "";
-                constanciaActual.Observaciones_encargado = dataSend.Observaciones_encargado;
-                constanciaActual.Valida = dataSend.Valida + "";    
-                                        
-                //Actualizamos los datos en el arreglo de todas las constancas
-                updateLocalDataConstancias(newDataConstancia);
-                    
-                //Actualizamos la tabla
-                const dataTable = $("#tabla_registros_constancias_validar").DataTable();
-                let data = dataTable.row(`#row_ID_${ID_Constancia}`).data();
-                    
-                data[data.length - 1] = `<div style="width: 100%; height: 100%;">
-                                            <button type="button" style="width: 100%; height: 100%;" class="btn btn-info waves-effect" onclick="setIDConstancia(${ID_Constancia},true)">
-                                                <i class="material-icons">update</i>
-                                                <span>Editar validación</span>
-                                            </button>
-                                        </div>`;
-                dataTable.row(`#row_ID_${ID_Constancia}`).data(data);
-                    
-                //Mostramos la notificacion de que se hicieron los cambios
-                showNotification({
-                    message : "La revisión se ha guardado correctamente.",
-                    type : 'success'
-                })
-                    
-                //Cerramos el modal
-                $("#modal_validar_constancias").modal('hide');
-
-                //Checamos cuales se estan mostrando, para renderizar la tabla
-                if(typeConstanciasActuales === typeConstanciaShowing.Validada){
-                    renderAllValidatedConstancias();
-                }else if(typeConstanciasActuales === typeConstanciaShowing.NoValidada){
-                    renderConstanciasToValidate();
-                }else{
-                    renderAllConstancias();
-                }
-
-            });
         }
     }else{
 
@@ -534,9 +625,8 @@ const uploadRevision = async () =>{
                 timer: 2000
             });
         }else{
-            //Encontramos la nueva denominación que se le asignará a la constancia
-            let denominacionNueva = (parseInt(newDenominacionConstancia) !== 0) ? allDataDenominaciones.find(({ID}) => ID === newDenominacionConstancia) 
-                                                                                : {ID : 0, Factor : '1 x 0 horas'};
+            //Obtenemos la denominacion de la base de datos
+            let denominacionNueva = (newDenominacionConstancia !== 0) ? await getDenominacionDataById(parseInt(newDenominacionConstancia)) : {Factor : '1 x 0 horas', ID : 0};
             
             const {Factor : FactorNuevo} = denominacionNueva;                             
             const newCreditosToAdd = (parseInt(denominacionNueva.ID) !== 0) ? getCreditosOtorgados(FactorNuevo).toPrecision(5) : 0 + "";
@@ -548,12 +638,6 @@ const uploadRevision = async () =>{
                 Creditos : newCreditosToAdd,
                 Alumno_id : constanciaActual.Alumno_id,
                 Valida : parseInt(isValida),
-            };
-
-            let newDataConstancia = {
-                Denominacion_id : newDenominacionConstancia + "",
-                Observaciones_encargado : observacionesEncargado,
-                Valida : isValida + ""
             };
 
             updateConstanciaAlumno(dataSend)
@@ -621,15 +705,6 @@ const uploadRevision = async () =>{
                                 })
                             });
 
-                            //Actualizo el valor de la constancia actual
-                            constanciaActual.Creditos = parseFloat(newCreditosToAdd).toPrecision(5);
-                            constanciaActual.Denominacion_id = newDenominacionConstancia + "";
-                            constanciaActual.Observaciones_encargado = observacionesEncargado;
-                            constanciaActual.Valida = isValida + "";
-
-                            //Actualizo el registro en el arreglo de todas las constancias
-                            updateLocalDataConstancias(newDataConstancia);
-
                             //Cerramos el modal
                             $("#modal_validar_constancias").modal('hide');
                         } catch (error) {
@@ -655,7 +730,6 @@ const addNewConstanciaValidada = (newConstanciaLiberada) => {
                 newRegistroElectivasLiberadas : JSON.stringify(newConstanciaLiberada)
             },
             success : (serverResponse) => {
-
                 const jsonResponse = JSON.parse(serverResponse);
                 const {status, message} = jsonResponse;
                 
@@ -680,7 +754,6 @@ const getElectivasAlumno = ({Alumno_id}) => {
                 Alumno_id : Alumno_id
             },
             success : (serverResponse) => {
-
                 const jsonResponse = JSON.parse(serverResponse);
                 const {status, message} = jsonResponse;
 
@@ -822,7 +895,7 @@ const updateCreditosLiberadosAlumno = (idConstanciaToDelete = 0,newRegistrosElec
 const getCreditosConstanciasAlumno = (Alumno_id) => {
     return new Promise((resolve, reject) => {
         $.ajax({
-            method : "POST",
+            method : "GET",
             url    : "./php/constancias_validar/getConstanciasAlumno.php",
             data   : {
                 Alumno_id : Alumno_id
@@ -867,14 +940,21 @@ $(document).ready(() => {
         //Inicializamos la tabla
         initDataTable()
         .then(() => {
-            fetchData().then(() => {
+            fetchData()
+            .then(() => {
                 //Configuramos para refrescar el embed donde se muetra el PDF
                 $('#modal_archivo_subido').on('hidden.bs.modal', refreshEmbedFile);
                 //Configuramos para que cada que se abra el modal, se actualicen los datos del mismo
                 $('#modal_archivo_subido').on('show.bs.modal', setDataFile);
                 //Quitamos la pantalla de carga al obtener todos los datos y mostrarlos en la tabla
                 setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
-            })   
+            }) 
+            .catch(({message}) => {
+                const messageHTML = `<div>
+                                        ${message}
+                                    </div>`;
+                $('.page-loader-wrapper').append(messageHTML);
+            })  
         });   
     })
     .catch(({message}) => {
