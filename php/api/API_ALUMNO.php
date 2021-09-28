@@ -43,11 +43,13 @@
                                         "status" => "OK",
                                     ));
 
-                                    //Guardamos las cookies, con expiracion de 1 hora
-                                    setcookie("token_id",$ID_Alumno,time() + (60*60),"/");
-                                    setcookie("nombre",$dataAlumno['Nombre'],time() + (60*60),"/");
-                                    setcookie("programa",$dataAlumno['Programa'],time() + (60*60),"/");
-
+                                    //Mandamos llamar la funcion para usar las variables de sesión
+                                    session_start();
+                                    
+                                    //Guardamos las variables de sesión
+                                    $_SESSION['token'] = $ID_Alumno;
+                                    $_SESSION['nombre'] = $dataAlumno['Nombre'];
+                                    $_SESSION['programa'] = $dataAlumno['Programa'];
                                 }else{
                                     echo json_encode(array(
                                         "message" => "Error. No se pudo obtener datos del alumno.",

@@ -4,7 +4,7 @@ const setDataMenu = () => {
         //Obtenemos las cookies, y si es valido el acceso
         $.ajax({
             method : "GET",
-            url    : "./php/api/COOKIES.php",
+            url    : "./php/api/SESSION_DATA.php",
             success : (serverResponse) => {
                 
                 const jsonResponse = JSON.parse(serverResponse);
@@ -16,12 +16,21 @@ const setDataMenu = () => {
                 }else{
                     const {Nombre, Programa} = jsonResponse;
 
-                    $(".name").html(Nombre.substr(Nombre.indexOf("=") + 1, Nombre.length));
+                    //Arreglamos el nombre del alumno
+                    const nombreArray = Nombre.split(" ");
+                    let fixedNombre = "";
+                    nombreArray.forEach((palabra) => {
+                        fixedNombre += palabra[0].toUpperCase() + palabra.substr(1,palabra.length - 1);
+                        fixedNombre += " ";
+                    });
+                    
+
+                    $(".name").html(fixedNombre);
                     $(".name").css({
                         "font-size" : "18px"
                     })
                     
-                    $(".program").append("Ingeniería: " + Programa.substr(Programa.indexOf("=") + 1, Programa.length));
+                    $(".program").append(Programa);
                     $(".program").css({
                         "color" : "white",
                         "font-size" : "12px"
@@ -555,8 +564,6 @@ const deleteConstancia = () => {
 }
 
 $(document).ready(() => {
-    //Checamos si existen cookies
-    if(document.cookie.split(";").length >= 3){
         //Agregamos los listeners de los botones
         setDataMenu()
         .then(() => {
@@ -575,10 +582,4 @@ $(document).ready(() => {
                                 </div>`;
             $('.page-loader-wrapper').append(messageHTML);
         })
-    }else{
-        const messageHTML = `<div>
-                                Acceso denegado. Inicie sesión
-                            </div>`;
-        $('.page-loader-wrapper').append(messageHTML);
-    }
 })

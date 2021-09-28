@@ -11,8 +11,10 @@
     $serverResponse = array();
     $serverResponse['electivas'] = array();
 
-    if(isset($_COOKIE['token_id'])){
-        $mysql_request = "SELECT * FROM `electiva` WHERE `Alumno_id` = ".$_COOKIE['token_id']. " ORDER BY Nombre;";
+    session_start();//Mandamos llamar la funcion para poder usar las variables de sesion
+
+    if(isset($_SESSION['token'])){
+        $mysql_request = "SELECT * FROM `electiva` WHERE `Alumno_id` = ".$_SESSION['token']. " ORDER BY Nombre;";
         $mysql_response = mysqli_query($link, $mysql_request);
             
         if(mysqli_num_rows($mysql_response) > 0){

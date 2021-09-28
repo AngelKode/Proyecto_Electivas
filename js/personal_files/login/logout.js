@@ -4,7 +4,7 @@ const deleteCookies = () => {
     return new Promise((resolve, reject) => {
         $.ajax({
             method : "GET",
-            url    : "./php/api/DELETE_COOKIES.php",
+            url    : "./php/api/DELETE_SESSION.php",
             success : (serverResponse) => {
                 const jsonResponse = JSON.parse(serverResponse);
                 const {status} = jsonResponse;

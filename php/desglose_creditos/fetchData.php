@@ -11,8 +11,10 @@
     $serverResponse = array();
     $serverResponse['electivas'] = array();
 
-    if(isset($_COOKIE['token_id'])){
-        $mysql_request = "SELECT constancia.Actividad, constancia.Horas, constancia_electiva.Creditos, denominacion.EjeTematico, denominacion.Modalidad, denominacion.Factor, electiva.Nombre, electiva.Creditos_acumulados FROM `constancia` INNER JOIN `constancia_electiva` on constancia.ID = constancia_electiva.Constancia_id INNER JOIN `denominacion` on constancia.Denominacion_id = denominacion.ID INNER JOIN `electiva` on electiva.ID = constancia_electiva.Electiva_id WHERE constancia.Alumno_id = '".intval($_COOKIE['token_id'])."' AND constancia.Valida = '2' ORDER BY electiva.Nombre;";
+    session_start();
+
+    if(isset($_SESSION['token'])){
+        $mysql_request = "SELECT constancia.Actividad, constancia.Horas, constancia_electiva.Creditos, denominacion.EjeTematico, denominacion.Modalidad, denominacion.Factor, electiva.Nombre, electiva.Creditos_acumulados FROM `constancia` INNER JOIN `constancia_electiva` on constancia.ID = constancia_electiva.Constancia_id INNER JOIN `denominacion` on constancia.Denominacion_id = denominacion.ID INNER JOIN `electiva` on electiva.ID = constancia_electiva.Electiva_id WHERE constancia.Alumno_id = '".intval($_SESSION['token'])."' AND constancia.Valida = '2' ORDER BY electiva.Nombre;";
         $mysql_response = mysqli_query($link, $mysql_request);
     
         if(mysqli_num_rows($mysql_response) > 0){

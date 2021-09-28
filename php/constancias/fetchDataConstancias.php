@@ -1,6 +1,8 @@
 <?php
 
-    if(isset($_COOKIE['token_id'])){
+    session_start();
+
+    if(isset($_SESSION['token'])){
         include '../database/databaseConection.php';
 
         //Definimos el encabezado para setear el set de caracteres
@@ -11,7 +13,7 @@
    
        $serverResponse = array();
        
-        $mysql_request = "SELECT * FROM `constancia` WHERE `Alumno_id` = '".intval($_COOKIE['token_id'])."';";
+        $mysql_request = "SELECT * FROM `constancia` WHERE `Alumno_id` = '".intval($_SESSION['token'])."';";
         $mysql_response = mysqli_query($link, $mysql_request);
     
         if($mysql_response){

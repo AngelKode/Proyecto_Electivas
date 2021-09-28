@@ -1,11 +1,11 @@
 <?php
     include '../database/databaseConection.php';
 
-     //Definimos el encabezado para setear el set de caracteres
+    //Definimos el encabezado para setear el set de caracteres
      header("Content-Type: text/html;charset=utf-8");
 
-     //Configuramos el set de caracteres para la consulta
-     mysqli_set_charset($link, "utf8");
+    //Configuramos el set de caracteres para la consulta
+    mysqli_set_charset($link, "utf8");
 
     //Obtenemos los datos a agregarse
     $dataActividad = $_POST['Actividad']; 
@@ -19,8 +19,11 @@
 
     //Verificamos que los datos se hayan mandado
     if(isset($dataActividad) && isset($dataFechaInicio) && isset($dataFechaFin) && isset($dataHoras) && isset($dataFileName) && isset($dataObservaciones)){
+        
+        session_start();
+
         //Hacemos la peticion a la base de datos
-        $mysql_request = "INSERT INTO `constancia`(`Alumno_id`, `Actividad`, `Fecha_inicio`, `Fecha_fin`, `Horas`, `Archivo`, `Observaciones`,`Valida`) VALUES (".intval($_COOKIE['token_id']).",'".$dataActividad."','".$dataFechaInicio."','".$dataFechaFin."','".$dataHoras."','".$dataFileName."','".$dataObservaciones."','1')";
+        $mysql_request = "INSERT INTO `constancia`(`Alumno_id`, `Actividad`, `Fecha_inicio`, `Fecha_fin`, `Horas`, `Archivo`, `Observaciones`,`Valida`) VALUES (".intval($_SESSION['token']).",'".$dataActividad."','".$dataFechaInicio."','".$dataFechaFin."','".$dataHoras."','".$dataFileName."','".$dataObservaciones."','1')";
         $mysql_response = mysqli_query($link, $mysql_request);
 
         //Verificamos que la peticion se haya realizado correctamente

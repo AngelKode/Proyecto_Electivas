@@ -10,6 +10,8 @@
 
     $serverResponse = array();
 
+    session_start();
+
     if(isset($_POST['Alumno_id'])){
         $mysql_request = "SELECT * FROM `electiva` WHERE `Alumno_id` = ".intval($_POST['Alumno_id']). " ORDER BY Nombre;";
         $mysql_response = mysqli_query($link, $mysql_request);
@@ -27,7 +29,7 @@
             $serverResponse['message'] = "Error de la base de datos. Inténtelo nuevamente.";
         }
     }else{
-        $mysql_request = "SELECT * FROM `electiva` WHERE `Alumno_id` = ".intval($_COOKIE['token_id']). " ORDER BY Nombre;";
+        $mysql_request = "SELECT * FROM `electiva` WHERE `Alumno_id` = ".intval($_SESSION['token']). " ORDER BY Nombre;";
         $mysql_response = mysqli_query($link, $mysql_request);
     
         if(mysqli_num_rows($mysql_response) > 0){
