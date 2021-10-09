@@ -187,7 +187,7 @@ const setDataFile = () => {
 }
 
 const setFileToView = () => {
-    $("#fileViewer").attr("src",`./files/${constanciaActual.Archivo}`);
+    $("#fileViewer").attr("src",`files/${constanciaActual.Archivo}`);
     $('#modal_archivo_subido').modal('show');
 }
 

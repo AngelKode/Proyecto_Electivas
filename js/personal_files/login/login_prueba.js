@@ -37,7 +37,18 @@ $(document).ready(() => {
         const passwdValue = formDOM.elements['passwd_value'].value;
 
         //Hacemos la peticion
-        await requestLogIn(boletaValue, passwdValue).then(({estatus,datos})=> {
+        await requestLogIn(boletaValue, passwdValue).then(({estatus,datos,newRegister,newRegisterMessage})=> {
+
+            if(newRegister !== undefined && newRegister === "warning"){
+                swal({
+                    title: "¡Error al registrarse!",
+                    text: newRegisterMessage,
+                    type: "warning",
+                    showConfirmButton : false,
+                    timer: 2000
+                });
+                return;
+            }
             //Checamos la respuesta del servidor
             if(estatus !== "true"){
                 //Mostramos un mensaje al usuario de error de autenticación

@@ -28,7 +28,6 @@ $(document).ready(() => {
         const passwdValue = formDOM.elements['passwd_value'].value;
         //Hacemos la peticion
         await requestLoginAdmin({adminUser: userValue, adminPasswd : passwdValue}).then(({message,status})=> {
-            console.log(message,status)
             //Checamos la respuesta del servidor
             if(status !== "OK"){
 

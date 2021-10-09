@@ -113,7 +113,7 @@ const getStatusRequestView = (IDRow,doneRevision,reasonRejected="") => {
 
 let allDataConstancias = [];
 let idRow;
-let routeFiles = "./files";
+let routeFiles = "files";
 let constanciaToBeUpdated;
 
 const setIDRow = (ID,action) => {
@@ -133,8 +133,7 @@ const setValuesModal = (action) => {
         document.getElementById("updateFechaInicio").value = Fecha_inicio;
         document.getElementById("updateFechaFin").value = Fecha_fin;
         document.getElementById("updateHoras").value = Horas;
-            document.getElementById("actualFile").setAttribute("href", `${routeFiles}/${Archivo}`);
-            document.getElementById("actualFile").firstElementChild.innerHTML = Archivo.split("-data-")[1];
+            document.getElementById("actualFile").innerHTML = Archivo.split("-data-")[1];
         document.getElementById("updateObservaciones").value = Observaciones;
     }else{
         document.getElementById("actividadDelete").value = Actividad;
@@ -147,13 +146,29 @@ const setValuesModal = (action) => {
 
 }
 const refreshEmbedFile = () => {
-    $("#fileViewerContainer>embed").remove();
-    $("#fileViewerContainer").html(`<embed src="" type="application/pdf" style="width: 100%;height: 70vh;overflow-y: scroll;" id="fileViewer">`); 
+    $("#fileViewerContainer>iframe").remove();
+    $("#fileViewerContainer").html(`<iframe src="" type="application/pdf" style="width: 100%;height: 70vh;overflow-y: scroll;" id="fileViewer"></iframe>`); 
 }
 
 const openFileToView = (fileName) => {
-    $("#fileViewer").attr("src",`./files/${fileName}`);
+    console.log(fileName)
+    $("#fileViewer").attr("src",`${routeFiles}/${fileName}`);
     $('#modal_archivo_subido').modal('show');
+}
+
+const getActualFile = async () => {
+    const actualConstancia = await getDataFile();
+    return actualConstancia.Archivo;
+}
+
+const getDataFile = () => {
+    return new Promise((resolve) => {
+        allDataConstancias.find((data) => {
+            if(data.ID === `${idRow}`){
+                resolve(data)
+            }
+        });
+    })
 }
 
 const addLocalDataConstancias = (Register) => {
@@ -240,10 +255,28 @@ const addNewConstancia = () => {
         const inputFileDOM = $("#newRowFile");
         const {files} = inputFileDOM[0]; 
     const valueObservaciones = $("#newRowObservaciones").val();
-
-    //Verificamos que no haya dejado espacios en blanco y que haya elegido un archivo
+    
+    //Verificamos que no haya dejado espacios en blanco, que haya elegido un archivo, que las fechas sean correctas y el formato de las horas tambien
     if(!(valueNombreActividad.trim() === "" || valueFechaInicio.trim() === "" || valueFechaFin.trim() === "" ||
          valueHoras.trim() === "" || files[0] === undefined || valueObservaciones.trim() === "")){
+
+            //Verificamos que las fechas de inicio y fin sean coherentes
+            const dataFechaInicio = valueFechaInicio.split("-");
+                const fechaInicioDate = new Date(dataFechaInicio[0],dataFechaInicio[1],dataFechaInicio[2])
+            const dataFechaFin = valueFechaFin.split("-");
+                const fechaFinDate = new Date(dataFechaFin[0],dataFechaFin[1],dataFechaFin[2])
+
+            if(fechaInicioDate.getTime() > fechaFinDate.getTime()){
+                swal({
+                    title: "¡Cuidado!",
+                    text: "Ingresa correctamente la fecha de inicio y término de la actividad",
+                    type: "warning",
+                    showConfirmButton : true
+                })
+                return;
+            }
+            //Verificamos que las fechas de inicio y fin sean coherentes
+
             //Obtenemos el nombre y el tamaño del archivo
             const {name : valueNameFile, size} = files[0];
 
@@ -265,8 +298,7 @@ const addNewConstancia = () => {
                 contentType: false,
                 processData: false,
                 success : (serverResponse) => {
-
-                    //Obtenemos la respuesta del servidor
+                     //Obtenemos la respuesta del servidor
                     const {status,message,ID,newFileName} = JSON.parse(serverResponse);
                     let icon = "warning-sign";
         
@@ -306,31 +338,42 @@ const addNewConstancia = () => {
                         //Agregamos el dato para tenerlo más a la mano
                         addLocalDataConstancias(dataRegisterToBeAdded);
                         icon = "ok";//Le damos el valor al icono de 'ok' que se mostrará en la notificacion
-                    }
-                    
-                    const waitTime = () => {
-                        return new Promise((resolve) => {
-                            const timeOutObject = setTimeout(()=>{
-                                resolve(timeOutObject);
-                            },800);
-                        })
-                    }
-    
-                    waitTime().then((timeOutObject) =>{
-                        closeAlert();
-    
-                        //Mostramos la notificacion al usuario
-                        showNotification({
-                            message : message,
-                            type : status,
-                            icon : icon
-                        });
-    
-                        //Cerramos el modal
-                        $("#modal_alta_constancias").modal('hide');
 
-                        clearTimeout(timeOutObject);
-                    });
+                        const waitTime = () => {
+                            return new Promise((resolve) => {
+                                const timeOutObject = setTimeout(()=>{
+                                    resolve(timeOutObject);
+                                },800);
+                            })
+                        }
+        
+                        waitTime().then((timeOutObject) =>{
+                            closeAlert();
+        
+                            //Mostramos la notificacion al usuario
+                            showNotification({
+                                message : message,
+                                type : status,
+                                icon : icon
+                            });
+        
+                            //Cerramos el modal
+                            $("#modal_alta_constancias").modal('hide');
+    
+                            clearTimeout(timeOutObject);
+                        });
+
+                    }else{
+                        //Si la 
+                        setTimeout(() => {
+                            swal({
+                                title: "Error al subir la constancia",
+                                text: message,
+                                type: "info",
+                                showConfirmButton : true
+                            });
+                        }, 1000);
+                    }
                 }
             });        
     }else{
@@ -339,8 +382,7 @@ const addNewConstancia = () => {
             title: "¡Cuidado!",
             text: "1 o más datos faltantes. Chécalos:)",
             type: "warning",
-            showConfirmButton : false,
-            timer: 2000
+            showConfirmButton : true
         });
     } 
 }
@@ -359,7 +401,26 @@ const updateConstancia = () => {
     //Verificamos que no haya dejado espacios vacíos
     if(!(valueUpdateActividad.trim() === "" || valueUpdateFechaInicio.trim() === "" || valueUpdateFechaFin.trim() === "" ||
        valueUpdateHoras.trim() === "" || valueUpdateObservaciones.trim() === "")){
-         //Verificamos si el usuario eligio un archivo o no
+
+
+        //Verificamos que las fechas de inicio y fin sean coherentes
+        const dataFechaInicio = valueUpdateFechaInicio.split("-");
+            const fechaInicioDate = new Date(dataFechaInicio[0],dataFechaInicio[1],dataFechaInicio[2])
+        const dataFechaFin = valueUpdateFechaFin.split("-");
+            const fechaFinDate = new Date(dataFechaFin[0],dataFechaFin[1],dataFechaFin[2])
+
+        if(fechaInicioDate.getTime() > fechaFinDate.getTime()){
+            swal({
+                title: "¡Cuidado!",
+                text: "Ingresa correctamente la fecha de inicio y término de la actividad",
+                type: "warning",
+                showConfirmButton : true
+            })
+            return;
+        }
+        //Verificamos que las fechas de inicio y fin sean coherentes
+
+        //Verificamos si el usuario eligio un archivo o no
         const fileAvailable = (fileData) ? fileData.name : null;
 
         //Dependiendo si eligió un archivo, será el contenido de formData
@@ -468,8 +529,7 @@ const updateConstancia = () => {
             title: "¡Cuidado!",
             text: "1 o más datos faltantes. Chécalos:)",
             type: "warning",
-            showConfirmButton : false,
-            timer: 2000
+            showConfirmButton : true
         });
     }
 }
@@ -570,16 +630,31 @@ $(document).ready(() => {
             fetchDataConstancias().then(() => {
                 //Configuramos para refrescar el embed donde se muetra el PDF
                 $('#modal_archivo_subido').on('hidden.bs.modal', refreshEmbedFile);
-        
+                
+                $("#actualFile").on('click', () => {
+                    getActualFile().then((file) => {
+                        openFileToView(file)
+                    })
+                    
+                })
                 //Quitamos la pantalla de carga al obtener todos los datos y mostrarlos en la tabla
                 setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
             });
         })
         .catch((errMessage) => {
-            console.log("aqui")
-            const messageHTML = `<div>
-                                ${errMessage}
-                                </div>`;
-            $('.page-loader-wrapper').append(messageHTML);
+            $(".page-loader-wrapper").css("background","linear-gradient(90deg, rgba(106,81,92,1) 19%, rgba(104,36,68,1) 87%)")
+             //Mostramos una notificacion indicando que no hay sesión actual
+            swal({
+                title: errMessage,
+                text: "Redirigiendo...",
+                type: "warning",
+                showConfirmButton : false,
+                background : '#fff'
+            });
+
+            setTimeout(() => {
+                //Despues de 2.5 segundos, redirigimos al usuario para que inicie sesión
+                window.location.replace("login_prueba.html");
+            }, 2500);
         })
 })

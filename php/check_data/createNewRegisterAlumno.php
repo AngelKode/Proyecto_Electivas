@@ -31,7 +31,7 @@
                         );
                         break;
                     }
-                    case 'ING. EN MECATRÓNICA':{
+                    case 'ING. MECATRÓNICA':{
                         $registersToAdd = array(
                             'Electiva 1' => array(
                                 'Creditos' => 7

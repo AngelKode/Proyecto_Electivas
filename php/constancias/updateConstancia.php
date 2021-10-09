@@ -22,24 +22,26 @@
         $mysqli_request = "";
         $fileName = "";
         if(isset($_POST['FileName'])){
-            $fileName = uniqid() . "-data-" .$_POST['FileName']; 
-            $mysqli_request = "UPDATE `constancia` SET `Actividad`='".$newValueActividad."',`Fecha_inicio`='".$newValueFechaInicio."',`Fecha_fin`='".$newValueFechaFin."',`Horas`='".$newValueHoras."',`Archivo`='".$fileName."',`Observaciones`='".$newValueObservaciones."' WHERE ID =".$ID.";";
-        }else{
-            $mysqli_request = "UPDATE `constancia` SET `Actividad`='".$newValueActividad."',`Fecha_inicio`='".$newValueFechaInicio."',`Fecha_fin`='".$newValueFechaFin."',`Horas`='".$newValueHoras."',`Observaciones`='".$newValueObservaciones."' WHERE ID =".$ID.";";
-        }
+            //***********************Con cambios en el archivo subido***********************
 
-        //Hacemos la peticion
-        $mysql_response = mysqli_query($link, $mysqli_request);
+            //Checamos si la extensión es la correcta
+            $mymeType = pathinfo($_FILES['FileData']['name'], PATHINFO_EXTENSION);
 
-        if($mysql_response){
-            $serverResponse['status'] = "success";
-            //Verificamos que se hayan modificado los datos, y checamos si se tiene que actualizar el archivo o no
-            if((mysqli_affected_rows($link) > 0)){
+            if(strcasecmp($mymeType,"pdf") == 0){
+                //Si la extensión es correcta, subimos el archivo y actualizamos la bd
+                $fileName = uniqid() . "-data-" .$_POST['FileName']; 
+                $mysqli_request = "UPDATE `constancia` SET `Actividad`='".$newValueActividad."',`Fecha_inicio`='".$newValueFechaInicio."',`Fecha_fin`='".$newValueFechaFin."',`Horas`='".$newValueHoras."',`Archivo`='".$fileName."',`Observaciones`='".$newValueObservaciones."' WHERE ID =".$ID.";";
 
-                if(isset($_POST['FileName'])){
+                //Hacemos la peticion
+                $mysql_response = mysqli_query($link, $mysqli_request);
+
+                if($mysql_response){
+                    $serverResponse['status'] = "success";
+                    
+                    //***********************Actualización del archivo subido***********************
                     $urlDirectorio = "../../files/";
                     $locationFileToUpload = $urlDirectorio . $fileName;
-            
+                    
                     //Verificamos que se haya subido correctamente
                     if(move_uploaded_file($_FILES['FileData']['tmp_name'],$locationFileToUpload)){
                         //Eliminamos el archivo anterior
@@ -48,16 +50,34 @@
                     }else{
                         $serverResponse['status'] = "warning";
                         $serverResponse['message'] = "Ha ocurrido un error al subir el archivo. Inténtelo nuevamente.'";
-                    }
+                    } 
+                    $serverResponse['message'] = "La constancia se ha actualizado correctamente";
+                    //***********************Actualización del archivo subido***********************
+                }else{
+                    $serverResponse['status'] = "success";
+                    $serverResponse['message'] = "Error al actualizar los datos. Inténtelo nuevamente.";
                 }
-                $serverResponse['message'] = "La constancia se ha actualizado correctamente";
-
             }else{
-                $serverResponse['message'] = "No se hicieron modificaciones a la constancia.";
+                $serverResponse['status'] = "warning";
+                $serverResponse['message'] = "No se ha podido actualizar la constancia. El archivo no tiene extensión PDF'";
             }
         }else{
-            $serverResponse['status'] = "success";
-            $serverResponse['message'] = "Error al actualizar los datos. Inténtelo nuevamente.";
+             //***********************Sin cambios en el archivo subido***********************
+            $mysqli_request = "UPDATE `constancia` SET `Actividad`='".$newValueActividad."',`Fecha_inicio`='".$newValueFechaInicio."',`Fecha_fin`='".$newValueFechaFin."',`Horas`='".$newValueHoras."',`Observaciones`='".$newValueObservaciones."' WHERE ID =".$ID.";";
+            
+            //Hacemos la peticion
+            $mysql_response = mysqli_query($link, $mysqli_request);
+
+            if($mysql_response){
+                $serverResponse['status'] = "success";
+
+                 //Verificamos que se hayan modificado los datos, y checamos si se tiene que actualizar el archivo o no
+                 if((mysqli_affected_rows($link) > 0)){
+                    $serverResponse['message'] = "La constancia se ha actualizado correctamente";
+                 }else{
+                    $serverResponse['message'] = "No se hicieron modificaciones a la constancia.";
+                 }
+            }
         }
        
     }else{

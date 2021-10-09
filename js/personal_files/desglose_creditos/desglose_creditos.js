@@ -211,9 +211,19 @@ $(document).ready(()=>{
         })
     })
     .catch((errMessage) => {
-        const messageHTML = `<div>
-                                ${errMessage}
-                            </div>`;
-        $('.page-loader-wrapper').append(messageHTML);
+        $(".page-loader-wrapper").css("background","linear-gradient(90deg, rgba(106,81,92,1) 19%, rgba(104,36,68,1) 87%)")
+         //Mostramos una notificacion indicando que no hay sesión actual
+        swal({
+            title: errMessage,
+            text: "Redirigiendo...",
+            type: "warning",
+            showConfirmButton : false,
+            background : '#fff'
+        });
+
+        setTimeout(() => {
+            //Despues de 2.5 segundos, redirigimos al usuario para que inicie sesión
+            window.location.replace("login_prueba.html");
+        }, 2500);
     })
 })
