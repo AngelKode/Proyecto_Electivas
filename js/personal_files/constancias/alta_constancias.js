@@ -151,7 +151,6 @@ const refreshEmbedFile = () => {
 }
 
 const openFileToView = (fileName) => {
-    console.log(fileName)
     $("#fileViewer").attr("src",`${routeFiles}/${fileName}`);
     $('#modal_archivo_subido').modal('show');
 }
