@@ -1,6 +1,6 @@
 import showNotification from "../notificaciones/notificacion.js";
 
-const deleteCookies = () => {
+const deleteSessionData = () => {
     return new Promise((resolve, reject) => {
         $.ajax({
             method : "GET",
@@ -25,9 +25,24 @@ $(document).ready(() => {
         document.getElementById("logout").addEventListener('click', async () => {
             //Y eliminamos las cookies
             try {
-                await deleteCookies();
+                await deleteSessionData();
                 //Si todo salió bien, cambiamos de página
                 window.location.replace("login_prueba.html");
+            } catch (error) {
+                showNotification({
+                    message : error,
+                    type : 'danger'
+                })
+            }
+        })
+    }
+    if(document.getElementById("logout-admin")){
+        document.getElementById("logout-admin").addEventListener('click', async () => {
+            //Y eliminamos las cookies
+            try {
+                await deleteSessionData();
+                //Si todo salió bien, cambiamos de página
+                window.location.replace("login_admin.html");
             } catch (error) {
                 showNotification({
                     message : error,

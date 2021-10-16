@@ -12,7 +12,7 @@
     $dataFechaInicio = $_POST['FechaInicio'];
     $dataFechaFin = $_POST['FechaFin'];
     $dataHoras = $_POST['Horas'];
-    $dataFileName = uniqid()."-data-".$_POST['FileName'];
+    $dataFileName = $_POST['FileName'];
     $dataObservaciones = $_POST['Observaciones'];            
     
     $serverResponse = array();
@@ -20,6 +20,9 @@
     //Verificamos que los datos se hayan mandado
     if(isset($dataActividad) && isset($dataFechaInicio) && isset($dataFechaFin) && isset($dataHoras) && isset($dataFileName) && isset($dataObservaciones)){
 
+        //Agregamos un id unico al archivo
+        $dataFileName uniqid()."-data-".$_POST['FileName'];
+        
         //Antes de agregarlo en la bd o subir el archivo, checamos la extensión
         $mymeType = pathinfo($_FILES['FileData']['name'],PATHINFO_EXTENSION);
 

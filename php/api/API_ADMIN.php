@@ -26,9 +26,12 @@
                         if($mysql_response){
                             http_response_code(200);
                             if(mysqli_affected_rows($link) > 0){
-                                //Guardamos las cookies, con expiracion de 1 hora
-                                setcookie("token_id",$userAdmin,time() + (60*60),"/");
-                                
+                                //Mandamos llamar la funcion para usar las variables de sesión
+                                session_start();
+                                    
+                                //Guardamos las variables de sesión
+                                $_SESSION['token'] = 'admin';
+
                                 echo json_encode(array(
                                     "message" => "Credenciales correctas",
                                     "status" => "OK",
