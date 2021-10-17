@@ -813,8 +813,17 @@ $(document).ready(() => {
     .then(() => {
         fetchData()
         .then(() => {
+            //Agregamos un listener cuando se cierre el modal de editar y eliminar oficio
+            $("#modal_update_oficio").on('hidden.modal.bs', () => {
+                $(document.body).addClass('modal-open')
+            })
+            $("#modal_delete_oficio").on('hidden.modal.bs', () => {
+                $(document.body).addClass('modal-open')
+            })
+
             //Agregamos un listener al boton de agregar oficio
             $("#btnAddOficio").on('click', addOficio);
+
             //Quitamos la pantalla de carga al obtener todos los datos y mostrarlos en la tabla
             setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
         })
