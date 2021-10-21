@@ -182,12 +182,20 @@ const refreshEmbedFile = () => {
 
 const setDataFile = () => {
     //Actualizamos el encabezado del modal al ver el documento PDF
-    $("#nombreActividadTitle").html(constanciaActual.Actividad);
-    $("#horasActividadTitle").html(constanciaActual.Horas);
+    if(constanciaActual !== undefined){
+        $("#nombreActividadTitle").html(constanciaActual.Actividad);
+        $("#horasActividadTitle").html(constanciaActual.Horas);
+    }
 }
 
-const setFileToView = () => {
-    $("#fileViewer").attr("src",`files/${constanciaActual.Archivo}`);
+const setFileToView = (option, fileName = undefined, horas = undefined, actividad = undefined) => {
+    if(option === 'onTable'){ 
+        $("#fileViewer").attr("src",`files/${fileName}`);
+        $("#nombreActividadTitle").html(actividad);
+        $("#horasActividadTitle").html(horas);
+    }else{
+        $("#fileViewer").attr("src",`files/${constanciaActual.Archivo}`);
+    }
     $('#modal_archivo_subido').modal('show');
 }
 
@@ -342,7 +350,7 @@ const fetchData = () => {
                     dataConstancias.forEach((constancia) => {
 
                         const {ID : ID_Constancia,Nombre : Nombre_Alumno, Actividad : Actividad_Alumno, 
-                               Programa : Programa_Alumno, Horas, Valida} = constancia;
+                               Programa : Programa_Alumno, Horas, Valida, Archivo} = constancia;
 
                         const btnCheckConstancia = (parseInt(Valida) === 1) ? `<div style="width: 100%; height: 100%;">
                                                                         <button type="button" style="width: 100%; height: 100%;" class="btn btn-warning waves-effect" onclick="setIDConstancia(${ID_Constancia},false)">
@@ -350,14 +358,21 @@ const fetchData = () => {
                                                                             <span>Validar</span>
                                                                         </button>
                                                                     </div>`
-                                                                  : `<div style="width: 100%; height: 100%;">
-                                                                        <button type="button" style="width: 100%; height: 100%;" class="btn btn-info waves-effect" onclick="setIDConstancia(${ID_Constancia},true)">
-                                                                            <i class="material-icons">update</i>
-                                                                            <span>Editar validación</span>
-                                                                        </button>
+                                                                  : `<div style="width: 100%; height: 100%;display:flex;justify-content:center;align-items:center;flex-grow:2;flex-direction:row;">
+                                                                        <div style="flex:2; margin:5px;">
+                                                                            <button type="button" style="width: 100%; height: 100%;" class="btn btn-info waves-effect" onclick="setIDConstancia(${ID_Constancia},true)">
+                                                                                <i class="material-icons">update</i>
+                                                                                <span>Editar validación</span>
+                                                                            </button>
+                                                                        </div>
                                                                     </div>`;
+                        //Creamos el icono para ver el archivo subido
+                        const btnViewFileOnTable =`<div class="view_uploaded_file">
+                                                        <img src="images/images-app/PDF_file_example.svg" alt="PDF" style="width: 3rem;height: 3rem;cursor: pointer;" role="button" onclick="setFileToView('onTable','${Archivo}',${Horas},'${Actividad_Alumno}')">
+                                                   </div>`;
+
                         dataTable.row.add([
-                            Programa_Alumno, Nombre_Alumno, Actividad_Alumno, Horas, btnCheckConstancia
+                            Programa_Alumno, Nombre_Alumno, Actividad_Alumno, Horas, btnViewFileOnTable,btnCheckConstancia
                         ]).draw().node().id = `row_ID_${ID_Constancia}`;
 
                         //Guardamos todos los datos data-table en el arreglo de toda la data obtenida de las constancias
