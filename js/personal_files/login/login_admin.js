@@ -48,7 +48,7 @@ $(document).ready(() => {
             }else{
                 //Iniciar sesión
                 //Cambiamos de pagina
-                window.location.replace("./denominacion_electivas.html"); 
+                window.location.replace("./validar_constancias.html"); 
             }
         });
     });
