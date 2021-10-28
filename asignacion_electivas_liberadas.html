@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>Cambiar Credenciales</title>
+    <title>Asignacion Electivas Liberadas</title>
     <!-- Favicon-->
     <link rel="icon" href="favicon.ico" type="image/x-icon">
 
@@ -22,24 +22,26 @@
     <!-- Animation Css -->
     <link href="plugins/animate-css/animate.css" rel="stylesheet" />
 
-    <!-- Morris Chart Css-->
-    <link href="plugins/morrisjs/morris.css" rel="stylesheet" />
-
-    <!-- Custom Css -->
-    <link href="css/style.css" rel="stylesheet">
-
     <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
     <link href="css/themes/theme-blue.css" rel="stylesheet" />
-
-    <!-- Sweetalert Css -->
-    <link href="plugins/sweetalert/sweetalert.css" rel="stylesheet" />
 
     <!-- JQuery DataTable Css -->
     <link href="plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css" rel="stylesheet">
 
-    <!--Custom CSS personal-->
-    <link href="css/personal_files/page_loader/index.css" rel="stylesheet">
+    <!-- Bootstrap Select Css -->
+    <link href="plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
 
+    <!-- Bootstrap DatePicker Css -->
+    <link href="plugins/bootstrap-datepicker/css/bootstrap-datepicker.css" rel="stylesheet" />
+
+    <!-- Sweetalert Css -->
+    <link href="plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+
+    <!-- Custom Css -->
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/personal_files/page_loader/index.css" rel="stylesheet">
+    <link href="css/personal_files/asignacion_electivas/asignacion_electivas.css" rel="stylesheet">
+    
 </head>
 
 <body class="theme-blue">
@@ -104,7 +106,7 @@
                     </div>
                 </div>
             </div>
-
+            
             <!-- #User Info -->
             <!-- Menu -->
             <div class="menu">
@@ -116,7 +118,7 @@
                             <span>Validación de Constancias</span>
                         </a>
                     </li>
-                    <li>
+                    <li class="active">
                         <a href="asignacion_electivas_liberadas.html">
                             <i class="material-icons">task_alt</i>
                             <span>Asignacion Electivas</span>
@@ -134,13 +136,13 @@
                             <span>Denominación Electivas</span>
                         </a>
                     </li>
-                    <li class="active">
+                    <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">settings</i>
                             <span>Configuración</span>
                         </a>
                         <ul class="ml-menu">
-                            <li  class="active">
+                            <li>
                                 <a href="cambiar_credenciales.html">Cambiar contraseña</a>
                             </li>
                         </ul>
@@ -316,37 +318,40 @@
     <section class="content">
         <div class="container-fluid">
             <div class="block-header">
-                <h2>Configuraciones</h2>
+                <h2>Electivas Liberadas</h2>
             </div>
-
-            <div class="row clearfix" id="body_page">
+            <div class="row clearfix">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="card">
                         <div class="header">
                             <h2 style="display: inline-block;">
-                                Cambiar contraseña
+                                Asignacion de Oficio
                             </h2>
                         </div>
                         <div class="body">
-                            <div class="row clearfix">
-                                <div class="col-sm-12" style="margin-bottom: 0;">
-                                    <div class="form-group">
-                                        <div class="form-line">
-                                            <input type="password" class="form-control" placeholder="Contraseña anterior" id="oldPasswd">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="form-line">
-                                            <input type="password" class="form-control" placeholder="Contraseña nueva" id="newPasswd">    
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="form-line">
-                                            <input type="password" class="form-control" placeholder="Confirmar nueva contraseña" id="newPasswdCheck">
-                                        </div>
-                                    </div>
-                                    <button type="button" class="btn btn-success waves-effect" disabled id="changePasswdBtn">Aplicar cambios</button>
-                                </div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped table-hover" id="tabla_registros_asignaciones">
+                                    <thead>
+                                        <tr>
+                                            <th>Asignar</th>
+                                            <th>Programa</th>
+                                            <th>Nombre</th>
+                                            <th>Electivas</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Asignar</th>
+                                            <th>Programa</th>
+                                            <th>Nombre</th>
+                                            <th>Electivas</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -354,6 +359,163 @@
             </div>
             <!--Div Tabla-->
 
+            <!--Modal Validar Constancia-->
+            <div class="modal fade" id="modal_validar_constancias" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="defaultModalLabel" style="font-weight: 100;">Validar constancia de <b id="alumnoConstancia"></b></h4>
+                        </div>
+
+                        <div class="modal-body">
+                                <div class="row clearfix">
+
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <div class="form-group form-float">
+                                            <div class="form-line focused">
+                                                <input type="text" class="form-control" value="" id="nombreActividadConstancia" disabled>
+                                                <label class="form-label">Nombre de la Actividad</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                        <div class="form-group">
+                                            <label style="font-weight: 100;font-size: 12px;opacity: 0.8;">Fecha de Inicio</label>
+                                            <div class="input-daterange input-group" id="date_picker_inicio">
+                                                <div class="form-line focused">
+                                                    <input type="date" class="form-control" id="fechaInicioConstancia" disabled>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                        <div class="form-group">
+                                            <label style="font-weight: 100;font-size: 12px;opacity: 0.8;">Fecha de Término</label>
+                                            <div class="input-daterange input-group" id="date_picker_fin">
+                                                <div class="form-line focused">
+                                                    <input type="date" class="form-control" id="fechaFinConstancia" disabled>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                        <div class="form-group">
+                                            <label style="font-weight: 100;font-size: 12px;opacity: 0.8;">Horas</label>
+                                            <div class="form-line focused">
+                                                <input type="number" class="form-control" value="" id="horasConstancia" disabled>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <div style="display: inline-block;width: 40%;">
+                                            <label style="font-weight: 100;font-size: 12px;opacity: 0.8;">Mostrar Archivo</label>
+                                            <button style="width: 100%;height: 90%;" class="btn btn-warning waves-effect" onclick="setFileToView('onShowingModal')">
+                                                <i class="material-icons">loupe</i>
+                                            </button>
+                                        </div>
+                                        
+                                        <div style="display: inline-block;float: right;width: 40%;">
+                                            <label style="font-weight: 100;font-size: 12px;opacity: 0.8;">¿Constancia Válida?</label>
+                                            <select class="selectpicker" title="Seleccione" data-width="100%" id="isValidaConstancia">
+                                                <option value="2">Si</option>
+                                                <option value="3">No</option>
+                                            </select> 
+                                        </div> 
+                                    </div>
+
+
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding-top: 25px;">
+                                        <label style="font-weight: 100;font-size: 12px;opacity: 0.8;">Denominacion</label>
+                                        <select class="selectpicker" data-size="5" data-dropup-auto="true" title="Seleccione una opción" data-width="100%" id="denominacionConstancia">
+                                        </select>  
+                                    </div>
+                                    
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding-top: 25px;">
+                                        <div class="form-group form-float">
+                                            <div class="form-line">
+                                                <textarea name="observaciones" cols="30" rows="3" class="form-control" id="observacionesConstancia"></textarea>
+                                                <label class="form-label">Observaciones</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <!--Row-->
+                        </div>
+                        <!--Modal Body-->
+
+                        <div class="modal-footer" style="padding-top: 0;">
+                            <div style="padding-right: 10px;">
+                                <ul style="list-style:none;">
+                                    <li style="display: inline-block;">
+                                        <a href="javascript:void(0)" onclick="uploadRevision()">
+                                            <i class="material-icons" style="color: #2196F3;">save</i>
+                                        </a>
+                                    </li>
+                                    <li style="display: inline-block;">
+                                        <a href="javascript:void(0);">
+                                            <i class="material-icons" style="color: #F44336;"  data-dismiss="modal">close</i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!--Footer-->
+                    </div>
+                    <!--Content-->
+                </div>
+                <!--Dialog-->
+            </div>
+            <!--Modal Validar Constancia-->
+
+            <!--Modal Archivo Subido-->
+            <div class="modal fade" id="modal_archivo_subido" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+                <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <div class="row clearfix">
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6" style="padding-right: 0;">
+                                    <h4 class="modal-title" id="defaultModalLabel" style="float: right;">Constancia :</h4>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6" style="padding-left: 10px;">
+                                    <h4 class="modal-title" id="defaultModalLabel" style="float: left;"><i id="nombreActividadTitle"></i></h4>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6" style="padding-right: 0;">
+                                    <h4 class="modal-title" style="float: right;">Horas :</h4>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6" style="padding-left: 10px;">
+                                    <h4 class="modal-title" style="float: left;"><i id="horasActividadTitle"></i></h4>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-body" style="height: 100%;" id="fileViewerContainer">
+                            <embed src="" type="application/pdf" style="width: 100%;height: 70vh;overflow-y: scroll;" id="fileViewer">
+                        </div>
+                        <!--Modal Body-->
+
+                        <div class="modal-footer">
+                            <div style="padding-right: 10px;">
+                                <ul style="list-style:none;">
+                                    <li style="display: inline-block;">
+                                        <a href="javascript:void(0);">
+                                            <i class="material-icons" style="color: #F44336;"  data-dismiss="modal">close</i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!--Footer-->
+                    </div>
+                    <!--Content-->
+                </div>
+                <!--Dialog-->
+            </div>
+            <!--Modal Archivo Subido-->
 
         </div>
         <!--Container Fluid-->
@@ -363,17 +525,17 @@
     <!-- Jquery Core Js -->
     <script src="plugins/jquery/jquery.min.js"></script>
 
-    <!-- Jquery CountTo Plugin Js -->
-    <script src="plugins/jquery-countto/jquery.countTo.js"></script>
-
     <!-- Bootstrap Core Js -->
     <script src="plugins/bootstrap/js/bootstrap.js"></script>
+
+    <!-- Jquery CountTo Plugin Js -->
+    <script src="plugins/jquery-countto/jquery.countTo.js"></script>
 
     <!-- Bootstrap Notify Plugin Js -->
     <script src="plugins/bootstrap-notify/bootstrap-notify.js"></script>
 
-    <!-- Waves Effect Plugin Js -->
-    <script src="plugins/node-waves/waves.js"></script>
+    <!-- Slimscroll Plugin Js -->
+    <script src="plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
 
     <!-- Jquery DataTable Plugin Js -->
     <script src="plugins/jquery-datatable/jquery.dataTables.js"></script>
@@ -389,12 +551,27 @@
     <!-- SweetAlert Plugin Js -->
     <script src="plugins/sweetalert/sweetalert.min.js"></script>
 
-    <!-- Custom Js -->
-    <script src="js/admin.js"></script>
-    <script type="module" src="js/personal_files/login/logout_prueba.js"></script>
-    <script src="js/pages/tables/jquery-datatable.js"></script>
-    <script src="js/personal_files/cambiar_credenciales/setListeners.js"></script>
-    <script src="js/personal_files/cambiar_credenciales/cambiar_contrasenia.js"></script>
+    <!-- Moment Plugin Js -->
+    <script src="plugins/momentjs/moment.js"></script>
+
+   <!-- Waves Effect Plugin Js -->
+   <script src="plugins/node-waves/waves.js"></script>
+
+    <!-- Bootstrap Datepicker Plugin Js -->
+    <script src="plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+   
+    <!-- Select Plugin Js -->
+    <script src="plugins/bootstrap-select/js/bootstrap-select.js"></script>
+
+   <!-- Custom Js -->
+   <script src="js/admin.js"></script>
+   <script src="js/pages/tables/jquery-datatable.js"></script>
+   <script src="js/pages/ui/tooltips-popovers.js"></script>
+
+   <!--Inicializaciones de componentes de la página-->
+   <script src="js/personal_files/asignacion_electivas/asignacion_electivas.js"></script>
+   <script type = "module"src="js/personal_files/login/logout_prueba.js"></script>
+   <script src="js/personal_files/asignacion_electivas/listenersSelect.js"></script>
 
 </body>
 

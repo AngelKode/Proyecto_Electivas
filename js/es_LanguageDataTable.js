@@ -1,6 +1,6 @@
 
 $(document).ready(function(){
-    const tablasRegistros = ["denominaciones", "constancias","departamentales","oficios"];
+    const tablasRegistros = ["denominaciones", "constancias","departamentales","oficios","asignaciones"];
     const configuraciones = {
         "paging" : true,
         "pageLength": 5,
