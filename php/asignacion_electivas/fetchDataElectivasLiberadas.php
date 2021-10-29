@@ -25,7 +25,7 @@
                 $newData['nombre_alumno'] = $mysqli_row['nombre_alumno'];
                 $newData['programa'] = $mysqli_row['programa'];
                 $newData['boleta'] = $mysqli_row['boleta'];
-                $newData['id_asignacion'] = ($mysqli_row['id_asignacion'] == NULL) ? '0' : $mysqli_row['id_asignacion'];
+                $newData['id_asignacion'] = ($mysqli_row['id_asignacion'] == NULL) ? "0" : $mysqli_row['id_asignacion'];
                 array_push($serverResponse['data'], $newData);
             }
         }else{

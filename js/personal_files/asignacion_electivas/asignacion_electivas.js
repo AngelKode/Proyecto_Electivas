@@ -113,13 +113,18 @@ const generateExcel = () => {
         let dataFileString = "No,BOLETA,NOMBRE,PROGRAMA-ACADEMICO,UNIDADES-DE-APRENDIZAJE-LIBERADAS\r\n";
 
         //Para cada registro, un renglon de excels
-        allDataAlumnos.forEach(({boleta, nombre,programa,ua, id_oficios_asignacion},index) => {
-            //Filtramos los que aun no se han asignado oficios
-            if(id_oficios_asignacion.find((elem) => elem === 0) === undefined){
-                //Usamos el metodo normalize con el parametro NFD para separar los acentos de sus letras, seguido de eso eliminamos el caracter de el acento
-                dataFileString += `${index + 1}, ${boleta} , ${nombre.normalize('NFD').replace(/[\u0300-\u036f]/g, '')}, ${programa.normalize('NFD').replace(/[\u0300-\u036f]/g, '')} , ${ua.join("-")} \r\n`;
+        let counterRegistros = 1;
+        for(let alumnos in allDataAlumnos){
+            if(allDataAlumnos.hasOwnProperty(alumnos)){
+                //Filtramos los que aun no se han asignado oficios
+                const {boleta, nombre_alumno,programa,nombre_electiva} = allDataAlumnos[alumnos];
+                if(nombre_electiva['asignados'].length > 0){
+                    //Usamos el metodo normalize con el parametro NFD para separar los acentos de sus letras, seguido de eso eliminamos el caracter de el acento
+                    dataFileString += `${counterRegistros}, ${boleta} , ${nombre_alumno.normalize('NFD').replace(/[\u0300-\u036f]/g, '')}, ${programa.normalize('NFD').replace(/[\u0300-\u036f]/g, '')} , ${nombre_electiva['asignados'].join("-")} \r\n`;
+                }
+                counterRegistros++;
             }
-        })
+        }
         
         //Creamos el objeto Blob que contiene la información
         const blob = new Blob([dataFileString], { type: "text/csv;charset=UTF-8;" });
@@ -179,17 +184,23 @@ const assignToAllElectivas = () => {
 
         //Recorremos los que ya se completaron para asignarles oficios
         let dataOfElectivas = [];
+        let affectedAlumnosID = [];
 
-        allDataAlumnos.forEach(({id_oficios_asignacion, id_alumno,id_ua,boleta}) => {
-            //Filtramos los que aun no se han asignado oficios para a ellos asignarlos
-            if(id_oficios_asignacion.find((elem) => elem === 0) !== undefined){
-                dataOfElectivas.push({
-                    id_alumno : id_alumno,
-                    id_electiva : id_ua,
-                    boleta      : boleta
-                });
+        for(let alumnos in allDataAlumnos){
+            if(allDataAlumnos.hasOwnProperty(alumnos)){
+                const {id_alumno, id_electiva} = allDataAlumnos[alumnos];
+
+                if(id_electiva['noAsignados'].length > 0){
+                    dataOfElectivas.push({
+                        id_alumno : id_alumno,
+                        id_electiva : [...id_electiva['noAsignados']],
+                        nombre      : alumnos
+                    });
+                    //Agregamos el ID del alumno que se alteró su información
+                    affectedAlumnosID.push(alumnos);
+                }
             }
-        })
+        }
 
         //Teniendo los datos que se van a mandar, hacemos la peticion
         $.ajax({
@@ -201,28 +212,53 @@ const assignToAllElectivas = () => {
                 electivasToAdd : JSON.stringify(dataOfElectivas)
             },
             success : (serverResponse) => {
-                
+
                 setTimeout(() => {
                     const jsonResponse = JSON.parse(serverResponse);
                     const {status, message} = jsonResponse;
-    
+                    const id_new_oficios = jsonResponse.id_oficios;//Obtenemos el ID de los oficios que se asignaron
+
                     if(status === 'success'){
                         //Si todo salió bien, modificamos la tabla, y modificamos los datos de cada registro con las IDs generadas
-                        const {id_oficios} = jsonResponse;
-                        const dataTable = $("#tabla_registros_asignaciones").DataTable();
+                        
+                        affectedAlumnosID.forEach((alumno,index) => {
+                            if(allDataAlumnos.hasOwnProperty(alumno)){
+                                //Obtenemos el renglon de las electivas que aun no habian sido asignados con un oficio
+                                //y eliminamos el renglon, para pasar la información a 1 solo renglón en caso de que haya mas de 1
 
-                        allDataAlumnos.forEach(({id_oficios_asignacion, id_alumno}, index) => {
-                            //Filtramos los que aun no se han asignado oficios para a ellos asignarlos
-                            if(id_oficios_asignacion.find((elem) => elem === 0) !== undefined){
+                                //Obtenemos el Id del alumno, el nombre de las electivas que se agregaron y sus IDs
+                                const {id_alumno, nombre_electiva, id_electiva} = allDataAlumnos[alumno];
+                                    const nombre_electivas_no_asignadas = [...nombre_electiva['noAsignados']];//Obtenemos el nombre de las electivas que se agregaron
+                                    const id_electivas_no_asignadas = [...id_electiva['noAsignados']];
+                                const dataTable = $("#tabla_registros_asignaciones").DataTable();
 
-                                //Modificamos el registro de la tabla
-                                const dataRow = dataTable.row(`#row_ID_${id_alumno}`).data()
-                                dataRow[0] =  `<div style="display: flex;justify-content: center;align-items: center; width: auto;">
-                                                    <span class="material-icons">
-                                                        check_box
-                                                    </span>
-                                                </div>`;
-                                dataRow[dataRow.length - 1] = `<div style="width: 100%; height: 100%;display:flex;justify-content:center;align-items:center;flex-grow:2;flex-direction:row;">
+                                //Checamos si hay mas de 1 renglon
+                                if(allDataAlumnos[alumno].id_asignacion['asignados'].length > 0){
+                                    //Entra en caso de haber al menos 1 electiva ya con oficio asignado
+
+                                    //Eliminamos el renglon ya que pasan a ser 'asignados'
+                                    dataTable.row(`#row_ID_${id_alumno}_noAsignados`).remove().draw();
+
+                                    //Agregamos el nombre de las electivas a el renglon donde están las electivas que ya tienen oficio
+                                    const rowData = dataTable.row(`#row_ID_${id_alumno}_asignados`).data();
+
+                                    rowData[3] += `, ${nombre_electivas_no_asignadas.join(" , ")}`;
+                                    //Actualizamos la información
+                                    dataTable.row(`#row_ID_${id_alumno}_asignados`).data(rowData);
+
+                                }else{
+                                    //Si no, aun no tiene electivas con oficio asignado
+
+                                    //Obtenemos la información del renglon, para actualizarla
+                                    const rowData = dataTable.row(`#row_ID_${id_alumno}_noAsignados`).data();
+
+                                    //Actualizamos el icono de asignar y el boton de acciones
+                                    rowData[0] = `<div style="display: flex;justify-content: center;align-items: center; width: auto;">
+                                                <span class="material-icons">
+                                                    check_box
+                                                </span>
+                                            </div>`;
+                                    rowData[rowData.length - 1] = `<div style="width: 100%; height: 100%;display:flex;justify-content:center;align-items:center;flex-grow:2;flex-direction:row;">
                                                                     <div style="flex:2; margin:5px;">
                                                                         <button type="button" style="width: 100%; height: 100%;" class="btn btn-danger waves-effect" onclick="deleteOficioElectiva(${id_alumno})">
                                                                             <i class="material-icons">delete_forever</i>
@@ -230,12 +266,28 @@ const assignToAllElectivas = () => {
                                                                         </button>
                                                                     </div>
                                                                 </div>`;
-                                dataTable.row(`#row_ID_${id_alumno}`).data(dataRow);
-                                console.log(id_oficios)
-                                //Modificamos los IDs de los oficios
-                                allDataAlumnos[index].id_oficios_asignacion = id_oficios[index];
+
+                                    dataTable.row(`#row_ID_${id_alumno}_noAsignados`).data(rowData);
+                                    //Cambiamos el ID a 'asignados'
+                                    dataTable.row(`#row_ID_${id_alumno}_noAsignados`).node().id = `row_ID_${id_alumno}_asignados`;
+                                }
+
+                                //Actualizamos el id de los oficios
+                                const newArrayIdAsignacion = allDataAlumnos[alumno].id_asignacion['asignados'].concat([...id_new_oficios[alumno]]);
+                                allDataAlumnos[alumno].id_asignacion['asignados'] = newArrayIdAsignacion;
+                                allDataAlumnos[alumno].id_asignacion['noAsignados'] = [];
+
+                                //Actualizamos el id de las electivas
+                                const newArrayIdElectiva = allDataAlumnos[alumno].id_electiva['asignados'].concat([...id_electivas_no_asignadas]);
+                                allDataAlumnos[alumno].id_electiva['asignados'] = newArrayIdElectiva;
+                                allDataAlumnos[alumno].id_electiva['noAsignados'] = [];
+
+                                //Actualizamos el nombre de las electivas
+                                const newArrayNombreElectiva = allDataAlumnos[alumno].nombre_electiva['asignados'].concat([...nombre_electivas_no_asignadas]);
+                                allDataAlumnos[alumno].nombre_electiva['asignados'] = newArrayNombreElectiva;
+                                allDataAlumnos[alumno].nombre_electiva['noAsignados'] = [];
                             }
-                        })
+                        })   
                     }
 
                     //Mostramos una notificacion
@@ -319,36 +371,30 @@ const getElectivasLiberadasAlumnos = () => {
 
                             //Dependiendo el valor, ya le fue asignado un oficio o no, y se agrega a las liberadas o 
                             //a las que aun no han sido liberadas
+                            if(cv.id_asignacion === `0`){
+                                acc[cv.nombre_alumno].id_asignacion = {asignados : [],noAsignados : [cv.id_asignacion]};
+                                acc[cv.nombre_alumno].id_electiva = {asignados : [], noAsignados : [cv.id_electiva]};
+                                acc[cv.nombre_alumno].nombre_electiva = {asignados : [], noAsignados : [cv.nombre_electiva]};
+                            }else{
+                                acc[cv.nombre_alumno].id_asignacion = {asignados : [cv.id_asignacion], noAsignados : []};
+                                acc[cv.nombre_alumno].id_electiva = {asignados : [cv.id_electiva], noAsignados : []};
+                                acc[cv.nombre_alumno].nombre_electiva = {asignados : [cv.nombre_electiva], noAsignados : []};
+                            }
 
-                            //--ID de la tabla de Oficios
-                            acc[cv.nombre_alumno].id_asignacion = (cv.id_asignacion === `0`) 
-                                                                    ? {asignados : [],noAsignados : [cv.id_asignacion]} 
-                                                                    : {asignados : [cv.id_asignacion], noAsignados : []};
-
-                            //--ID de la electiva que ya fue completada
-                            acc[cv.nombre_alumno].id_electiva = (cv.id_asignacion === `0`) 
-                                                                    ? {asignados : [], noAsignados : [cv.id_electiva]} 
-                                                                    : {asignados : [cv.id_electiva], noAsignados : []};
-                            //Nombre de la Electiva
-                            acc[cv.nombre_alumno].nombre_electiva = (cv.id_asignacion === `0`) 
-                                                                    ? {asignados : [], noAsignados : [cv.nombre_electiva]} 
-                                                                    : {asignados : [cv.nombre_electiva], noAsignados : []};
                         }else{
-                            
                             //Dependiendo el valor, ya le fue asignado un oficio o no, y lo agregamos a los IDs de las electivas
                             //que ya fueron asignadas con su oficio o a las que no
 
                              //--ID de la tabla de Oficios
-                            (cv.id_asignacion === `0`) ? acc[cv.nombre_alumno].id_asignacion.noAsignados.push(cv.id_asignacion) 
-                                                       : acc[cv.nombre_alumno].id_asignacion.asignados.push(cv.id_asignacion) ; 
-
-                            //--ID de la electiva que ya fue completada
-                            (cv.id_asignacion === `0`) ? acc[cv.nombre_alumno].id_electiva.noAsignados.push(cv.id_electiva) 
-                                                       : acc[cv.nombre_alumno].id_electiva.asignados.push(cv.id_electiva) ; 
-                            
-                            //Nombre de la Electiva
-                            (cv.id_asignacion === `0`) ? acc[cv.nombre_alumno].nombre_electiva.noAsignados.push(cv.nombre_electiva) 
-                                                       : acc[cv.nombre_alumno].nombre_electiva.asignados.push(cv.nombre_electiva) ; 
+                             if(cv.id_asignacion === `0`){
+                                acc[cv.nombre_alumno].id_asignacion.noAsignados.push(cv.id_asignacion);
+                                acc[cv.nombre_alumno].id_electiva.noAsignados.push(cv.id_electiva);
+                                acc[cv.nombre_alumno].nombre_electiva.noAsignados.push(cv.nombre_electiva); 
+                             }else{
+                                acc[cv.nombre_alumno].id_asignacion.asignados.push(cv.id_asignacion);
+                                acc[cv.nombre_alumno].id_electiva.asignados.push(cv.id_electiva);
+                                acc[cv.nombre_alumno].nombre_electiva.asignados.push(cv.nombre_electiva)
+                             } 
                         }
                         return acc;
                     },[]);
@@ -359,55 +405,55 @@ const getElectivasLiberadasAlumnos = () => {
                             const {id_electiva, id_asignacion, id_alumno, nombre_alumno, nombre_electiva, programa} = sameElectivaAlumno[alumnos];
 
                             //Recorremos los que ya fueron asignados y los que no de sus oficios
-                            for(let statusElectiva in nombre_electiva){
+                             for(let statusElectiva in nombre_electiva){
                                 if(nombre_electiva.hasOwnProperty(statusElectiva) && id_electiva.hasOwnProperty(statusElectiva) && id_asignacion.hasOwnProperty(statusElectiva)){
 
                                     //Si no tiene elementos, no hacemos nada
-                                    if (nombre_electiva[statusElectiva].length < 1) break;
-                                    
-                                    //Obtenemos los datos del nombre de las electivas
-                                    const data_nombre_electiva = nombre_electiva[statusElectiva];
-                                    
-                                    //Dependiendo la posicion del hash, será la presentacion que tendrá en la tabla
-                                    let isAssigned;
-                                    let btnAccion;
+                                    if (!nombre_electiva[statusElectiva].length < 1){
+                                                                            //Obtenemos los datos del nombre de las electivas
+                                        const data_nombre_electiva = nombre_electiva[statusElectiva];
+                                        
+                                        //Dependiendo la posicion del hash, será la presentacion que tendrá en la tabla
+                                        let isAssigned;
+                                        let btnAccion;
 
-                                    if(statusElectiva === 'asignados'){
-                                        isAssigned = `<div style="display: flex;justify-content: center;align-items: center; width: auto;">
-                                                                    <span class="material-icons">
-                                                                        check_box
-                                                                    </span>
-                                                            </div>`;
-                                                             
+                                        if(statusElectiva === 'asignados'){
+                                            isAssigned = `<div style="display: flex;justify-content: center;align-items: center; width: auto;">
+                                                                        <span class="material-icons">
+                                                                            check_box
+                                                                        </span>
+                                                                </div>`;
+                                                                
 
-                                        btnAccion = `<div style="width: 100%; height: 100%;display:flex;justify-content:center;align-items:center;flex-grow:2;flex-direction:row;">
-                                                        <div style="flex:2; margin:5px;">
-                                                            <button type="button" style="width: 100%; height: 100%;" class="btn btn-danger waves-effect" onclick="deleteOficioElectiva(${id_alumno})">
-                                                                <i class="material-icons">delete</i>
-                                                                <span>Quitar</span>
-                                                            </button>
-                                                        </div>
-                                                    </div>`;
-                                    }else{
-                                        isAssigned = `<div style="display: flex;justify-content: center;align-items: center; width: auto;">
-                                                        <span class="material-icons">
-                                                                check_box_outline_blank
-                                                        </span>
-                                                     </div>`;
-                                        btnAccion = `<div style="width: 100%; height: 100%;display:flex;justify-content:center;align-items:center;flex-grow:2;flex-direction:row;">
-                                                        <div style="flex:2; margin:5px;">
-                                                            <button type="button" style="width: 100%; height: 100%;" class="btn btn-info waves-effect" onclick="addOficioElectiva(${id_alumno})">
-                                                                <i class="material-icons">post_add</i>
-                                                                <span>Asignar</span>
-                                                            </button>
-                                                        </div>
-                                                    </div>`;
+                                            btnAccion = `<div style="width: 100%; height: 100%;display:flex;justify-content:center;align-items:center;flex-grow:2;flex-direction:row;">
+                                                            <div style="flex:2; margin:5px;">
+                                                                <button type="button" style="width: 100%; height: 100%;" class="btn btn-danger waves-effect" onclick="deleteOficioElectiva(${id_alumno})">
+                                                                    <i class="material-icons">delete</i>
+                                                                    <span>Quitar</span>
+                                                                </button>
+                                                            </div>
+                                                        </div>`;
+                                        }else{
+                                            isAssigned = `<div style="display: flex;justify-content: center;align-items: center; width: auto;">
+                                                            <span class="material-icons">
+                                                                    check_box_outline_blank
+                                                            </span>
+                                                        </div>`;
+                                            btnAccion = `<div style="width: 100%; height: 100%;display:flex;justify-content:center;align-items:center;flex-grow:2;flex-direction:row;">
+                                                            <div style="flex:2; margin:5px;">
+                                                                <button type="button" style="width: 100%; height: 100%;" class="btn btn-info waves-effect" onclick="addOficioElectiva(${id_alumno})">
+                                                                    <i class="material-icons">post_add</i>
+                                                                    <span>Asignar</span>
+                                                                </button>
+                                                            </div>
+                                                        </div>`;
+                                        }
+                                        //Agregamos el registro a la tabla
+                                        dataTable.row.add([
+                                            isAssigned, programa, nombre_alumno, data_nombre_electiva.join(" , "), btnAccion
+                                        ]).draw().node().id = `row_ID_${id_alumno}_${statusElectiva}`;
+
                                     }
-                                    //Agregamos el registro a la tabla
-                                    dataTable.row.add([
-                                        isAssigned, programa, nombre_alumno, data_nombre_electiva.join(" , "), btnAccion
-                                    ]).draw().node().id = `row_ID_${id_alumno}_${statusElectiva}`;
-
                                 }
                             }
                         }
@@ -488,6 +534,7 @@ const addOficioElectiva = (id) => {
 
                                 //Agregamos el nombre de las electivas a el renglon donde están las electivas que ya tienen oficio
                                 const rowData = dataTable.row(`#row_ID_${dataElectivas.id_alumno}_asignados`).data();
+
                                 rowData[3] += `, ${nombre_electivas_no_asignadas.join(" , ")}`;
                                 //Actualizamos la información
                                 dataTable.row(`#row_ID_${dataElectivas.id_alumno}_asignados`).data(rowData);
@@ -515,7 +562,7 @@ const addOficioElectiva = (id) => {
 
                                 dataTable.row(`#row_ID_${dataElectivas.id_alumno}_noAsignados`).data(rowData);
                                 //Cambiamos el ID a 'asignados'
-                                dataTable.row(`#row_ID_${dataElectivas.id_alumno}_noAsignados`).node().id = `row_ID_${id}_asignados`;;
+                                dataTable.row(`#row_ID_${dataElectivas.id_alumno}_noAsignados`).node().id = `row_ID_${id}_asignados`;
                             }
 
                             //Agregamos los ids generados de los oficios
@@ -565,10 +612,23 @@ const addOficioElectiva = (id) => {
 const deleteOficioElectiva = (id) => {
     
     //Obtenemos el registro con los datos necesarios para eliminar los oficios
-    const dataElectivas = allDataAlumnos.find(({id_alumno}) => id_alumno === `${id}`)
+    let dataElectivas;
+    for(let alumnos in allDataAlumnos){
+        if(allDataAlumnos.hasOwnProperty(alumnos)){
+            if(allDataAlumnos[alumnos].id_alumno === `${id}`){
+                dataElectivas = {...allDataAlumnos[alumnos]};
+                break;
+            }
+        }
+    }
 
-    //Verificamos que se haya encontrado un registro
-    if(dataElectivas){
+        //Verificamos que se haya encontrado un registro
+        if(dataElectivas){
+
+            //Obtenemos los datos que serán actualizados
+            const id_electivas_asignadas = [...dataElectivas.id_electiva['asignados']];
+            const id_asignacion_electivas = [...dataElectivas.id_asignacion['asignados']];
+            const nombre_electivas = [...dataElectivas.nombre_electiva['asignados']];
 
             //Mostramos una notificacion que se está haciendo la peticion para eliminarlo
             swal({
@@ -583,7 +643,7 @@ const deleteOficioElectiva = (id) => {
                 method : 'POST',
                 url    : './php/asignacion_electivas/deleteAsignacionOficios.php',
                 data   : {
-                    id_oficios_to_delete : dataElectivas.id_oficios_asignacion
+                    id_oficios_to_delete : id_asignacion_electivas
                 },
                 success : (serverResponse) => {
 
@@ -595,15 +655,37 @@ const deleteOficioElectiva = (id) => {
                         if(status === 'success'){
                             
                             const dataTable = $("#tabla_registros_asignaciones").DataTable();
-                            const rowData = dataTable.row(`#row_ID_${dataElectivas.id_alumno}`).data();
 
-                            //Actualizamos el icono a 'Asignar' y el boton de acciones
-                            rowData[0] = `<div style="display: flex;justify-content: center;align-items: center; width: auto;">
+                            //Checamos si tiene algun dato o no los no asignados
+                            if(dataElectivas.nombre_electiva['noAsignados'].length > 0){
+                                //Entra en caso de haber al menos 1 electiva ya con oficio asignado
+
+                                //Eliminamos el renglon ya que pasan a ser 'no asignados'
+                                dataTable.row(`#row_ID_${dataElectivas.id_alumno}_asignados`).remove().draw();
+
+                                //Agregamos el nombre de las electivas a el renglon donde están las electivas que no tienen oficio
+                                const rowData = dataTable.row(`#row_ID_${dataElectivas.id_alumno}_noAsignados`).data();
+                                    //Ordenamos alfabeticamente
+                                    let actualElectivas = rowData[3].split(",");
+                                    actualElectivas = actualElectivas.concat([...nombre_electivas]);
+                                    actualElectivas = [...new Set(actualElectivas)];
+                                    actualElectivas.sort()
+                                rowData[3] = actualElectivas.join(',');
+                                //Actualizamos la información
+                                dataTable.row(`#row_ID_${dataElectivas.id_alumno}_noAsignados`).data(rowData);
+                            }else{
+                                //Si no, no hay electivas sin oficio
+
+                                //Obtenemos la información del renglon, para actualizarla
+                                const rowData = dataTable.row(`#row_ID_${dataElectivas.id_alumno}_asignados`).data();
+
+                                //Actualizamos el icono de asignar y el boton de acciones
+                                rowData[0] = `<div style="display: flex;justify-content: center;align-items: center; width: auto;">
                                             <span class="material-icons">
                                                 check_box_outline_blank
                                             </span>
                                         </div>`;
-                            rowData[rowData.length - 1] = `<div style="width: 100%; height: 100%;display:flex;justify-content:center;align-items:center;flex-grow:2;flex-direction:row;">
+                                rowData[rowData.length - 1] = `<div style="width: 100%; height: 100%;display:flex;justify-content:center;align-items:center;flex-grow:2;flex-direction:row;">
                                                                 <div style="flex:2; margin:5px;">
                                                                     <button type="button" style="width: 100%; height: 100%;" class="btn btn-info waves-effect" onclick="addOficioElectiva(${id})">
                                                                         <i class="material-icons">post_add</i>
@@ -612,14 +694,32 @@ const deleteOficioElectiva = (id) => {
                                                                 </div>
                                                             </div>`;
 
-                            dataTable.row(`#row_ID_${dataElectivas.id_alumno}`).data(rowData);
+                                dataTable.row(`#row_ID_${dataElectivas.id_alumno}_asignados`).data(rowData);
+                                //Cambiamos el ID a 'asignados'
+                                dataTable.row(`#row_ID_${dataElectivas.id_alumno}_asignados`).node().id = `row_ID_${id}_noAsignados`;
+                            }
 
-                            //Eliminamos los IDs de los oficios
-                            allDataAlumnos.find((data) => {
-                                if(data.id_alumno === `${id}`){
-                                    data.id_oficios_asignacion.fill(0);
+                            //Eliminamos los datos relacionados con los oficios asignados
+                            for(let alumnos in allDataAlumnos){
+                                if(allDataAlumnos.hasOwnProperty(alumnos)){
+                                    if(allDataAlumnos[alumnos].id_alumno === `${id}`){
+                                        //Actualizamos el id de los oficios
+                                        const newArrayIdAsignacion = allDataAlumnos[alumnos].id_asignacion['noAsignados'].concat([...id_asignacion_electivas]) 
+                                        allDataAlumnos[alumnos].id_asignacion['asignados'] = [];
+                                        allDataAlumnos[alumnos].id_asignacion['noAsignados'] = newArrayIdAsignacion;
+
+                                        //Actualizamos el id de las electivas
+                                        const newArrayIdElectiva =  allDataAlumnos[alumnos].id_electiva['noAsignados'].concat([...id_electivas_asignadas]);
+                                        allDataAlumnos[alumnos].id_electiva['asignados'] = [];
+                                        allDataAlumnos[alumnos].id_electiva['noAsignados'] = newArrayIdElectiva;
+
+                                        //Actualizamos el nombre de las electivas
+                                        const newArrayNombreElectiva = allDataAlumnos[alumnos].nombre_electiva['noAsignados'].concat([...nombre_electivas]);
+                                        allDataAlumnos[alumnos].nombre_electiva['asignados'] = [];
+                                        allDataAlumnos[alumnos].nombre_electiva['noAsignados'] = newArrayNombreElectiva;
+                                    }
                                 }
-                            })
+                            }
                         }
                         showNotification({
                             message : message,
@@ -629,7 +729,7 @@ const deleteOficioElectiva = (id) => {
                     }, 1000);
                 }
             })
-    }
+        }
 }
 
 $(document).ready(() => {

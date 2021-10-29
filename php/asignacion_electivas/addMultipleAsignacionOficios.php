@@ -17,20 +17,20 @@
         $generatedIds = array();
 
         foreach($decodeData as $dataAlumno){
-            $generatedIds = array();
             //Obtenemos el id del alumno y el id de las electivas
             $idAlumno = $dataAlumno['id_alumno'];
             $id_electivas = $dataAlumno['id_electiva'];
+            $nombreAlumno = $dataAlumno['nombre'];
 
             //Recorremos todas las electivas y hacemos las peticiones
-            $ids_inserted = array();
+            $generatedIds[$nombreAlumno] = array();
             foreach($id_electivas as $id){
                 $mysqli_query = "INSERT INTO `asignaciones_oficios` (`id_alumno`,`id_electiva`,`id_oficio`,`id_departamental`) VALUES('".intval($idAlumno)."','".intval($id)."','".intval($_POST['id_oficio'])."','".intval($_POST['id_departamental'])."');";
                 $mysqli_response = mysqli_query($link, $mysqli_query);
 
                 if($mysqli_response){
                     //Agregamos el ID que se generó del oficio
-                    array_push($ids_inserted, mysqli_insert_id($link));
+                    array_push($generatedIds[$nombreAlumno], mysqli_insert_id($link));
                 }else{
                     $serverResponse['status'] = 'danger';
                     $serverResponse['message'] = 'Error en la base de datos. Inténtelo nuevamente.';
@@ -44,7 +44,6 @@
                     exit;
                 }
             }
-            array_push($generatedIds, $ids_inserted);
         }
 
         $serverResponse['status'] = 'success';
