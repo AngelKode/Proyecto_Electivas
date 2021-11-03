@@ -1,13 +1,5 @@
 $(function () {
     skinChanger();
-    activateNotificationAndTasksScroll();
-
-    setSkinListHeightAndScroll(true);
-    setSettingListHeightAndScroll(true);
-    $(window).resize(function () {
-        setSkinListHeightAndScroll(false);
-        setSettingListHeightAndScroll(false);
-    });
 });
 
 //Skin changer
@@ -15,7 +7,7 @@ function skinChanger() {
     $('.right-sidebar .demo-choose-skin li').on('click', function () {
         var $body = $('body');
         var $this = $(this);
-
+        console.log('a')
         var existTheme = $('.right-sidebar .demo-choose-skin li.active').data('theme');
         $('.right-sidebar .demo-choose-skin li').removeClass('active');
         $body.removeClass('theme-' + existTheme);
@@ -25,7 +17,7 @@ function skinChanger() {
     });
 }
 
-//Skin tab content set height and show scroll
+/* //Skin tab content set height and show scroll
 function setSkinListHeightAndScroll(isFirstTime) {
     var height = $(window).height() - ($('.navbar').innerHeight() + $('.right-sidebar .nav-tabs').outerHeight());
     var $el = $('.demo-choose-skin');
@@ -105,3 +97,4 @@ function loadTracking() {
     ga('send', 'pageview');
 }
 //========================================================================================================
+ */

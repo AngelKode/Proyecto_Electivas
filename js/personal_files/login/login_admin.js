@@ -48,7 +48,7 @@ $(document).ready(() => {
             }else{
                 //Iniciar sesión
                 //Cambiamos de pagina
-                window.location.replace("./validar_constancias.html"); 
+                window.location.replace("./consulta_alumnos.html"); 
             }
         });
     });

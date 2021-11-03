@@ -23,7 +23,7 @@
     <link href="plugins/animate-css/animate.css" rel="stylesheet" />
 
     <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
-    <link href="css/themes/theme-blue.css" rel="stylesheet" />
+    <link href="css/themes/all-themes.css" rel="stylesheet" />
 
     <!-- JQuery DataTable Css -->
     <link href="plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css" rel="stylesheet">
@@ -40,6 +40,7 @@
     <!-- Custom Css -->
     <link href="css/style.css" rel="stylesheet">
     <link href="css/personal_files/page_loader/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/personal_files/acerca_de/styles_modal.css">
     
 </head>
 
@@ -111,6 +112,12 @@
             <div class="menu">
                 <ul class="list">
                     <li class="header">Secciones</li>
+                    <li>
+                        <a href="consulta_alumnos.html">
+                            <i class="material-icons">groups</i>
+                            <span>Consultar Avances</span>
+                        </a>
+                    </li>
                     <li class="active">
                         <a href="validar_constancias.html">
                             <i class="material-icons">task</i>
@@ -147,7 +154,7 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="#" data-target="#modal_acerca_de" data-toggle="modal">
                             <i class="material-icons">info</i>
                             <span>Acerca de</span>
                         </a>
@@ -170,144 +177,94 @@
         </aside>
         <!-- #END# Left Sidebar -->
         <!-- Right Sidebar -->
-        <aside id="rightsidebar" class="right-sidebar">
+        <aside id="rightsidebar" class="right-sidebar" style="overflow-y: scroll;">
             <ul class="nav nav-tabs tab-nav-right" role="tablist">
-                <li role="presentation" class="active"><a href="#skins" data-toggle="tab">SKINS</a></li>
-                <li role="presentation"><a href="#settings" data-toggle="tab">SETTINGS</a></li>
+                <li role="presentation" class="active"><a href="#skins" data-toggle="tab">Temas</a></li>
             </ul>
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane fade in active in active" id="skins">
                     <ul class="demo-choose-skin">
-                        <li data-theme="red" class="active">
+                        <li data-theme="red">
                             <div class="red"></div>
-                            <span>Red</span>
+                            <span>Rojo</span>
                         </li>
                         <li data-theme="pink">
                             <div class="pink"></div>
-                            <span>Pink</span>
+                            <span>Rosa</span>
                         </li>
                         <li data-theme="purple">
                             <div class="purple"></div>
-                            <span>Purple</span>
+                            <span>Morado</span>
                         </li>
                         <li data-theme="deep-purple">
                             <div class="deep-purple"></div>
-                            <span>Deep Purple</span>
+                            <span>Morado Oscuro</span>
                         </li>
                         <li data-theme="indigo">
                             <div class="indigo"></div>
                             <span>Indigo</span>
                         </li>
-                        <li data-theme="blue">
+                        <li data-theme="blue" class="active">
                             <div class="blue"></div>
-                            <span>Blue</span>
+                            <span>Azul</span>
                         </li>
                         <li data-theme="light-blue">
                             <div class="light-blue"></div>
-                            <span>Light Blue</span>
+                            <span>Azul cielo</span>
                         </li>
                         <li data-theme="cyan">
                             <div class="cyan"></div>
-                            <span>Cyan</span>
+                            <span>Cian</span>
                         </li>
                         <li data-theme="teal">
                             <div class="teal"></div>
-                            <span>Teal</span>
+                            <span>Verde Azulado</span>
                         </li>
                         <li data-theme="green">
                             <div class="green"></div>
-                            <span>Green</span>
+                            <span>Verde</span>
                         </li>
                         <li data-theme="light-green">
                             <div class="light-green"></div>
-                            <span>Light Green</span>
+                            <span>Verde claro</span>
                         </li>
                         <li data-theme="lime">
                             <div class="lime"></div>
-                            <span>Lime</span>
+                            <span>Lima</span>
                         </li>
                         <li data-theme="yellow">
                             <div class="yellow"></div>
-                            <span>Yellow</span>
+                            <span>Amarillo</span>
                         </li>
                         <li data-theme="amber">
                             <div class="amber"></div>
-                            <span>Amber</span>
+                            <span>Ámbar</span>
                         </li>
                         <li data-theme="orange">
                             <div class="orange"></div>
-                            <span>Orange</span>
+                            <span>Naranja</span>
                         </li>
                         <li data-theme="deep-orange">
                             <div class="deep-orange"></div>
-                            <span>Deep Orange</span>
+                            <span>Naranja oscuro</span>
                         </li>
                         <li data-theme="brown">
                             <div class="brown"></div>
-                            <span>Brown</span>
+                            <span>Café</span>
                         </li>
                         <li data-theme="grey">
                             <div class="grey"></div>
-                            <span>Grey</span>
+                            <span>Gris</span>
                         </li>
                         <li data-theme="blue-grey">
                             <div class="blue-grey"></div>
-                            <span>Blue Grey</span>
+                            <span>Gris azulado</span>
                         </li>
                         <li data-theme="black">
                             <div class="black"></div>
-                            <span>Black</span>
+                            <span>Negro</span>
                         </li>
                     </ul>
-                </div>
-                <div role="tabpanel" class="tab-pane fade" id="settings">
-                    <div class="demo-settings">
-                        <p>GENERAL SETTINGS</p>
-                        <ul class="setting-list">
-                            <li>
-                                <span>Report Panel Usage</span>
-                                <div class="switch">
-                                    <label><input type="checkbox" checked><span class="lever"></span></label>
-                                </div>
-                            </li>
-                            <li>
-                                <span>Email Redirect</span>
-                                <div class="switch">
-                                    <label><input type="checkbox"><span class="lever"></span></label>
-                                </div>
-                            </li>
-                        </ul>
-                        <p>SYSTEM SETTINGS</p>
-                        <ul class="setting-list">
-                            <li>
-                                <span>Notifications</span>
-                                <div class="switch">
-                                    <label><input type="checkbox" checked><span class="lever"></span></label>
-                                </div>
-                            </li>
-                            <li>
-                                <span>Auto Updates</span>
-                                <div class="switch">
-                                    <label><input type="checkbox" checked><span class="lever"></span></label>
-                                </div>
-                            </li>
-                        </ul>
-                        <p>ACCOUNT SETTINGS</p>
-                        <ul class="setting-list">
-                            <li>
-                                <span>Offline</span>
-                                <div class="switch">
-                                    <label><input type="checkbox"><span class="lever"></span></label>
-                                </div>
-                            </li>
-                            <li>
-                                <span>Location Permission</span>
-                                <div class="switch">
-                                    <label><input type="checkbox" checked><span class="lever"></span></label>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
                 </div>
             </div>
         </aside>
@@ -518,6 +475,64 @@
             </div>
             <!--Modal Archivo Subido-->
 
+            <!--Modal Acerca de-->
+            <div class="modal fade" id="modal_acerca_de" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+                <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="defaultModalLabel">SiSEL</h4>
+                        </div>
+
+                        <div class="modal-body" style="height: 100%;">
+                            <div class="container">
+                                <div class="container_div">
+                                    <img src="images/images-app/acerca_de/idea.png"/>
+                                    <h3>Idea Original</h3>
+                                    <h4>Efraín Arredondo Morales</h4>
+                                </div>
+                                <div class="container_div">
+                                    <img src="images/images-app/acerca_de/developer.png"/>
+                                    <h3>Desarrollador</h3>
+                                    <h4>Angel Isaac Saldivar Delgado</h4>
+                                </div>
+                                <div class="container_div">
+                                    <img src="images/images-app/acerca_de/tester.png"/>
+                                    <h3>Tester</h3>
+                                    <h4>Ana Paulina López Cazares</h4>
+                                </div>
+                                <div class="container_div">
+                                    <img src="images/images-app/acerca_de/colaborador.png"/>
+                                    <h3>Colaboradora</h3>
+                                    <h4>María del Pilar Haro Magallanes</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Modal Body-->
+
+                        <div class="modal-footer">
+                            <div style="padding-right: 10px;">
+                                <ul class="list_footer_acerca_de">
+                                    <li class="credits_icons">
+                                        <div>Iconos hechos por <a href="https://www.flaticon.com/authors/surang" title="surang">surang</a> , <a href="https://www.freepik.com" title="Freepik">Freepik</a> , <a href="https://www.flaticon.com/authors/nikita-golubev" title="Nikita Golubev">Nikita Golubev</a> y <a href="https://www.flaticon.com/authors/eucalyp" title="Eucalyp">Eucalyp</a> de <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+                                    </li>
+                                    <li>
+                                        <div class="close_modal_icon">
+                                            <a href="javascript:void(0);">
+                                                <i class="material-icons" style="color: #F44336;"  data-dismiss="modal">close</i>
+                                            </a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!--Footer-->
+                    </div>
+                    <!--Content-->
+                </div>
+                <!--Dialog-->
+            </div>
+            <!--Modal Acerca de-->
+
         </div>
         <!--Container Fluid-->
 
@@ -566,6 +581,7 @@
 
    <!-- Custom Js -->
    <script src="js/admin.js"></script>
+   <script src="js/demo.js"></script>
    <script src="js/pages/tables/jquery-datatable.js"></script>
    <script src="js/pages/ui/tooltips-popovers.js"></script>
 

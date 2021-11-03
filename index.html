@@ -29,7 +29,7 @@
     <link href="css/style.css" rel="stylesheet">
 
     <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
-    <link href="css/themes/theme-blue.css" rel="stylesheet" />
+    <link href="css/themes/all-themes.css" rel="stylesheet" />
 
     <!-- JQuery DataTable Css -->
     <link href="plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css" rel="stylesheet">
@@ -146,144 +146,94 @@
         </aside>
         <!-- #END# Left Sidebar -->
         <!-- Right Sidebar -->
-        <aside id="rightsidebar" class="right-sidebar">
+        <aside id="rightsidebar" class="right-sidebar" style="overflow-y: scroll;">
             <ul class="nav nav-tabs tab-nav-right" role="tablist">
-                <li role="presentation" class="active"><a href="#skins" data-toggle="tab">SKINS</a></li>
-                <li role="presentation"><a href="#settings" data-toggle="tab">SETTINGS</a></li>
+                <li role="presentation" class="active"><a href="#skins" data-toggle="tab">Temas</a></li>
             </ul>
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane fade in active in active" id="skins">
                     <ul class="demo-choose-skin">
-                        <li data-theme="red" class="active">
+                        <li data-theme="red">
                             <div class="red"></div>
-                            <span>Red</span>
+                            <span>Rojo</span>
                         </li>
                         <li data-theme="pink">
                             <div class="pink"></div>
-                            <span>Pink</span>
+                            <span>Rosa</span>
                         </li>
                         <li data-theme="purple">
                             <div class="purple"></div>
-                            <span>Purple</span>
+                            <span>Morado</span>
                         </li>
                         <li data-theme="deep-purple">
                             <div class="deep-purple"></div>
-                            <span>Deep Purple</span>
+                            <span>Morado Oscuro</span>
                         </li>
                         <li data-theme="indigo">
                             <div class="indigo"></div>
                             <span>Indigo</span>
                         </li>
-                        <li data-theme="blue">
+                        <li data-theme="blue" class="active">
                             <div class="blue"></div>
-                            <span>Blue</span>
+                            <span>Azul</span>
                         </li>
                         <li data-theme="light-blue">
                             <div class="light-blue"></div>
-                            <span>Light Blue</span>
+                            <span>Azul cielo</span>
                         </li>
                         <li data-theme="cyan">
                             <div class="cyan"></div>
-                            <span>Cyan</span>
+                            <span>Cian</span>
                         </li>
                         <li data-theme="teal">
                             <div class="teal"></div>
-                            <span>Teal</span>
+                            <span>Verde Azulado</span>
                         </li>
                         <li data-theme="green">
                             <div class="green"></div>
-                            <span>Green</span>
+                            <span>Verde</span>
                         </li>
                         <li data-theme="light-green">
                             <div class="light-green"></div>
-                            <span>Light Green</span>
+                            <span>Verde claro</span>
                         </li>
                         <li data-theme="lime">
                             <div class="lime"></div>
-                            <span>Lime</span>
+                            <span>Lima</span>
                         </li>
                         <li data-theme="yellow">
                             <div class="yellow"></div>
-                            <span>Yellow</span>
+                            <span>Amarillo</span>
                         </li>
                         <li data-theme="amber">
                             <div class="amber"></div>
-                            <span>Amber</span>
+                            <span>Ámbar</span>
                         </li>
                         <li data-theme="orange">
                             <div class="orange"></div>
-                            <span>Orange</span>
+                            <span>Naranja</span>
                         </li>
                         <li data-theme="deep-orange">
                             <div class="deep-orange"></div>
-                            <span>Deep Orange</span>
+                            <span>Naranja oscuro</span>
                         </li>
                         <li data-theme="brown">
                             <div class="brown"></div>
-                            <span>Brown</span>
+                            <span>Café</span>
                         </li>
                         <li data-theme="grey">
                             <div class="grey"></div>
-                            <span>Grey</span>
+                            <span>Gris</span>
                         </li>
                         <li data-theme="blue-grey">
                             <div class="blue-grey"></div>
-                            <span>Blue Grey</span>
+                            <span>Gris azulado</span>
                         </li>
                         <li data-theme="black">
                             <div class="black"></div>
-                            <span>Black</span>
+                            <span>Negro</span>
                         </li>
                     </ul>
-                </div>
-                <div role="tabpanel" class="tab-pane fade" id="settings">
-                    <div class="demo-settings">
-                        <p>GENERAL SETTINGS</p>
-                        <ul class="setting-list">
-                            <li>
-                                <span>Report Panel Usage</span>
-                                <div class="switch">
-                                    <label><input type="checkbox" checked><span class="lever"></span></label>
-                                </div>
-                            </li>
-                            <li>
-                                <span>Email Redirect</span>
-                                <div class="switch">
-                                    <label><input type="checkbox"><span class="lever"></span></label>
-                                </div>
-                            </li>
-                        </ul>
-                        <p>SYSTEM SETTINGS</p>
-                        <ul class="setting-list">
-                            <li>
-                                <span>Notifications</span>
-                                <div class="switch">
-                                    <label><input type="checkbox" checked><span class="lever"></span></label>
-                                </div>
-                            </li>
-                            <li>
-                                <span>Auto Updates</span>
-                                <div class="switch">
-                                    <label><input type="checkbox" checked><span class="lever"></span></label>
-                                </div>
-                            </li>
-                        </ul>
-                        <p>ACCOUNT SETTINGS</p>
-                        <ul class="setting-list">
-                            <li>
-                                <span>Offline</span>
-                                <div class="switch">
-                                    <label><input type="checkbox"><span class="lever"></span></label>
-                                </div>
-                            </li>
-                            <li>
-                                <span>Location Permission</span>
-                                <div class="switch">
-                                    <label><input type="checkbox" checked><span class="lever"></span></label>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
                 </div>
             </div>
         </aside>
@@ -356,11 +306,13 @@
    
     <!-- Custom Js -->
     <script src="js/admin.js"></script>
+    <script src="js/demo.js"></script>
     <script src="js/pages/tables/jquery-datatable.js"></script>
 
     <!--Fetch files-->
     <script type="module" src="js/personal_files/estado_liberacion_electivas/liberacionElectivas.js"></script>
     <script type = "module"src="js/personal_files/login/logout_prueba.js"></script>
+    <script src="js/personal_files/chat/chat_script.js"></script>
 
 </body>
 
