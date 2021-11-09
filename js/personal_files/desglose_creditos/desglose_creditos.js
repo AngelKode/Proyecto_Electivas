@@ -1,4 +1,17 @@
+import fetchDataContacto from "../configurar_contacto/getDataContacto.js";
 import setDataMenu from "../setting_data/setDataMenu.js"
+
+const loadChatBot = function(){
+    return new Promise((resolve) => {
+        var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+        var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+        s1.async=true;
+        s1.src='https://embed.tawk.to/617c07e886aee40a5738ff4c/1fj67tpdj';
+        s1.setAttribute('crossorigin','*');
+        s0.parentNode.insertBefore(s1,s0);
+        resolve();
+    })
+}
 
 const getPanelContainer = ({Title = "", CountPanel = 1, TableBody = "", TotalCreditos = 0}) => {
     return `<div class="panel panel-success">
@@ -156,15 +169,12 @@ const createSectionsElectivas = (dataOfEachElectiva) => {
 
 $(document).ready(()=>{
 
-    setDataMenu()
-    .then(() => {
-        fetchData()
-        .then(async ({electivas}) => {
-            
-            //Obtenemos las electivas del alumno
-            getElectivasAlumno()
-            .then( async (electivasAlumno) => {
-
+    setDataMenu()//Configuramos el menu de las secciones
+    .then(() => fetchDataContacto())//Obtenemos los datos de contacto
+    .then(() => fetchData())//Obtenemos las constancias validadas del alumno
+    .then(async({electivas}) => {
+        getElectivasAlumno()//Obtenemos las electivas del alumno
+        .then(async (electivasAlumno) => {
                 //Separamos las constancias por electiva
                 const separatedElectivasByName = [];
                 electivasAlumno.forEach(({Nombre}) => {
@@ -181,6 +191,9 @@ $(document).ready(()=>{
                     await createSectionsElectivas(separatedElectivasByName)
                     .then(() => {
                             setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
+
+                            //Mostramos el chat bot al cargarse todo
+                            loadChatBot();
                     })
                     .catch(({message}) => {
                         const messageHTML = `<div>
@@ -195,19 +208,6 @@ $(document).ready(()=>{
                         icon : 'warning'
                     })
                 }
-            })
-            .catch(({message}) => {
-                const messageHTML = `<div>
-                                ${message}
-                                </div>`;
-                $('.page-loader-wrapper').append(messageHTML);
-            })
-        })
-        .catch(({message}) => {
-            const messageHTML = `<div>
-                            ${message}
-                            </div>`;
-            $('.page-loader-wrapper').append(messageHTML);
         })
     })
     .catch((errMessage) => {

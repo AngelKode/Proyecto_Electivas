@@ -31,7 +31,7 @@
             session_start();
 
             //Hacemos la peticion a la base de datos
-            $mysql_request = "INSERT INTO `constancia`(`Alumno_id`, `Actividad`, `Fecha_inicio`, `Fecha_fin`, `Horas`, `Archivo`, `Observaciones`,`Valida`) VALUES (".intval($_SESSION['token']).",'".$dataActividad."','".$dataFechaInicio."','".$dataFechaFin."','".$dataHoras."','".$dataFileName."','".$dataObservaciones."','1')";
+            $mysql_request = "INSERT INTO `constancia`(`Alumno_id`, `Actividad`, `Fecha_inicio`, `Fecha_fin`, `Horas`, `Archivo`, `Observaciones`,`Valida`, `Fecha_Recibido`) VALUES (".intval($_SESSION['token']).",'".$dataActividad."','".$dataFechaInicio."','".$dataFechaFin."','".$dataHoras."','".$dataFileName."','".$dataObservaciones."','1','".date('Y-m-d', time())."')";
             $mysql_response = mysqli_query($link, $mysql_request);
 
             //Verificamos que la peticion se haya realizado correctamente

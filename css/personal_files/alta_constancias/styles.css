@@ -1,0 +1,36 @@
+.contact-item{
+    display: flex;flex-grow: 6; 
+    margin-bottom: 20px;
+    padding-left: 0;
+}
+
+.contact-icon{
+    flex: 0.5;
+    display: table;
+    margin-right: 15px;
+}
+.contact-icon>img{
+    width: 32px;
+    height: 32px;
+}
+.contact-info{
+    flex: 5.5;
+    display: table;
+}
+
+.contact-icon>i{
+    display:table-cell;
+    vertical-align:middle;
+}
+.contact-info>span{
+    display:table-cell;
+    vertical-align:middle;
+}
+
+/*
+
+<div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+<div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+<div>Icons made by <a href="https://www.flaticon.com/authors/pixel-perfect" title="Pixel perfect">Pixel perfect</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+<div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+*/

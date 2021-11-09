@@ -809,27 +809,22 @@ const fetchData = () => {
 
 
 $(document).ready(() => {
-    verifyUser()
+    verifyUser()//Verificamos que haya una sesión
+    .then(() => fetchData())//Obtenemos los datos de los oficios
     .then(() => {
-        fetchData()
-        .then(() => {
-            //Agregamos un listener cuando se cierre el modal de editar y eliminar oficio
-            $("#modal_update_oficio").on('hidden.modal.bs', () => {
-                $(document.body).addClass('modal-open')
-            })
-            $("#modal_delete_oficio").on('hidden.modal.bs', () => {
-                $(document.body).addClass('modal-open')
-            })
-
-            //Agregamos un listener al boton de agregar oficio
-            $("#btnAddOficio").on('click', addOficio);
-
-            //Quitamos la pantalla de carga al obtener todos los datos y mostrarlos en la tabla
-            setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
+        //Agregamos un listener cuando se cierre el modal de editar y eliminar oficio
+        $("#modal_update_oficio").on('hidden.modal.bs', () => {
+            $(document.body).addClass('modal-open')
         })
-        .catch((errMessage) => {
-            console.log(errMessage)
+        $("#modal_delete_oficio").on('hidden.modal.bs', () => {
+            $(document.body).addClass('modal-open')
         })
+        
+        //Agregamos un listener al boton de agregar oficio
+        $("#btnAddOficio").on('click', addOficio);
+        
+        //Quitamos la pantalla de carga al obtener todos los datos y mostrarlos en la tabla
+        setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
     })
     .catch(({message}) => {
         $(".page-loader-wrapper").css("background","linear-gradient(90deg, rgba(106,81,92,1) 19%, rgba(104,36,68,1) 87%)")

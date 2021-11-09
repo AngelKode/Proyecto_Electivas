@@ -1,3 +1,37 @@
+const fetchDataContacto = () => {
+    $.ajax({
+        method : 'GET',
+        url    : './php/contacto_soporte/fetchData.php',
+        success : (serverResponse) => {
+            
+            //Obtenemos la respuesta y asignamos al modal
+            const jsonResponse = JSON.parse(serverResponse);
+            const {status, message} = jsonResponse;
+
+            //Si se hizo con exito la peticion, asignamos los datos al modal
+            if(status === 'success'){
+                const {data} = jsonResponse;
+                $("#whatsappContact").html(data[0].whats_app);
+                $("#emailContact").html(data[0].email);
+                $("#phoneContact").html(data[0].telefono_escuela);
+            }
+            //Quitamos el cargador al ya obtener las electivas del alumno y los ejemplos de actividades
+            setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
+        }
+    })
+}
+
+const loadChatBot = function(){
+    return new Promise((resolve) => {
+        var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+        var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+        s1.async=true;
+        s1.src='https://embed.tawk.to/617c07e886aee40a5738ff4c/1fj67tpdj';
+        s1.setAttribute('crossorigin','*');
+        s0.parentNode.insertBefore(s1,s0);
+        resolve();
+    })
+}
 
 const setDataMenu = () => {
     return new Promise((resolve, reject) => {
@@ -229,16 +263,10 @@ const fetchDataConstancias = () => {
                         //Agregamos los datos a la memoria local
                         addLocalDataConstancias(dataRow);
                     });
+                    resolve();
                 }else{
-                    //En caso de algún error, notificamos al usuario
-                    const {message,status} = jsonServerResponse;
-                    showNotification({
-                        message : message,
-                        type : status,
-                        icon : "exclamation-sign"
-                    })
+                    reject(message)
                 }
-                resolve();
             }
         })
     })
@@ -623,37 +651,39 @@ const deleteConstancia = () => {
 }
 
 $(document).ready(() => {
-        //Agregamos los listeners de los botones
-        setDataMenu()
-        .then(() => {
-            fetchDataConstancias().then(() => {
-                //Configuramos para refrescar el embed donde se muetra el PDF
-                $('#modal_archivo_subido').on('hidden.bs.modal', refreshEmbedFile);
-                
-                $("#actualFile").on('click', () => {
-                    getActualFile().then((file) => {
-                        openFileToView(file)
-                    })
-                    
-                })
-                //Quitamos la pantalla de carga al obtener todos los datos y mostrarlos en la tabla
-                setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
-            });
-        })
-        .catch((errMessage) => {
-            $(".page-loader-wrapper").css("background","linear-gradient(90deg, rgba(106,81,92,1) 19%, rgba(104,36,68,1) 87%)")
-             //Mostramos una notificacion indicando que no hay sesión actual
-            swal({
-                title: errMessage,
-                text: "Redirigiendo...",
-                type: "warning",
-                showConfirmButton : false,
-                background : '#fff'
-            });
 
-            setTimeout(() => {
-                //Despues de 2.5 segundos, redirigimos al usuario para que inicie sesión
-                window.location.replace("login_prueba.html");
-            }, 2500);
+    setDataMenu()//Configuramos el menu de las secciones
+    .then(() => fetchDataConstancias())//Obtenemos las constancias del alumno
+    .then(() => {
+        //Configuramos para refrescar el embed donde se muetra el PDF
+        $('#modal_archivo_subido').on('hidden.bs.modal', refreshEmbedFile);
+        
+        //Configuramos la accion para ver el archivo anterior cuando se quiere editar la constancia
+        $("#actualFile").on('click', () => {
+            getActualFile().then((file) => {
+                openFileToView(file)
+            })
+                    
         })
+
+        //Una vez cargado todo, mostramos el chat-bot
+        return loadChatBot();
+    })
+    .then(() => fetchDataContacto())
+    .catch((errMessage) => {
+        $(".page-loader-wrapper").css("background","linear-gradient(90deg, rgba(106,81,92,1) 19%, rgba(104,36,68,1) 87%)")
+        //Mostramos una notificacion indicando que no hay sesión actual
+        swal({
+            title: errMessage,
+            text: "Redirigiendo...",
+            type: "warning",
+            showConfirmButton : false,
+            background : '#fff'
+        });
+
+        setTimeout(() => {
+            //Despues de 2.5 segundos, redirigimos al usuario para que inicie sesión
+            window.location.replace("login_prueba.html");
+        }, 2500);
+    })
 })

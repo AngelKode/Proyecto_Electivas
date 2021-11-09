@@ -1,3 +1,4 @@
+let tableData = [];
 
 const showNotification = ({message = "", type = "info", element = "body", offset = {x : 30,y : 75},placement = {from : "top", align : "right"}, icon="ok"}) => {
      return $.notify({
@@ -68,7 +69,7 @@ const initDataTable = () => {
          let table = $('#tabla_registros_alumnos').DataTable();
          table.destroy();
          table = $('#tabla_registros_alumnos').DataTable(configuraciones);
- 
+
          resolve();
      });
  }
@@ -121,7 +122,7 @@ const getPanelContainer = ({Title = "", CountPanel = 1, TableBody = "", TotalCre
  const generateTableBody = (constancias) => {
      //Generamos los renglones de la tabla
      let body = "";
-     constancias.forEach(({Actividad,Archivo,EjeTematico, Modalidad, Horas, Factor, Creditos, Creditos_acumulados}) => {
+     constancias.forEach(({ID,Actividad,EjeTematico, Modalidad, Horas, Factor, Creditos}) => {
          //Obtenemos las horas usadas
          const horasPorCredito = parseInt(Factor.substring(Factor.lastIndexOf('x') + 2, Factor.lastIndexOf('horas') - 1));
          const creditosTotales = parseFloat((parseFloat(Horas) / parseFloat(horasPorCredito)).toPrecision(5));
@@ -129,7 +130,7 @@ const getPanelContainer = ({Title = "", CountPanel = 1, TableBody = "", TotalCre
           
           //Creamos el icono para ver el archivo subido
           const btnViewFileOnTable =`<div class="view_uploaded_file">
-                                         <img src="images/images-app/PDF_file_example.svg" alt="PDF" style="width: 3rem;height: 3rem;cursor: pointer;" role="button" onclick="setFileToView('${Archivo}',${Horas},'${Actividad}')">
+                                         <img src="images/images-app/PDF_file_example.svg" alt="PDF" style="width: 3rem;height: 3rem;cursor: pointer;" role="button" onclick="setFileToView(${ID})">
                                      </div>`;
          body += `<tr>
                      <th scope = "row"><em>${Actividad}</em></th>
@@ -213,15 +214,29 @@ const getPanelContainer = ({Title = "", CountPanel = 1, TableBody = "", TotalCre
      })
 }
 
-const setFileToView = (fileName = undefined, horas = undefined, actividad = undefined) => {
+const setFileToView = (id_constancia) => {
 
-     //Asignamos la direccion del archivo que será abierto, asi como el nombre de la actividad y el numero de horas
-     $("#fileViewer").attr("src",`files/${fileName}`);
-     $("#nombreActividadTitle").html(actividad);
-     $("#horasActividadTitle").html(horas);
+     //Buscamos los datos de la constancia con el ID que tenemos
+     const dataConstancia = tableData.find(({id}) => id === `${id_constancia}`)
 
-     //Abrimos el modal que muestra el archivo
-     $('#modal_archivo_subido').modal('show');
+     //Checamos que hayamos encontrado algo
+     if(dataConstancia){
+          //Asignamos la direccion del archivo que será abierto, asi como el nombre de la actividad y el numero de horas
+          $("#fileViewer").attr("src",`files/${dataConstancia.nombre_archivo}`);
+          $("#nombreActividadTitle").html(dataConstancia.actividad);
+          $("#horasActividadTitle").html(dataConstancia.horas);
+
+          //Abrimos el modal que muestra el archivos
+          $('#modal_archivo_subido').modal('show');
+     }else{
+          swal({
+               title: "!Vaya¡",
+               text: "Parece que ha surgido un error",
+               type: "warning",
+               showConfirmButton : false,
+               timer: 2500
+          })
+     }
 }
 
 const refreshEmbedFile = () => {
@@ -267,6 +282,12 @@ const fetchDataAlumnos = () => {
                                         data_table.row.add([
                                              boleta_alumno,formattedNameAlumno,programa_alumno,btnViewModalDesglose
                                         ]).draw().node().id = `row_ID_${id_alumno}`;
+                                   })
+                                   .catch(() => {
+                                        reject({
+                                             status : 'error',
+                                             message : 'Error al obtener el nombre del alumno. Inténtelo nuevamente'
+                                        })
                                    })     
                               }
                          }
@@ -296,7 +317,7 @@ const showModalDesglose = (id) => {
                id_alumno : id
           },
           success : (serverResponse) => {
-               
+
                const jsonResponse = JSON.parse(serverResponse);
                const {status, message} = jsonResponse;
 
@@ -310,14 +331,24 @@ const showModalDesglose = (id) => {
                     .then( async (electivasAlumno) => {
 
                          //Separamos las constancias por electiva
-                         const separatedElectivasByName = [];
+                         let separatedElectivasByName = [];
                          electivasAlumno.forEach(({Nombre}) => {
                               separatedElectivasByName[Nombre] = [];
                          });
 
                          //Ya teniendo todas las electivas, agregamos las constancias a la electiva donde pertenencen
+                         //y tambien al arreglo de todos los datos
+                         tableData = [];//Limpiamos el arreglo
                          electivas.forEach((constancia) => {
                               separatedElectivasByName[constancia.Nombre].push({...constancia});
+
+                              //Agregamos los datos al arreglo
+                              tableData.push({
+                                   id             : constancia.ID,
+                                   actividad      : constancia.Actividad,
+                                   horas          : constancia.Horas,
+                                   nombre_archivo : constancia.Archivo
+                              })
                          });
 
                          try {
@@ -371,7 +402,7 @@ const showModalDesglose = (id) => {
 }
 
 const setFormattedName = (cadena) => {
-     return new Promise((resolve) => {
+     return new Promise((resolve, reject) => {
           //Verificamos si se manda algo valido
           if(!cadena.trim().length > 0){
                resolve('');
@@ -391,29 +422,62 @@ const setFormattedName = (cadena) => {
      })
 }
 
+const verifyUser = () => {
+     return new Promise((resolve, reject) => {
+         $.ajax({
+             method : 'GET',
+             url    : './php/api/SESSION_DATA_ADMIN.php',
+             success : (serverResponse) => {
+                 
+                 const {status} = JSON.parse(serverResponse);
+ 
+                 if(status === "OK"){
+                     resolve(JSON.parse(serverResponse))
+                 }else{
+                     reject(JSON.parse(serverResponse))
+                 }
+             }
+         })
+     })
+ }
+
 $(document).ready(() => {
-     initDataTable()
+
+     verifyUser()//Verificamos el usuario
+     .then(() => initDataTable())//Verificamos que la tabla se haya iniciado correctamente
+     .then(() => fetchDataAlumnos())//Verificamos que se hayan obtenido los datos de los alumnos correctamente
      .then(() => {
-          fetchDataAlumnos()
-          .then(() => {
-               //Quitamos la pantalla de carga al obtener todos los datos y mostrarlos en la tabla
-               setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
+          //Quitamos la pantalla de carga al obtener todos los datos y mostrarlos en la tabla
+          setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
      
-               //Configuramos para que al momento de cerrarse el modal de la información, eliminamos todos los elementos del modal
-               $("#modal_desglose_electivas").on('hidden.bs.modal', () => {
-                    $("#panel_info>div").remove()
-               })
-     
-               //Configuramos para evitar que se desactive el modal del desglose al cerrar el modal de visualizacion del archivo
-               $('#modal_archivo_subido').on('hidden.bs.modal', () => {
-                    $(document.body).addClass('modal-open')
-               })
-     
-               //Configuramos para refrescar el embed donde se muetra el PDF
-               $('#modal_archivo_subido').on('hidden.bs.modal', refreshEmbedFile);
+          //Configuramos para que al momento de cerrarse el modal de la información, eliminamos todos los elementos del modal
+          $("#modal_desglose_electivas").on('hidden.bs.modal', () => {
+               $("#panel_info>div").remove()
           })
-          .catch(() => {
      
+          //Configuramos para evitar que se desactive el modal del desglose al cerrar el modal de visualizacion del archivo
+          $('#modal_archivo_subido').on('hidden.bs.modal', () => {
+               $(document.body).addClass('modal-open')
           })
+     
+          //Configuramos para refrescar el embed donde se muetra el PDF
+          $('#modal_archivo_subido').on('hidden.bs.modal', refreshEmbedFile);
+     })
+     .catch((errMessage) => {
+          const {message} = errMessage;
+          $(".page-loader-wrapper").css("background","linear-gradient(90deg, rgba(106,81,92,1) 19%, rgba(104,36,68,1) 87%)")
+          //Mostramos una notificacion indicando que no hay sesión actual
+          swal({
+               title: message,
+               text: "Redirigiendo...",
+               type: "warning",
+               showConfirmButton : false,
+               background : '#fff',
+          });
+
+          setTimeout(() => {
+               //Despues de 2.5 segundos, redirigimos al usuario para que inicie sesión
+               window.location.replace("login_admin.html");
+          }, 2500);
      })
 })

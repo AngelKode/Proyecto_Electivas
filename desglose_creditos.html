@@ -36,6 +36,7 @@
 
     <!--Custom CSS personal-->
     <link href="css/personal_files/page_loader/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/personal_files/alta_constancias/styles.css">
 
 </head>
 
@@ -125,6 +126,12 @@
                             <span>Desglose de Créditos</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#modal_contacto">
+                            <i class="material-icons">contact_support</i>
+                            <span>Contacto</span>
+                        </a>
+                    </li>
                 </ul>
             </div>
             <!-- #Menu -->
@@ -143,7 +150,7 @@
         </aside>
         <!-- #END# Left Sidebar -->
         <!-- Right Sidebar -->
-        <aside id="rightsidebar" class="right-sidebar" style="overflow-y: scroll;">
+        <aside id="rightsidebar" class="right-sidebar">
             <ul class="nav nav-tabs tab-nav-right" role="tablist">
                 <li role="presentation" class="active"><a href="#skins" data-toggle="tab">Temas</a></li>
             </ul>
@@ -262,33 +269,104 @@
                 </div>
             </div>
             <!--ROW-->
+
+            <!--Modal Contacto-->
+            <div class="modal fade" id="modal_contacto" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="defaultModalLabel">Contacto</h4>
+                        </div>
+
+                        <div class="modal-body" style="height: 100%;">
+                            <div class="row-clearfix" id="container-contact">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 contact-item">
+                                    <div class="contact-icon">
+                                        <img src="icons/messages.png" alt="Message">
+                                    </div>
+                                    <div class="contact-info">
+                                        <span>Puede usar el chat de la página.</span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 contact-item">
+                                    <div class="contact-icon">
+                                        <img src="icons/whatsapp.png" alt="Message">
+                                    </div>
+                                    <div class="contact-info">
+                                        <span id="whatsappContact"></span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 contact-item">
+                                    <div class="contact-icon">
+                                        <img src="icons/email.png" alt="Message">
+                                    </div>
+                                    <div class="contact-info">
+                                        <span id="emailContact"></span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 contact-item">
+                                    <div class="contact-icon">
+                                        <img src="icons/telephone.png" alt="Message">
+                                    </div>
+                                    <div class="contact-info">
+                                        <span id="phoneContact"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Modal Body-->
+
+                        <div class="modal-footer">
+                            <div style="padding-right: 10px;">
+                                <ul style="list-style: none;">
+                                    <li>
+                                        <div class="close_modal_icon">
+                                            <a href="javascript:void(0);">
+                                                <i class="material-icons" style="color: #F44336;"  data-dismiss="modal">close</i>
+                                            </a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!--Footer-->
+                    </div>
+                    <!--Content-->
+                </div>
+                <!--Dialog-->
+            </div>
+            <!--Modal Contacto-->
+
         </div>
         <!--Container Fluid-->
 
     </section>
 
-   <!-- Jquery Core Js -->
-   <script src="plugins/jquery/jquery.min.js"></script>
+    <!-- Jquery Core Js -->
+    <script src="plugins/jquery/jquery.min.js"></script>
 
-   <!-- Jquery CountTo Plugin Js -->
-   <script src="plugins/jquery-countto/jquery.countTo.js"></script>
+    <!-- Jquery CountTo Plugin Js -->
+    <script src="plugins/jquery-countto/jquery.countTo.js"></script>
 
-   <!-- Bootstrap Core Js -->
-   <script src="plugins/bootstrap/js/bootstrap.js"></script>
+    <!-- Bootstrap Core Js -->
+    <script src="plugins/bootstrap/js/bootstrap.js"></script>
 
-   <!-- Waves Effect Plugin Js -->
-   <script src="plugins/node-waves/waves.js"></script>
+    <!-- Waves Effect Plugin Js -->
+    <script src="plugins/node-waves/waves.js"></script>
   
-   <!-- Jquery DataTable Plugin Js -->
-   <script src="plugins/jquery-datatable/jquery.dataTables.js"></script>
-   <script src="plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js"></script>
-   <script src="plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js"></script>
-   <script src="plugins/jquery-datatable/extensions/export/buttons.flash.min.js"></script>
-   <script src="plugins/jquery-datatable/extensions/export/jszip.min.js"></script>
-   <script src="plugins/jquery-datatable/extensions/export/pdfmake.min.js"></script>
-   <script src="plugins/jquery-datatable/extensions/export/vfs_fonts.js"></script>
-   <script src="plugins/jquery-datatable/extensions/export/buttons.html5.min.js"></script>
-   <script src="plugins/jquery-datatable/extensions/export/buttons.print.min.js"></script>
+    <!-- Slimscroll Plugin Js -->
+    <script src="plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+    
+    <!-- Jquery DataTable Plugin Js -->
+    <script src="plugins/jquery-datatable/jquery.dataTables.js"></script>
+    <script src="plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js"></script>
+    <script src="plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js"></script>
+    <script src="plugins/jquery-datatable/extensions/export/buttons.flash.min.js"></script>
+    <script src="plugins/jquery-datatable/extensions/export/jszip.min.js"></script>
+    <script src="plugins/jquery-datatable/extensions/export/pdfmake.min.js"></script>
+    <script src="plugins/jquery-datatable/extensions/export/vfs_fonts.js"></script>
+    <script src="plugins/jquery-datatable/extensions/export/buttons.html5.min.js"></script>
+    <script src="plugins/jquery-datatable/extensions/export/buttons.print.min.js"></script>
   
     <!-- SweetAlert Plugin Js -->
     <script src="plugins/sweetalert/sweetalert.min.js"></script>
@@ -298,9 +376,9 @@
    <script src="js/demo.js"></script>
 
    <!--Fetch files-->
+   <script type="module" src="js/personal_files/configurar_contacto/getDataContacto.js"></script>
    <script type="module" src="js/personal_files/desglose_creditos/desglose_creditos.js"></script>
    <script type = "module"src="js/personal_files/login/logout_prueba.js"></script>
-   <script src="js/personal_files/chat/chat_script.js"></script>
 
 </body>
 

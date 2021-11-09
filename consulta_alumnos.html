@@ -114,6 +114,12 @@
             <div class="menu">
                 <ul class="list">
                     <li class="header">Secciones</li>
+                    <li>
+                        <a href="inicio.html">
+                            <i class="material-icons">dashboard</i>
+                            <span>Inicio</span>
+                        </a>
+                    </li>
                     <li class="active">
                         <a href="consulta_alumnos.html">
                             <i class="material-icons">groups</i>
@@ -142,6 +148,12 @@
                         <a href="denominacion_electivas.html">
                             <i class="material-icons">library_add</i>
                             <span>Denominación Electivas</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="configuracion_contacto.html">
+                            <i class="material-icons">contact_page</i>
+                            <span>Configuración Contacto</span>
                         </a>
                     </li>
                     <li>
@@ -179,7 +191,7 @@
         </aside>
         <!-- #END# Left Sidebar -->
         <!-- Right Sidebar -->
-        <aside id="rightsidebar" class="right-sidebar" style="overflow-y: scroll;">
+        <aside id="rightsidebar" class="right-sidebar">
             <ul class="nav nav-tabs tab-nav-right" role="tablist">
                 <li role="presentation" class="active"><a href="#skins" data-toggle="tab">Temas</a></li>
             </ul>
@@ -317,7 +329,7 @@
 
             <!--Modal Desglose Electivas Alumno-->
             <div class="modal fade" id="modal_desglose_electivas" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
-                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg" role="document">
+                <div class="modal-dialog modal-dialog-centered modal-scrollable modal-lg modal-desglose" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h4 class="modal-title" id="defaultModalLabel">Desglose de los Créditos Acumulados</h4>
@@ -403,7 +415,7 @@
                         </div>
 
                         <div class="modal-body" style="height: 100%;">
-                            <div class="container">
+                            <div class="container_info">
                                 <div class="container_div">
                                     <img src="images/images-app/acerca_de/idea.png"/>
                                     <h3>Idea Original</h3>

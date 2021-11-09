@@ -188,15 +188,26 @@ const setDataFile = () => {
     }
 }
 
-const setFileToView = (option, fileName = undefined, horas = undefined, actividad = undefined) => {
-    if(option === 'onTable'){ 
-        $("#fileViewer").attr("src",`files/${fileName}`);
-        $("#nombreActividadTitle").html(actividad);
-        $("#horasActividadTitle").html(horas);
-    }else{
+const setFileToView = (option, id_constancia = 0) => {
+
+    if(option === 'onShowingModal'){
         $("#fileViewer").attr("src",`files/${constanciaActual.Archivo}`);
+        $('#modal_archivo_subido').modal('show');
+    }else{
+        //Buscamos los datos de la constancia con el ID que tenemos
+        const dataConstancia = tableData.find(({id}) => id === `row_ID_${id_constancia}`)
+
+        if(dataConstancia){
+            const {nombre_archivo} = dataConstancia;
+            const {data} = dataConstancia;
+            if(option === 'onTable'){ 
+                $("#fileViewer").attr("src",`files/${nombre_archivo}`);
+                $("#nombreActividadTitle").html(data[2]);
+                $("#horasActividadTitle").html(data[3]);
+            }
+            $('#modal_archivo_subido').modal('show');
+        }
     }
-    $('#modal_archivo_subido').modal('show');
 }
 
 const setInputDataModal = ({Nombre,Actividad,Fecha_inicio, Fecha_fin,Horas,Denominacion_id,Valida,Observaciones_encargado}, isRevisada) => {
@@ -368,7 +379,7 @@ const fetchData = () => {
                                                                     </div>`;
                         //Creamos el icono para ver el archivo subido
                         const btnViewFileOnTable =`<div class="view_uploaded_file">
-                                                        <img src="images/images-app/PDF_file_example.svg" alt="PDF" style="width: 3rem;height: 3rem;cursor: pointer;" role="button" onclick="setFileToView('onTable','${Archivo}',${Horas},'${Actividad_Alumno}')">
+                                                        <img src="images/images-app/PDF_file_example.svg" alt="PDF" style="width: 3rem;height: 3rem;cursor: pointer;" role="button" onclick="setFileToView('onTable',${ID_Constancia})">
                                                    </div>`;
 
                         dataTable.row.add([
@@ -378,7 +389,8 @@ const fetchData = () => {
                         //Guardamos todos los datos data-table en el arreglo de toda la data obtenida de las constancias
                         tableData.push({
                             data : dataTable.row(`#row_ID_${ID_Constancia}`).data().slice(),
-                            id : `row_ID_${ID_Constancia}`
+                            id : `row_ID_${ID_Constancia}`,
+                            nombre_archivo : Archivo,
                         });
                     });
                     
@@ -949,28 +961,17 @@ const verifyUser = () => {
 }
 
 $(document).ready(() => {
-    //Verificamos que el que ingresa sea administrador
-    verifyUser()
+    
+    verifyUser()//Verificamos que el que ingresa sea administrador
+    .then(() => initDataTable())//Inicializamos la DataTable
+    .then(() => fetchData())//Obtenemos las constancias
     .then(() => {
-        //Inicializamos la tabla
-        initDataTable()
-        .then(() => {
-            fetchData()
-            .then(() => {
-                //Configuramos para refrescar el embed donde se muetra el PDF
-                $('#modal_archivo_subido').on('hidden.bs.modal', refreshEmbedFile);
-                //Configuramos para que cada que se abra el modal, se actualicen los datos del mismo
-                $('#modal_archivo_subido').on('show.bs.modal', setDataFile);
-                //Quitamos la pantalla de carga al obtener todos los datos y mostrarlos en la tabla
-                setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
-            }) 
-            .catch(({message}) => {
-                const messageHTML = `<div>
-                                        ${message}
-                                    </div>`;
-                $('.page-loader-wrapper').append(messageHTML);
-            })  
-        });   
+        //Configuramos para refrescar el embed donde se muetra el PDF
+        $('#modal_archivo_subido').on('hidden.bs.modal', refreshEmbedFile);
+        //Configuramos para que cada que se abra el modal, se actualicen los datos del mismo
+        $('#modal_archivo_subido').on('show.bs.modal', setDataFile);
+        //Quitamos la pantalla de carga al obtener todos los datos y mostrarlos en la tabla
+        setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
     })
     .catch(({message}) => {
         $(".page-loader-wrapper").css("background","linear-gradient(90deg, rgba(106,81,92,1) 19%, rgba(104,36,68,1) 87%)")

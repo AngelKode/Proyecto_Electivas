@@ -1,11 +1,11 @@
 <?php
     include '../database/databaseConection.php';
 
-     //Definimos el encabezado para setear el set de caracteres
+    //Definimos el encabezado para setear el set de caracteres
      header("Content-Type: text/html;charset=utf-8");
 
-     //Configuramos el set de caracteres para la consulta
-     mysqli_set_charset($link, "utf8");
+    //Configuramos el set de caracteres para la consulta
+    mysqli_set_charset($link, "utf8");
      
     //Obtenemos cada valor enviado para crear la denominacion
     $EjeTematico = $_POST['EjeTematico'];

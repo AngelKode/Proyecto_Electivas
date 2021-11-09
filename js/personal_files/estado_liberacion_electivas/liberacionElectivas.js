@@ -1,8 +1,21 @@
+import fetchDataContacto from "../configurar_contacto/getDataContacto.js";
 import showNotification from "../notificaciones/notificacion.js";
 import setDataMenu from "../setting_data/setDataMenu.js";
 
+const loadChatBot = function(){
+    return new Promise((resolve) => {
+        var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+        var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+        s1.async=true;
+        s1.src='https://embed.tawk.to/617c07e886aee40a5738ff4c/1fj67tpdj';
+        s1.setAttribute('crossorigin','*');
+        s0.parentNode.insertBefore(s1,s0);
+        resolve()
+    })
+}
+
 const getCard = ({Creditos, Creditos_acumulados, Nombre}) => {
-    
+
     const percentageElectiva = (parseFloat(Creditos_acumulados) > 0) ? (parseFloat(Creditos_acumulados) * parseFloat(100)) / parseFloat(Creditos) : parseFloat(0);
 
     if(percentageElectiva === parseFloat(100)){
@@ -190,55 +203,47 @@ const createSectionEjemplosActividades = (EjesTematicos) => {
 
 $(document).ready(()=>{
 
-    //Mostramos el nombre del alumno y su carrera
-    setDataMenu()
-    .then(() => {
-         fetchData()
-        .then((electivasAlumno) => {
-            //Obtenemos las electivas, y mostramos el porcentaje de cada una
-            electivasAlumno['electivas'].forEach((electivaAlumno) => {
-                const cardToAdd = getCard(electivaAlumno);
-                $("#body_card_electivas").append(cardToAdd);
-            })
+    setDataMenu()//Mostramos el nombre del alumno y su carrera
+    .then(() => fetchData())//Obtenemos los datos del alumno respecto al avance de sus electivas
+    .then((electivasAlumno) => {
+        //Obtenemos las electivas, y mostramos el porcentaje de cada una
+        electivasAlumno['electivas'].forEach((electivaAlumno) => {
+            const cardToAdd = getCard(electivaAlumno);
+            $("#body_card_electivas").append(cardToAdd);
+        })
             
-            //Y mostramos los ejemplos de actividades dados de alta
-            fetchDataEjemplosActividades()
-            .then(async (denominaciones) => {
-    
-                //Separamos por ejes tematicos
-                const hashEjemplosActividades = denominaciones.reduce((acc,cv) => {
-                    //Verificamos si ya existe la posicion del arreglo, si no,la creamos
-                    if(acc[cv.EjeTematico] === undefined){
-                        acc[cv.EjeTematico] = [];
-                    }
-    
-                    //Verificamos que exista la posicion del arreglo de la modalidad en el eje tematico actual,
-                    //si no existe, lo creamos
-                    if(acc[cv.EjeTematico][cv.Modalidad] === undefined){
-                        acc[cv.EjeTematico][cv.Modalidad] = [];
-                    }
-    
-                    //Agregamos los ejemplos a la modalidad actual
-                    acc[cv.EjeTematico][cv.Modalidad].push(cv);
-    
-                    //Retornamos el acumulador
-                    return acc;
-                },[])
-    
-                //Con el hash, creamos las diferentes secciones
-                await createSectionEjemplosActividades(hashEjemplosActividades);
-    
-                //Quitamos el cargador al ya obtener las electivas del alumno y los ejemplos de actividades
-                setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
-            });
-        })
-        .catch(({message}) => {
-            const messageHTML = `<div>
-                                   ${message}
-                                </div>`;
-            $('.page-loader-wrapper').append(messageHTML);
-        })
+        //Y mostramos los ejemplos de actividades dados de alta
+        return fetchDataEjemplosActividades();
     })
+    .then(async (denominaciones) => {
+    
+        //Separamos por ejes tematicos
+        const hashEjemplosActividades = await denominaciones.reduce((acc,cv) => {
+            //Verificamos si ya existe la posicion del arreglo, si no,la creamos
+            if(acc[cv.EjeTematico] === undefined){
+                acc[cv.EjeTematico] = [];
+            }
+
+            //Verificamos que exista la posicion del arreglo de la modalidad en el eje tematico actual,
+            //si no existe, lo creamos
+            if(acc[cv.EjeTematico][cv.Modalidad] === undefined){
+                acc[cv.EjeTematico][cv.Modalidad] = [];
+            }
+
+            //Agregamos los ejemplos a la modalidad actual
+            acc[cv.EjeTematico][cv.Modalidad].push(cv);
+
+            //Retornamos el acumulador
+            return acc;
+        },[])
+
+        //Con el hash, creamos las diferentes secciones
+        await createSectionEjemplosActividades(hashEjemplosActividades);
+
+        //Mostramos el chat-bot al cargarse todo
+        return loadChatBot();
+    })
+    .then(() => fetchDataContacto())
     .catch((errMessage) => {
         $(".page-loader-wrapper").css("background","linear-gradient(90deg, rgba(106,81,92,1) 19%, rgba(104,36,68,1) 87%)")
          //Mostramos una notificacion indicando que no hay sesión actual

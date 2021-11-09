@@ -1,4 +1,4 @@
-.container{
+.container_info{
     align-items: center;
     display: flex;
     flex-direction: row;
@@ -7,7 +7,7 @@
 }
 
 @media (max-width: 1060px) {
-    .container {
+    .container_info {
       flex-direction: column;
     }  
 }
@@ -53,6 +53,11 @@
     align-items: flex-end;
 }
 
+#modal_desglose_electivas{
+    padding-right: 0 !important;
+}
+
 #modal_desglose_electivas_body{
-    max-height:70vh;overflow-y: scroll;
+    max-height:70vh;
+    overflow-y: auto;
 }

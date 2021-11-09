@@ -470,13 +470,12 @@ const deleteDenominacion = () => {
 }
 
 $(document).ready(() =>{
-    //Verificamos que el que ingresa sea administrador
-    verifyUser()
+    
+    verifyUser()//Verificamos que el que ingresa sea administrador
+    .then(() => fetchData())//Obtenemos los datos de las denominaciones
     .then(() => {
-        fetchData().then(() => {
-            //Quitamos la pantalla de carga al obtener todos los datos y mostrarlos en la tabla
-            setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
-        });
+        //Quitamos la pantalla de carga al obtener todos los datos y mostrarlos en la tabla
+        setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
     })
     .catch(({message}) => {
         $(".page-loader-wrapper").css("background","linear-gradient(90deg, rgba(106,81,92,1) 19%, rgba(104,36,68,1) 87%)")

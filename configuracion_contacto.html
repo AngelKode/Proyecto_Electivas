@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>Configurar Contacto</title>
+    <!-- Favicon-->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+
+    <!-- Bootstrap Core Css -->
+    <link href="plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Waves Effect Css -->
+    <link href="plugins/node-waves/waves.css" rel="stylesheet" />
+
+    <!-- Animation Css -->
+    <link href="plugins/animate-css/animate.css" rel="stylesheet" />
+
+    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+    <link href="css/themes/all-themes.css" rel="stylesheet" />
+
+    <!-- JQuery DataTable Css -->
+    <link href="plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css" rel="stylesheet">
+
+    <!-- Bootstrap Select Css -->
+    <link href="plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
+
+    <!-- Bootstrap DatePicker Css -->
+    <link href="plugins/bootstrap-datepicker/css/bootstrap-datepicker.css" rel="stylesheet" />
+
+    <!-- Sweetalert Css -->
+    <link href="plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+
+    <!-- Custom Css -->
+    <link href="css/style.css" rel="stylesheet">
+
+    <!--Custom CSS personal-->
+    <link href="css/personal_files/page_loader/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/personal_files/acerca_de/styles_modal.css">
+    <link rel="stylesheet" href="css/personal_files/configurar_contacto/styles.css">
+
+</head>
+
+<body class="theme-blue">
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Espere un momento...</p>
+        </div>
+    </div>
+    <!-- #END# Page Loader -->
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+    <!-- #END# Overlay For Sidebars -->
+    <!-- Top Bar -->
+    <nav class="navbar">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
+                <a href="javascript:void(0);" class="bars"></a>
+                <a class="navbar-brand" href="index.html">Administración de Electivas - UPIIZ</a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <!--Boton para las configuraciones de la página-->
+                    <li class="pull-right"><a href="javascript:void(0);" class="js-right-sidebar" data-close="true"><i class="material-icons">more_vert</i></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- #Top Bar -->
+    <section>
+        <!-- Left Sidebar -->
+        <aside id="leftsidebar" class="sidebar">
+            <!-- User Info -->
+            <div class="user-info">
+                <div class="image">
+                    <img src="images/user.png" width="48" height="48" alt="User" />
+                </div>
+                <div class="info-container">
+                    <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</div>
+                    <div class="email"></div>
+                    <div class="btn-group user-helper-dropdown">
+                        <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
+                        <ul class="dropdown-menu pull-right">
+                            <li>
+                                <a href="#" class="waves-effect waves-block" id="logout-admin" style="width: max-content;">
+                                    <i class="material-icons">input</i>
+                                    Cerrar Sesión
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- #User Info -->
+            <!-- Menu -->
+            <div class="menu">
+                <ul class="list">
+                    <li class="header">Secciones</li>
+                    <li>
+                        <a href="inicio.html">
+                            <i class="material-icons">dashboard</i>
+                            <span>Inicio</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="consulta_alumnos.html">
+                            <i class="material-icons">groups</i>
+                            <span>Consultar Avances</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="validar_constancias.html">
+                            <i class="material-icons">task</i>
+                            <span>Validación de Constancias</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="asignacion_electivas_liberadas.html">
+                            <i class="material-icons">task_alt</i>
+                            <span>Asignacion Electivas</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="oficios.html">
+                            <i class="material-icons">description</i>
+                            <span>Oficios</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="denominacion_electivas.html">
+                            <i class="material-icons">library_add</i>
+                            <span>Denominación Electivas</span>
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a href="configuracion_contacto.html">
+                            <i class="material-icons">contact_page</i>
+                            <span>Configuración Contacto</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">settings</i>
+                            <span>Configuración</span>
+                        </a>
+                        <ul class="ml-menu">
+                            <li>
+                                <a href="cambiar_credenciales.html">Cambiar contraseña</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#" data-target="#modal_acerca_de" data-toggle="modal">
+                            <i class="material-icons">info</i>
+                            <span>Acerca de</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <!-- #Menu -->
+
+            <!-- Footer -->
+            <div class="legal">
+                <div class="copyright">
+                    &copy; 2016 - 2017 <a href="javascript:void(0);">AdminBSB - Material Design</a>.
+                </div>
+                <div class="version">
+                    <b>Version: </b> 1.0.5
+                </div>
+            </div>
+            <!-- #Footer -->
+
+        </aside>
+        <!-- #END# Left Sidebar -->
+        <!-- Right Sidebar -->
+        <aside id="rightsidebar" class="right-sidebar">
+            <ul class="nav nav-tabs tab-nav-right" role="tablist">
+                <li role="presentation" class="active"><a href="#skins" data-toggle="tab">Temas</a></li>
+            </ul>
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane fade in active in active" id="skins">
+                    <ul class="demo-choose-skin">
+                        <li data-theme="red">
+                            <div class="red"></div>
+                            <span>Rojo</span>
+                        </li>
+                        <li data-theme="pink">
+                            <div class="pink"></div>
+                            <span>Rosa</span>
+                        </li>
+                        <li data-theme="purple">
+                            <div class="purple"></div>
+                            <span>Morado</span>
+                        </li>
+                        <li data-theme="deep-purple">
+                            <div class="deep-purple"></div>
+                            <span>Morado Oscuro</span>
+                        </li>
+                        <li data-theme="indigo">
+                            <div class="indigo"></div>
+                            <span>Indigo</span>
+                        </li>
+                        <li data-theme="blue" class="active">
+                            <div class="blue"></div>
+                            <span>Azul</span>
+                        </li>
+                        <li data-theme="light-blue">
+                            <div class="light-blue"></div>
+                            <span>Azul cielo</span>
+                        </li>
+                        <li data-theme="cyan">
+                            <div class="cyan"></div>
+                            <span>Cian</span>
+                        </li>
+                        <li data-theme="teal">
+                            <div class="teal"></div>
+                            <span>Verde Azulado</span>
+                        </li>
+                        <li data-theme="green">
+                            <div class="green"></div>
+                            <span>Verde</span>
+                        </li>
+                        <li data-theme="light-green">
+                            <div class="light-green"></div>
+                            <span>Verde claro</span>
+                        </li>
+                        <li data-theme="lime">
+                            <div class="lime"></div>
+                            <span>Lima</span>
+                        </li>
+                        <li data-theme="yellow">
+                            <div class="yellow"></div>
+                            <span>Amarillo</span>
+                        </li>
+                        <li data-theme="amber">
+                            <div class="amber"></div>
+                            <span>Ámbar</span>
+                        </li>
+                        <li data-theme="orange">
+                            <div class="orange"></div>
+                            <span>Naranja</span>
+                        </li>
+                        <li data-theme="deep-orange">
+                            <div class="deep-orange"></div>
+                            <span>Naranja oscuro</span>
+                        </li>
+                        <li data-theme="brown">
+                            <div class="brown"></div>
+                            <span>Café</span>
+                        </li>
+                        <li data-theme="grey">
+                            <div class="grey"></div>
+                            <span>Gris</span>
+                        </li>
+                        <li data-theme="blue-grey">
+                            <div class="blue-grey"></div>
+                            <span>Gris azulado</span>
+                        </li>
+                        <li data-theme="black">
+                            <div class="black"></div>
+                            <span>Negro</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
+        <!-- #END# Right Sidebar -->
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <h2>Contactos de Apoyo</h2>
+            </div>
+            <div class="row clearfix">
+                
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <div class="card" style="flex: 1;">
+                        <div class="header">
+                            <h2 style="display: inline-block;">
+                                Contacto por WhatsApp
+                            </h2>
+                            <i style="float: right;" class="material-icons">whatsapp</i>
+                        </div>
+                        <div class="body" style="padding-bottom:0;">
+                            <div class="row clearfix">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-bottom: 0;">
+                                    <div class="form-group" style="margin-bottom: 0;">
+                                        <p>Número Nuevo</p>
+                                        <div class="form-line input-group" id="group-whatsapp">
+                                            <input type="text" class="form-control input-content" placeholder="Ingrese el numero" id="newContentWhatsApp">
+                                            <i class="material-icons input-icon input-icon-incorrect-whatsapp">priority_high</i>
+                                            <i class="material-icons input-icon input-icon-correct-whatsapp">done</i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <p>Número Actual</p>
+                                    <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; display: block;" data-toggle="tooltip" data-placement="top" title="" id="whatsAppValue">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="footer">
+                            <div style="padding-right: 20px; padding-bottom: 15px;">
+                                <ul style="list-style: none;padding-left: 20px;">
+                                    <li>
+                                        <button type="button" class="btn btn-success waves-effect" id="changeWhatsAppBtn" disabled>Cambiar número</button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        <div class="card" style="flex: 1;">
+                            <div class="header">
+                                <h2 style="display: inline-block;">
+                                    Contacto por teléfono 
+                                </h2>
+                                <i style="float: right;" class="material-icons">phone_in_talk</i>
+                            </div>
+                            <div class="body" style="padding-bottom:0;">
+                                <div class="row clearfix">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-bottom: 0;">
+                                        <div class="form-group" style="margin-bottom: 0;">
+                                            <p>Número Nuevo</p>
+                                            <div class="form-line input-group" id="group-telefono">
+                                                <input type="text" class="form-control input-content" placeholder="Ingrese el numero" id="newContentTelefono">
+                                                <i class="material-icons input-icon input-icon-incorrect-telefono">priority_high</i>
+                                                <i class="material-icons input-icon input-icon-correct-telefono">done</i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <p>Número Actual</p>
+                                        <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; display: block;" data-toggle="tooltip" data-placement="top" title="" id="telefonoValue">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="footer">
+                                <div style="padding-right: 20px; padding-bottom: 15px;">
+                                    <ul style="list-style: none;padding-left: 20px;">
+                                        <li>
+                                            <button type="button" class="btn btn-success waves-effect" id="changeNumberBtn" disabled>Cambiar número</button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        <div class="card" style="flex: 1;">
+                            <div class="header">
+                                <h2 style="display: inline-block;">
+                                    Contacto por email 
+                                </h2>
+                                <i style="float: right;" class="material-icons">contact_mail</i>
+                            </div>
+                            <div class="body" style="padding-bottom:0;">
+                                <div class="row clearfix">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-bottom: 0;">
+                                        <div class="form-group" style="margin-bottom: 0;">
+                                            <p>Email Nuevo</p>
+                                            <div class="form-line input-group" id="group-email">
+                                                <input type="text" class="form-control input-content" placeholder="Ingrese el email" id="newContentEmail">
+                                                <i class="material-icons input-icon input-icon-incorrect-email">priority_high</i>
+                                                <i class="material-icons input-icon input-icon-correct-email">done</i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <p>Email Actual</p>
+                                        <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; display: block;"data-toggle="tooltip" data-placement="top" title="" id="emailValue">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="footer">
+                                <div style="padding-right: 20px; padding-bottom: 15px;">
+                                    <ul style="list-style: none;padding-left: 20px;">
+                                        <li>
+                                            <button type="button" class="btn btn-success waves-effect" id="changeEmailBtn" disabled>Cambiar email</button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            <!--Div Cards-->
+
+            <!--Modal Desglose Electivas Alumno-->
+            <div class="modal fade" id="modal_desglose_electivas" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+                <div class="modal-dialog modal-dialog-centered modal-scrollable modal-lg modal-desglose" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="defaultModalLabel">Desglose de los Créditos Acumulados</h4>
+                            <p id="name_alumno_title_modal"></p>
+                        </div>
+                        
+                        <div class="modal-body" id="modal_desglose_electivas_body">
+                            <div class="panel-group" id="panel_info" role="tablist" aria-multiselectable="true">
+                            </div>
+                        </div>
+                        <!--Modal Body-->
+
+                        <div class="modal-footer">
+                            <div style="padding-right: 10px;">
+                                <ul style="list-style: none;padding-left: 20px;">
+                                    <li>
+                                        <button type="button" class="btn btn-success waves-effect" id="changePasswdBtn">Aplicar cambios</button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!--Footer-->
+                    </div>
+                    <!--Content-->
+                </div>
+                <!--Dialog-->
+            </div>
+            <!--Modal Desglose Electivas Alumno-->
+
+            <!--Modal Acerca de-->
+            <div class="modal fade" id="modal_acerca_de" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+                <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="defaultModalLabel">SiSEL</h4>
+                        </div>
+
+                        <div class="modal-body" style="height: 100%;">
+                            <div class="container_info">
+                                <div class="container_div">
+                                    <img src="images/images-app/acerca_de/idea.png"/>
+                                    <h3>Idea Original</h3>
+                                    <h4>Efraín Arredondo Morales</h4>
+                                </div>
+                                <div class="container_div">
+                                    <img src="images/images-app/acerca_de/developer.png"/>
+                                    <h3>Desarrollador</h3>
+                                    <h4>Angel Isaac Saldivar Delgado</h4>
+                                </div>
+                                <div class="container_div">
+                                    <img src="images/images-app/acerca_de/tester.png"/>
+                                    <h3>Tester</h3>
+                                    <h4>Ana Paulina López Cazares</h4>
+                                </div>
+                                <div class="container_div">
+                                    <img src="images/images-app/acerca_de/colaborador.png"/>
+                                    <h3>Colaboradora</h3>
+                                    <h4>María del Pilar Haro Magallanes</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Modal Body-->
+
+                        <div class="modal-footer">
+                            <div style="padding-right: 10px;">
+                                <ul class="list_footer_acerca_de">
+                                    <li class="credits_icons">
+                                        <div>Iconos hechos por <a href="https://www.flaticon.com/authors/surang" title="surang">surang</a> , <a href="https://www.freepik.com" title="Freepik">Freepik</a> , <a href="https://www.flaticon.com/authors/nikita-golubev" title="Nikita Golubev">Nikita Golubev</a> y <a href="https://www.flaticon.com/authors/eucalyp" title="Eucalyp">Eucalyp</a> de <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+                                    </li>
+                                    <li>
+                                        <div class="close_modal_icon">
+                                            <a href="javascript:void(0);">
+                                                <i class="material-icons" style="color: #F44336;"  data-dismiss="modal">close</i>
+                                            </a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!--Footer-->
+                    </div>
+                    <!--Content-->
+                </div>
+                <!--Dialog-->
+            </div>
+            <!--Modal Acerca de-->
+
+        </div>
+        <!--Container Fluid-->
+
+    </section>
+
+    <!-- Jquery Core Js -->
+    <script src="plugins/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap Core Js -->
+    <script src="plugins/bootstrap/js/bootstrap.js"></script>
+
+    <!-- Jquery CountTo Plugin Js -->
+    <script src="plugins/jquery-countto/jquery.countTo.js"></script>
+
+    <!-- Bootstrap Notify Plugin Js -->
+    <script src="plugins/bootstrap-notify/bootstrap-notify.js"></script>
+
+    <!-- Slimscroll Plugin Js -->
+    <script src="plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+
+    <!-- Jquery DataTable Plugin Js -->
+    <script src="plugins/jquery-datatable/jquery.dataTables.js"></script>
+    <script src="plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js"></script>
+    <script src="plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js"></script>
+    <script src="plugins/jquery-datatable/extensions/export/buttons.flash.min.js"></script>
+    <script src="plugins/jquery-datatable/extensions/export/jszip.min.js"></script>
+    <script src="plugins/jquery-datatable/extensions/export/pdfmake.min.js"></script>
+    <script src="plugins/jquery-datatable/extensions/export/vfs_fonts.js"></script>
+    <script src="plugins/jquery-datatable/extensions/export/buttons.html5.min.js"></script>
+    <script src="plugins/jquery-datatable/extensions/export/buttons.print.min.js"></script>
+
+    <!-- SweetAlert Plugin Js -->
+    <script src="plugins/sweetalert/sweetalert.min.js"></script>
+
+    <!-- Moment Plugin Js -->
+    <script src="plugins/momentjs/moment.js"></script>
+
+    <!--Cleave js-->
+    <script src="plugins/cleave.js/dist/cleave.js"></script>
+    <script src="plugins/cleave.js/dist/addons/cleave-phone.mx.js"></script>
+
+   <!-- Waves Effect Plugin Js -->
+   <script src="plugins/node-waves/waves.js"></script>
+
+    <!-- Bootstrap Datepicker Plugin Js -->
+    <script src="plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+   
+    <!-- Select Plugin Js -->
+    <script src="plugins/bootstrap-select/js/bootstrap-select.js"></script>
+
+   <!-- Custom Js -->
+   <script src="js/admin.js"></script>
+   <script src="js/pages/tables/jquery-datatable.js"></script>
+   <script src="js/pages/ui/tooltips-popovers.js"></script>
+   <script src="js/demo.js"></script>
+
+   <!--Inicializaciones de componentes de la página-->
+   <script src="js/personal_files/configurar_contacto/setListeners.js"></script>
+   <script src="js/personal_files/configurar_contacto/configurar_contacto.js"></script>
+   <script src="js/personal_files/configurar_contacto/setInputValidation.js"></script>
+   <script type = "module"src="js/personal_files/login/logout_prueba.js"></script>
+
+</body>
+
+</html>

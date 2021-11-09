@@ -339,7 +339,9 @@ const getDataSelect = () => {
 
                     resolve()
                 }else{
-                    reject(message);
+                    reject({
+                        message : message
+                    });
                 }
     
             }
@@ -463,7 +465,9 @@ const getElectivasLiberadasAlumnos = () => {
 
                     resolve();
                 }else{
-                    reject(message)
+                    reject({
+                        message : message
+                    })
                 }
             }
         })
@@ -732,20 +736,50 @@ const deleteOficioElectiva = (id) => {
         }
 }
 
-$(document).ready(() => {
-    initDataTable()
-    .then(() => {
-        //Obtenemos los datos de los select del departamental y del numero de oficio
-        getDataSelect()
-        .then(() => {
-            //Obtenemos las electivas de los alumnos que ya están liberados
-            getElectivasLiberadasAlumnos()
-            .then(() => {
-                //Quitamos la pantalla de carga al obtener todos los datos y mostrarlos en la tabla
-                setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
-            })
-            .catch(console.error)
+const verifyUser = () => {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            method : 'GET',
+            url    : './php/api/SESSION_DATA_ADMIN.php',
+            success : (serverResponse) => {
+                
+                const {status} = JSON.parse(serverResponse);
+
+                if(status === "OK"){
+                    resolve(JSON.parse(serverResponse))
+                }else{
+                    reject(JSON.parse(serverResponse))
+                }
+            }
         })
-        .catch(console.error)
     })
+}
+
+$(document).ready(() => {
+
+    verifyUser()//Verificamos que haya sesión del usuario
+    .then(() => initDataTable())//Inicializamos la DataTable
+    .then(() => getDataSelect())//Obtenemos las opciones para el select de los departamentales
+    .then(() => getElectivasLiberadasAlumnos())//Obtenemos las electivas que ya fueron liberadas
+    .then(() => {
+        //Quitamos la pantalla de carga al obtener todos los datos y mostrarlos en la tabla
+        setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
+    })
+    .catch(({message}) => {
+        $(".page-loader-wrapper").css("background","linear-gradient(90deg, rgba(106,81,92,1) 19%, rgba(104,36,68,1) 87%)")
+        //Mostramos una notificacion indicando que no hay sesión actual
+       swal({
+           title: message,
+           text: "Redirigiendo...",
+           type: "warning",
+           showConfirmButton : false,
+           background : '#fff',
+       });
+
+       setTimeout(() => {
+           //Despues de 2.5 segundos, redirigimos al usuario para que inicie sesión
+           window.location.replace("login_admin.html");
+       }, 2500);
+    })
+
 })

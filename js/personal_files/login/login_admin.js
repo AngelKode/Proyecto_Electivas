@@ -48,7 +48,7 @@ $(document).ready(() => {
             }else{
                 //Iniciar sesión
                 //Cambiamos de pagina
-                window.location.replace("./consulta_alumnos.html"); 
+                window.location.replace("./inicio.html"); 
             }
         });
     });
