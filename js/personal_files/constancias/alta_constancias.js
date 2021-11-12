@@ -50,16 +50,7 @@ const setDataMenu = () => {
                 }else{
                     const {Nombre, Programa} = jsonResponse;
 
-                    //Arreglamos el nombre del alumno
-                    const nombreArray = Nombre.split(" ");
-                    let fixedNombre = "";
-                    nombreArray.forEach((palabra) => {
-                        fixedNombre += palabra[0].toUpperCase() + palabra.substr(1,palabra.length - 1);
-                        fixedNombre += " ";
-                    });
-                    
-
-                    $(".name").html(fixedNombre);
+                    $(".name").html(Nombre);
                     $(".name").css({
                         "font-size" : "18px"
                     })

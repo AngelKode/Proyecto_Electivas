@@ -250,7 +250,7 @@ const fetchDataAlumnos = () => {
                method : 'GET',
                url    : './php/consulta_avances/fetchAvancesAlumnos.php',
                success : (serverResponse) => {
-                    
+                    console.log(serverResponse)
                     const jsonResponse = JSON.parse(serverResponse)
                     const {status, message} = jsonResponse;
 
@@ -267,28 +267,18 @@ const fetchDataAlumnos = () => {
                                    //Obtenemos los datos del alumno
                                    const {id_alumno, boleta_alumno, programa_alumno} = data_alumnos[alumno][0];
 
-                                   //Asignamos al nombre del alumno, la primer letra de cada palabra en mayuscula
-                                   setFormattedName(alumno)
-                                   .then((formattedNameAlumno) => {
-                                        //Creamos el boton para acceder al desglose de electivas del alumno
-                                        const btnViewModalDesglose = `<div style="width: 100%; height: 100%;">
-                                                                      <button type="button" style="width: 100%; height: 100%;" class="btn btn-success waves-effect" onclick="showModalDesglose(${id_alumno})">
-                                                                           <i class="material-icons">leaderboard</i>
-                                                                           <span>Desglose</span>
-                                                                      </button>
-                                                                 </div>`;
+                                   //Creamos el boton para acceder al desglose de electivas del alumno
+                                   const btnViewModalDesglose = `<div style="width: 100%; height: 100%;">
+                                                                 <button type="button" style="width: 100%; height: 100%;" class="btn btn-success waves-effect" onclick="showModalDesglose(${id_alumno})">
+                                                                      <i class="material-icons">leaderboard</i>
+                                                                      <span>Desglose</span>
+                                                                 </button>
+                                                            </div>`;
 
-                                        //Agregamos el registro a la tabla
-                                        data_table.row.add([
-                                             boleta_alumno,formattedNameAlumno,programa_alumno,btnViewModalDesglose
-                                        ]).draw().node().id = `row_ID_${id_alumno}`;
-                                   })
-                                   .catch(() => {
-                                        reject({
-                                             status : 'error',
-                                             message : 'Error al obtener el nombre del alumno. Inténtelo nuevamente'
-                                        })
-                                   })     
+                                    //Agregamos el registro a la tabla
+                                   data_table.row.add([
+                                        boleta_alumno,alumno,programa_alumno,btnViewModalDesglose
+                                   ]).draw().node().id = `row_ID_${id_alumno}`;     
                               }
                          }
 

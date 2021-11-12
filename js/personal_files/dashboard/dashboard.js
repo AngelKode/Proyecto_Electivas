@@ -109,15 +109,81 @@ const initSelectYear = (dataYears) => {
         //Refrescamos el selectpicker
         selectYearDOM.selectpicker('refresh');
 
-        resolve()
+        resolve();
     })
 }
 
-const fetchData = () => {
+const fetchDataConstanciasRecibidas = () => {
     return new Promise((resolve, reject) => {
         $.ajax({
             method : 'GET',
-            url    : './php/dashboard/fetchData.php',
+            url    : './php/dashboard/fetchDataConstancias.php',
+            success : (serverResponse) => {
+
+                const jsonResponse = JSON.parse(serverResponse);
+                const {status, message} = jsonResponse;
+                //Verificamos que se haya hecho la peticion correctamente
+                if(status === undefined){
+                    
+                    const {fechas_constancias_recibidas} = jsonResponse;
+
+                    getHashArrayData(fechas_constancias_recibidas)//Ordenamos las fechas obtenidas por año y por mes
+                    .then((orderedArray) => initGraphic(orderedArray))//Con el arreglo obtenido, inicializamos la gráfica
+                    .then((arrayYears) => initSelectYear(arrayYears))//Inicializamos el select para poder seleccionar el año de visualización
+                    .then(() => {
+                        resolve()
+                    })
+                    .catch(() => {
+                        reject({
+                            status : status,
+                            message : 'Ha ocurrido un error. Si persiste el error contacte a soporte.'
+                        })
+                    })
+
+                }else{
+                    reject({
+                        message : message,
+                        status  : status
+                    })
+                }
+    
+            }
+        })
+    })
+}
+
+const adjustDataCards = (dataToAdjust) => {
+    return new Promise((resolve, reject) => {
+        let newArrayData = [];
+
+        try {
+            newArrayData = dataToAdjust[0].reduce((acc,cv) => {
+                //Obtenemos la llave
+                const key = Object.keys(cv)[0];
+
+                //Obtenemos el valor
+                const value = Object.values(cv)[0];
+
+                //Agregamos al acumulador
+                acc[key] = value;
+
+                return acc;
+            },[]) 
+            resolve(newArrayData)  
+        } catch (error) {
+            reject({
+                message : 'Error al obtener los datos'
+            })
+        }
+        
+    })
+}
+
+const fetchDataCards = () => {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            method : 'GET',
+            url    : './php/dashboard/fetchDataCards.php',
             success : (serverResponse) => {
 
                 const jsonResponse = JSON.parse(serverResponse);
@@ -126,36 +192,32 @@ const fetchData = () => {
                 //Verificamos que se haya hecho la peticion correctamente
                 if(status === undefined){
 
-                    const {num_constancias_no_validadas, 
-                           num_constancias_validadas,
-                           num_electivas_liberadas, 
-                           numero_alumnos,
-                           fechas_constancias_recibidas} = jsonResponse;
+                    //Obtenemos los valores de las tarjetas, obteniendo unicamente los valores
+                    const data_cards = jsonResponse.data[0].reduce((acc,cv) => {
+                        acc.push(Object.values(cv));//Agregamos al arreglo unicamente el valor del objeto
+                        return acc;
+                    },[])
+                    
+                    const [
+                        numero_alumnos,
+                        num_constancias_validadas,
+                        num_constancias_no_validadas,
+                        num_electivas_liberadas
+                        ] = data_cards; //Destructuramos los datos
 
-                    getHashArrayData(fechas_constancias_recibidas)//Ordenamos las fechas obtenidas por año y por mes
-                    .then((orderedArray) => initGraphic(orderedArray))//Con el arreglo obtenido, inicializamos la gráfica
-                    .then((arrayYears) => initSelectYear(arrayYears))//Inicializamos el select para poder seleccionar el año de visualización
-                    .then(() => {
+                    //Asignamos el valor a las tarjetas de información
+                    $("#numero_alumnos").attr("data-to",numero_alumnos)
+                    $("#numero_constancias_validas").attr("data-to",num_constancias_validadas)
+                    $("#numero_constancias_no_validas").attr("data-to",num_constancias_no_validadas)
+                    $("#numero_electivas_liberadas").attr("data-to",num_electivas_liberadas)
+
+                    $('.count-to').countTo();//Inicializamos el count-to para que aparezca la animacion
                         
-                        //Asignamos el valor a las tarjetas de información
-                        $("#numero_alumnos").attr("data-to",numero_alumnos)
-                        $("#numero_constancias_validas").attr("data-to",num_constancias_validadas)
-                        $("#numero_constancias_no_validas").attr("data-to",num_constancias_no_validadas)
-                        $("#numero_electivas_liberadas").attr("data-to",num_electivas_liberadas)
-                        $('.count-to').countTo();//Inicializamos el count-to para que aparezca la animacion
-                        resolve()
-
-                    })
-                    .catch(() => {
-                        reject({
-                            status : 'error',
-                            message : 'Ha ocurrido un error. Si persiste el error contacte a soporte.'
-                        })
-                    })
-
+                    resolve();
                 }else{
                     reject({
-                        message : message
+                        message : message,
+                        status  : status
                     })
                 }
     
@@ -186,7 +248,8 @@ const verifyUser = () => {
 $(document).ready(() => {
     //Quitamos la pantalla de carga
     verifyUser()
-    .then(() => fetchData())
+    .then(() => fetchDataConstanciasRecibidas())
+    .then(() => fetchDataCards())
     .then(() => {
         setTimeout(() => {$(".page-loader-wrapper").fadeOut();}, 50);
     })
